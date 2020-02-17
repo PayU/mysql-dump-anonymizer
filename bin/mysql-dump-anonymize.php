@@ -14,3 +14,6 @@ $anonymizer = new Anonymizer(
 );
 
 $anonymizer->anonymize(STDIN, STDOUT);
+
+$out = "Done.\nAnonymizer peak memory usage: " . number_format(memory_get_peak_usage()/1024/1024, 3, '.', '') . " MB\n";
+fwrite(STDERR, $out);

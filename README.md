@@ -27,3 +27,7 @@ Basically the command will look like:
 `mysqldump --compact --complete-insert --quick --innodb-optimize-keys --single-transaction --lock-for-backup <database>`
 
 and the output of it can be directly passed to anonymizer.
+
+Or pass the sql file at input and at output:
+
+`php bin/mysql-dump-anonymize.php <databse-dump.sql >databse-dump-anonymized.sql`
