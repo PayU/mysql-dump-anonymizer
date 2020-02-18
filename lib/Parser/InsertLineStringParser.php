@@ -12,7 +12,7 @@ use RuntimeException;
 
 class InsertLineStringParser implements InsertLineParser
 {
-    private const INSERT_LINE_PATTERN = '#^INSERT\s+INTO\s+`([^`]+)`\s*\(((?:`[^`]+`(?:\s*,\s*)?)+)\)\s+VALUES\s*(.*?)\s*;$#';
+    private const INSERT_LINE_PATTERN = '#^INSERT\s+INTO\s+`([^`]+)`\s*\(((?:`[^`]+`(?:\s*,\s*)?)+)\)\s+VALUES\s*(.*)\s*;$#';
 
     /**
      * @param string $line
