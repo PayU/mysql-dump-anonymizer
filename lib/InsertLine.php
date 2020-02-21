@@ -21,7 +21,7 @@ class InsertLine
      * @param string[] $columns
      * @param Value[][] $valuesList
      */
-    public function __construct(string $table, array $columns, array $valuesList)
+    public function __construct(string $table, array $columns, iterable $valuesList)
     {
         $this->table = $table;
         $this->columns = $columns;

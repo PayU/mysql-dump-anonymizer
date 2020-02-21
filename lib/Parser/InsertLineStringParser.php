@@ -53,9 +53,8 @@ class InsertLineStringParser implements InsertLineParser
      * @param string $rawValues
      * @return Value[][]
      */
-    private function parseValuesList(string $rawValues): array
+    private function parseValuesList(string $rawValues): iterable
     {
-        $rows = [];
         $row = [];
         $rawValue = '';
 
@@ -83,7 +82,7 @@ class InsertLineStringParser implements InsertLineParser
                     }
                     if ($char === ')') {
                         $parseLevel = 0;
-                        $rows[] = $row;
+                        yield $row;
                         break;
                     }
 
@@ -105,7 +104,7 @@ class InsertLineStringParser implements InsertLineParser
                         if ($char === ')') {
                             $parseLevel = 0;
                             $row[] = new Value($rawValue, '');
-                            $rows[] = $row;
+                            yield $row;
                             break;
                         }
                         $rawValue .= $char;
@@ -126,7 +125,6 @@ class InsertLineStringParser implements InsertLineParser
             }
             $index++;
         }
-        return $rows;
     }
 
 }
