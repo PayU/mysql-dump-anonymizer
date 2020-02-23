@@ -7,6 +7,7 @@ namespace PayU\MysqlDumpAnonymizer;
 use PayU\MysqlDumpAnonymizer\Dumper\InsertLineMysqlLikeDumper;
 use PayU\MysqlDumpAnonymizer\Parser\InsertLineStringParser;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\ValueAnonymizerRegistry;
+use RuntimeException;
 
 class Anonymizer
 {
@@ -46,7 +47,7 @@ class Anonymizer
         try {
             $insertLine = $this->insertLineParser->parse($line);
         } catch (InsertLineParserException $ignoreLine) {
-            return $line;
+            throw new RuntimeException('Parse error', 0, $ignoreLine);
         }
 
         $anonymizedInsertLine = $this->anonymizeInsertLine($insertLine);
