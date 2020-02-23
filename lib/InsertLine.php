@@ -44,7 +44,7 @@ class InsertLine
     /**
      * @return Value[][]
      */
-    public function getValuesList(): array
+    public function getValuesList(): iterable
     {
         return $this->valuesList;
     }
