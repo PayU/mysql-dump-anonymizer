@@ -5,6 +5,7 @@ namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use Generator;
+use PayU\MysqlDumpAnonymizer\Parser\InsertLineStringParser;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Statements\InsertStatement;
 use PhpMyAdmin\SqlParser\Components\IntoKeyword;
@@ -65,14 +66,25 @@ class MySqlDumpLineParser implements InterfaceLineParser
     }
 
 
+    public function getRowFromInsertLine($line) : Generator
+    {
+        $parser = new InsertLineStringParser();
+        $insertLine = $parser->parse($line);
+        foreach ($insertLine->getValuesList() as $a=>$vv) {
+            yield $vv;
+
+        }
+
+    }
+
     /**
      * @param string $line
      * @return Generator
+     * TODO remove
      */
-    public function getRowFromInsertLine($line) : Generator
+    /*public function getRowFromInsertLineOld($line) : Generator
     {
         foreach ((new Parser($line))->statements as $statement) {
-            /** @var InsertStatement $statement */
             foreach ($statement->values as $key => $values) {
 
                 $return = [];
@@ -87,7 +99,7 @@ class MySqlDumpLineParser implements InterfaceLineParser
                 yield $return;
             }
         }
-    }
+    }*/
 
 
 }
