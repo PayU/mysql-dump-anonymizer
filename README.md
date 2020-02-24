@@ -24,9 +24,15 @@ Optional for consistency
 
 Basically the command will look like:
 
-`mysqldump --compact --complete-insert --quick --innodb-optimize-keys --single-transaction --lock-for-backup <database>`
-
+`mysqldump --complete-insert --innodb-optimize-keys --single-transaction --lock-for-backup <database>`
 and the output of it can be directly passed to anonymizer.
+
+When using --compact dump file will not have @@SQL_MODE setting of the source server. When dealing with options like STRICT_TRANS_TABLES / NO_ZERO_IN_DATE this can be a problem.
+
+Check the system variables `net_buffer_length` and `max-allowed-packet` on the 
+destination server to be at least the same amount as on the source server.
+- https://dev.mysql.com/doc/refman/5.6/en/mysqldump.html#option_mysqldump_net-buffer-length
+
 
 Or pass the sql file at input and at output:
 

@@ -69,7 +69,11 @@ class Anonymizer
 
         $lineParser = $this->lineParserFactory->chooseLineParser($this->commandLineParameters->getLineParser());
 
+        $total = $this->commandLineParameters->getEstimatedDumpSize();
+        $readSoFar = 0;
         while ($line = fgets($inputStream)) {
+            $readSoFar += strlen($line);
+            RuntimeProgress::show($readSoFar, $total);
             fwrite($outputStream, $this->anonymizeLine($line, $config, $lineParser));
         }
     }
@@ -110,7 +114,7 @@ class Anonymizer
         //we have at least one column to anonymize
         $dumpQuery = 'INSERT'.' INTO '.$lineInfo->getTable().' (`';
         $dumpQuery .= implode('`, `', $lineColumns );
-        $dumpQuery .= ' VALUES ';
+        $dumpQuery .= '`) VALUES ';
         foreach ($lineParser->getRowFromInsertLine($line) as $row) {
             /** @var Value[] $row */
             $dumpQuery .= '(';

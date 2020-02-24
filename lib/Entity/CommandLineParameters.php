@@ -11,10 +11,13 @@ final class CommandLineParameters
     private const PARAM_CONFIG_FILES = 'config';
     private const PARAM_LINE_PARSER = 'line-parser';
     private const PARAM_CONFIG_TYPE = 'config-type';
+    private const PARAM_ESTIMATED_DUMP_SIZE = 'dump-size';
+
 
     private $configFile;
     private $lineParser = LineParserFactory::LINE_PARSER_MYSQL_DUMP;
     private $configType = ConfigFactory::DEFAULT_CONFIG_TYPE;
+    private $estimatedDumpSize = 1000000000;
 
 
     public function setCommandLineArguments($args) {
@@ -27,6 +30,8 @@ final class CommandLineParameters
                 $this->lineParser = $value;
             } elseif (strpos($arg, '--' . self::PARAM_CONFIG_TYPE) === 0) {
                 $this->configType = $value;
+            } elseif (strpos($arg, '--' . self::PARAM_ESTIMATED_DUMP_SIZE) === 0) {
+                $this->estimatedDumpSize = (int)$value;
             }
         }
     }
@@ -50,6 +55,7 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).
             ' --' .self::PARAM_CONFIG_FILES. '=config1.yml,config2.yml'.
             ' [--' .self::PARAM_CONFIG_TYPE. '='.ConfigFactory::DEFAULT_CONFIG_TYPE.']'.
             ' [--' .self::PARAM_LINE_PARSER. '='.LineParserFactory::LINE_PARSER_MYSQL_DUMP.']'.
+            ' [--' .self::PARAM_ESTIMATED_DUMP_SIZE. '=1000000]'.
             '
             
 ';
@@ -80,10 +86,13 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).
         return $this->configType;
     }
 
-
-
-
-
+    /**
+     * @return int
+     */
+    public function getEstimatedDumpSize(): int
+    {
+        return $this->estimatedDumpSize;
+    }
 
 
 }
