@@ -1,7 +1,19 @@
 {
-  "autoload": {
-    "psr-4": {
-      "PayU\\MysqlDumpAnonymizer\\": "lib/"
+    "autoload": {
+        "psr-4": {
+            "PayU\\MysqlDumpAnonymizer\\": "lib/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "7.3"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9"
+    },
+    "require": {
+        "phpmyadmin/sql-parser": "^5.2",
+        "symfony/yaml": "^5.0"
     }
-  }
 }

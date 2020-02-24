@@ -4,85 +4,136 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Dumper\InsertLineMysqlLikeDumper;
-use PayU\MysqlDumpAnonymizer\Parser\InsertLineStringParser;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\ValueAnonymizerRegistry;
+use InvalidArgumentException;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationColumnConfig;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationConfig;
+use PayU\MysqlDumpAnonymizer\Entity\CommandLineParameters;
+use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
+use PayU\MysqlDumpAnonymizer\Services\ConfigFactory;
+use PayU\MysqlDumpAnonymizer\Services\DataTypeService;
+use PayU\MysqlDumpAnonymizer\Services\LineParser\InterfaceLineParser;
+use PayU\MysqlDumpAnonymizer\Services\LineParserFactory;
 use RuntimeException;
 
 class Anonymizer
 {
-    /** @var InsertLineStringParser */
-    private $insertLineParser;
-    /** @var InsertLineMysqlLikeDumper */
-    private $insertLineDumper;
-    /** @var ValueAnonymizerRegistry */
-    private $valueAnonymizerRegistry;
+    /** @var CommandLineParameters */
+    private $commandLineParameters;
 
-    private const INSERT_LINE_PATTERN = '#^INSERT\s+INTO\s+#';
+    /** @var LineParserFactory */
+    private $lineParserFactory;
+
+    /** @var ConfigFactory */
+    private $configFactory;
+
+    /** @var DataTypeService */
+    private $dataTypeService;
 
     public function __construct(
-        InsertLineParser $insertLineParser,
-        InsertLineDumper $insertLineDumper,
-        ValueAnonymizerRegistry $valueAnonymizerRegistry
-    ) {
-        $this->insertLineParser = $insertLineParser;
-        $this->insertLineDumper = $insertLineDumper;
-        $this->valueAnonymizerRegistry = $valueAnonymizerRegistry;
+        CommandLineParameters $commandLineParameters,
+        ConfigFactory $configFactory,
+        LineParserFactory $lineParserFactory,
+        DataTypeService $dataTypeService
+    )
+    {
+        $this->commandLineParameters = $commandLineParameters;
+        $this->configFactory = $configFactory;
+        $this->lineParserFactory = $lineParserFactory;
+        $this->dataTypeService = $dataTypeService;
     }
 
 
-    public function anonymize($inputStream, $outputStream): void
+    public function run($inputStream, $outputStream, $errorStream): void
     {
-        while (false !== ($line = fgets($inputStream))) {
-            fwrite($outputStream, $this->anonymizeLine($line));
+        try {
+
+            $this->commandLineParameters->setCommandLineArguments($_SERVER['argv']);
+            $this->commandLineParameters->validate();
+
+            $configService = $this->configFactory->make(
+                $this->commandLineParameters->getConfigType(),
+                $this->commandLineParameters->getConfigFile()
+            );
+
+            $configService->validate();
+
+            $config = $configService->buildConfig();
+
+        } catch (InvalidArgumentException | ConfigValidationException $e) {
+            fwrite($errorStream, 'ERROR: ' . $e->getMessage() . "\n");
+            fwrite($errorStream, $this->commandLineParameters->help());
+            exit(1);
+        }
+
+        $lineParser = $this->lineParserFactory->chooseLineParser($this->commandLineParameters->getLineParser());
+
+        while ($line = fgets($inputStream)) {
+            fwrite($outputStream, $this->anonymizeLine($line, $config, $lineParser));
         }
     }
 
-    private function anonymizeLine(string $line): string
+
+
+ private function anonymizeLine($line, AnonymizationConfig $config, InterfaceLineParser $lineParser)
     {
-        if (!preg_match(self::INSERT_LINE_PATTERN, $line, $match)) {
+        $lineInfo = $lineParser->lineInfo($line);
+        if ($lineInfo->isInsert() === false) {
             return $line;
         }
 
-        try {
-            $insertLine = $this->insertLineParser->parse($line);
-        } catch (InsertLineParserException $ignoreLine) {
-            throw new RuntimeException('Parse error', 0, $ignoreLine);
+        //truncate action doesnt write inserts
+        if ($config->getActionConfig($lineInfo->getTable())->getAction() === AnonymizationActions::TRUNCATE) {
+            //TODO make fwrite not write '' when no need to write
+            return '';
+        }
+        $lineColumns = $lineInfo->getColumns();
+        $configColumns = $config->getActionConfig($lineInfo->getTable())->getColumns();
+
+        //Check if config contains all
+        if (count($lineColumns) !== count($configColumns)) {
+            throw new RuntimeException('Number of columns in table ' . $lineInfo->getTable() . ' doesnt match config.');
         }
 
-        $anonymizedInsertLine = $this->anonymizeInsertLine($insertLine);
-
-        return $this->insertLineDumper->dump($anonymizedInsertLine);
-    }
-
-    private function anonymizeValue($table, $column, Value $value): Value
-    {
-        $valueAnonymizer = $this->valueAnonymizerRegistry->getAnonymizer($table, $column);
-
-        return $valueAnonymizer->anonymize($value);
-    }
-
-    /**
-     * @param InsertLine $insertLine
-     * @return InsertLine
-     */
-    private function anonymizeInsertLine(InsertLine $insertLine): InsertLine
-    {
-        $table = $insertLine->getTable();
-        $columns = $insertLine->getColumns();
-        $valuesList = $insertLine->getValuesList();
-
-        $anonymizedValuesList = [];
-        foreach ($valuesList as $values) {
-            $anonymizedValues = [];
-            foreach ($values as $columnIndex => $value) {
-                $anonymizedValue = $this->anonymizeValue($table, $columns[$columnIndex], $value);
-                $anonymizedValues[$columnIndex] = $anonymizedValue;
+        foreach ($lineColumns as $lineColumn) {
+            if (!array_key_exists($lineColumn, $configColumns)) {
+                throw new RuntimeException('Column not found in config ' . $lineColumn . '');
             }
-            $anonymizedValuesList[] = $anonymizedValues;
         }
 
-        return new InsertLine($table, $columns, $anonymizedValuesList);
+        //no insert or there is not anonymization required for any of the columns
+        if ($lineInfo->isInsert() === false || empty(array_filter($configColumns))) {
+            return $line;
+        }
+
+        //we have at least one column to anonymize
+        $dumpQuery = 'INSERT'.' INTO '.$lineInfo->getTable().' (`';
+        $dumpQuery .= implode('`, `', $lineColumns );
+        $dumpQuery .= ' VALUES ';
+        foreach ($lineParser->getRowFromInsertLine($line) as $row) {
+            /** @var Value[] $row */
+            $dumpQuery .= '(';
+            foreach ($row as $columnIndex => $cell) {
+                $columnName = $lineColumns[$columnIndex];
+                $dumpQuery .= $this->anonymizeValue($configColumns[$columnName], $cell, array_combine($lineColumns, $row))->getQuotedValue();
+                $dumpQuery .= ', ';
+            }
+            $dumpQuery = substr($dumpQuery, 0, -2);
+            $dumpQuery .= '),';
+        }
+        return substr($dumpQuery, 0, -1).";\n";
+    }
+
+    private function anonymizeValue(AnonymizationColumnConfig $columnConfig, Value $value, $row)
+    {
+
+        if ($dataType = $this->dataTypeService->getDataType($columnConfig, $row)) {
+            $value->setQuotedValue(
+                '\'' . addcslashes($this->dataTypeService->anonymizeValue($value, $dataType), '\'') . '\''
+            );
+        }
+        return $value;
     }
 
 }

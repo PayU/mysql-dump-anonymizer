@@ -1,0 +1,1 @@
+type sample\sample.sql | php bin\mysql-dump-anonymize.php --config=sample\anon.yml,sample\no-anon.yml

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
+//TODO delete ?
+use PayU\MysqlDumpAnonymizer\Entity\Value;
+
 class InsertLine
 {
     /** @var string */

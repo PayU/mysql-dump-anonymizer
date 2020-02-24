@@ -1,7 +1,7 @@
 <?php
 
 
-namespace PayU\MysqlDumpAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Exceptions;
 
 
 use Exception;

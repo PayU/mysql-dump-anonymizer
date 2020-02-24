@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Dumper;
 
+use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\InsertLine;
 use PayU\MysqlDumpAnonymizer\InsertLineDumper;
-use PayU\MysqlDumpAnonymizer\Value;
 
+//TODO delete ?
 class InsertLineMysqlLikeDumper implements InsertLineDumper
 {
     public function dump(InsertLine $insertLine): string
@@ -23,7 +24,7 @@ class InsertLineMysqlLikeDumper implements InsertLineDumper
             static function ($values) {
                 $valueList = array_map(
                     static function (Value $value) {
-                        return $value->getRawValue();
+                        return $value->getQuotedValue();
                     },
                     $values
                 );
@@ -33,6 +34,7 @@ class InsertLineMysqlLikeDumper implements InsertLineDumper
             $insertLine->getValuesList()
         );
 
+        /** @noinspection SqlResolve */
         return 'INSERT INTO `' . $insertLine->getTable() . '` (' . implode(', ', $columnList) . ') VALUES ' . implode(',', $valuesList) . ";\n";
     }
 

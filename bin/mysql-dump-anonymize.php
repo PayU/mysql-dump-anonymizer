@@ -1,19 +1,26 @@
 <?php
-
 use PayU\MysqlDumpAnonymizer\Anonymizer;
-use PayU\MysqlDumpAnonymizer\Dumper\InsertLineMysqlLikeDumper;
-use PayU\MysqlDumpAnonymizer\Parser\InsertLineStringParser;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\ValueAnonymizerRegistry;
+use PayU\MysqlDumpAnonymizer\Entity\CommandLineParameters;
+use PayU\MysqlDumpAnonymizer\Services\ConfigFactory;
+use PayU\MysqlDumpAnonymizer\Services\DataTypeService;
+use PayU\MysqlDumpAnonymizer\Services\LineParserFactory;
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
+require_once dirname(__DIR__).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
-$anonymizer = new Anonymizer(
-    new InsertLineStringParser(),
-    new InsertLineMysqlLikeDumper(),
-    new ValueAnonymizerRegistry()
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+//new CommandLineParameters();
+
+
+
+$application = new Anonymizer(
+    new CommandLineParameters(),
+    new ConfigFactory(),
+    new LineParserFactory(),
+    new DataTypeService()
 );
 
-$anonymizer->anonymize(STDIN, STDOUT);
 
-$out = "Done.\nAnonymizer peak memory usage: " . number_format(memory_get_peak_usage()/1024/1024, 3, '.', '') . " MB\n";
-fwrite(STDERR, $out);
+$application->run(STDIN, STDOUT, STDERR);
+

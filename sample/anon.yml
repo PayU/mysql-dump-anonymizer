@@ -1,0 +1,26 @@
+example_1:
+  Action: anonymize
+  Columns:
+    - ColumnName: fname
+      DataType: SensitiveFreeText
+    - ColumnName: json
+      DataType: Json
+    - ColumnName: comment
+      DataType: FreeText
+example_2:
+  Action: anonymize
+  Columns:
+    - ColumnName: value
+      DataType: Email
+      Where: key=EMAIL
+    - ColumnName: value
+      DataType: Phone
+      Where: key=PHONE
+    - ColumnName: value
+      DataType: FreeText
+      Where: key=COMMENT
+    - ColumnName: value
+      DataType: DocumentData
+      Where: key=FISCAL_CODE
+example_3:
+  Action: truncate

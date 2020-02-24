@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Parser;
 
+use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\InsertLine;
 use PayU\MysqlDumpAnonymizer\InsertLineParser;
-use PayU\MysqlDumpAnonymizer\InsertLineParserException;
-use PayU\MysqlDumpAnonymizer\Value;
+use PayU\MysqlDumpAnonymizer\Exceptions\InsertLineParserException;
 use RuntimeException;
 
 class InsertLineStringParser implements InsertLineParser
