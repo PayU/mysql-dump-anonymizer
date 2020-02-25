@@ -17,7 +17,7 @@ final class CommandLineParameters
     private $configFile;
     private $lineParser = LineParserFactory::LINE_PARSER_MYSQL_DUMP;
     private $configType = ConfigFactory::DEFAULT_CONFIG_TYPE;
-    private $estimatedDumpSize = 1000000000;
+    private $estimatedDumpSize = 1370000000;
 
 
     public function setCommandLineArguments($args) {

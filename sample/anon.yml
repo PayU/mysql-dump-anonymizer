@@ -24,3 +24,47 @@ example_2:
       Where: key=FISCAL_CODE
 example_3:
   Action: truncate
+example_5:
+  Action: anonymize
+  Columns:
+    - ColumnName: binary
+      DataType: BinaryData
+all_allow_null:
+  Action: anonymize
+  Columns:
+    - ColumnName: BankData
+      DataType: BankData
+    - ColumnName: BinaryData
+      DataType: BinaryData
+    - ColumnName: CardData
+      DataType: CardData
+    - ColumnName: Credentials
+      DataType: Credentials
+    - ColumnName: Date
+      DataType: Date
+    - ColumnName: DocumentData
+      DataType: DocumentData
+    - ColumnName: Email
+      DataType: Email
+    - ColumnName: FileName
+      DataType: FileName
+    - ColumnName: FreeText
+      DataType: FreeText
+    - ColumnName: Id
+      DataType: Id
+    - ColumnName: Ip
+      DataType: Ip
+    - ColumnName: IpInt
+      DataType: IpInt
+    - ColumnName: Json
+      DataType: Json
+    - ColumnName: Phone
+      DataType: Phone
+    - ColumnName: SensitiveFreeText
+      DataType: SensitiveFreeText
+    - ColumnName: Serialized
+      DataType: Serialized
+    - ColumnName: Url
+      DataType: Url
+    - ColumnName: Username
+      DataType: Username

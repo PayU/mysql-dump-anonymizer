@@ -4,15 +4,9 @@
 
     <testsuites>
         <testsuite name="Tests">
-            <directory>tests</directory>
+            <directory>/tests/*Test.php</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory suffix=".php">lib/</directory>
-        </whitelist>
-    </filter>
 
     <php>
         <env name="APP_ENV" value="testing"/>

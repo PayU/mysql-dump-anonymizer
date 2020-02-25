@@ -7,3 +7,7 @@ example_2:
 example_4:
   id:
   name:
+example_5:
+  id:
+all_allow_null:
+  PrimaryKey:

@@ -133,9 +133,17 @@ class Anonymizer
     {
 
         if ($dataType = $this->dataTypeService->getDataType($columnConfig, $row)) {
+            $databaseValue = $this->dataTypeService->anonymizeValue($value, $dataType);
+
+            if ($databaseValue->isExpression()) {
+                $value->setQuotedValue($databaseValue->getValue());
+                return $value;
+            }
+
             $value->setQuotedValue(
-                '\'' . addcslashes($this->dataTypeService->anonymizeValue($value, $dataType), '\'') . '\''
+                '\'' . addcslashes($databaseValue->getValue(), "'\\\n") . '\''
             );
+            return $value;
         }
         return $value;
     }

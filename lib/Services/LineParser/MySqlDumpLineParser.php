@@ -3,14 +3,12 @@
 namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
 use Generator;
 use PayU\MysqlDumpAnonymizer\Parser\InsertLineStringParser;
 use PhpMyAdmin\SqlParser\Parser;
 use PhpMyAdmin\SqlParser\Statements\InsertStatement;
 use PhpMyAdmin\SqlParser\Components\IntoKeyword;
 use PhpMyAdmin\SqlParser\Components\Array2d;
-use RuntimeException;
 
 class MySqlDumpLineParser implements InterfaceLineParser
 {
@@ -66,6 +64,11 @@ class MySqlDumpLineParser implements InterfaceLineParser
     }
 
 
+    /**
+     * @param $line
+     * @return Generator
+     * @throws \PayU\MysqlDumpAnonymizer\Exceptions\InsertLineParserException
+     */
     public function getRowFromInsertLine($line) : Generator
     {
         $parser = new InsertLineStringParser();

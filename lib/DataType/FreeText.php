@@ -2,12 +2,15 @@
 
 namespace PayU\MysqlDumpAnonymizer\DataType;
 
+
+use PayU\MysqlDumpAnonymizer\Entity\DatabaseValue;
+
 class FreeText implements InterfaceDataType
 {
 
-    public function anonymize($value)
+    public function anonymize(DatabaseValue $value): DatabaseValue
     {
-        return 'FFFF'.$value;
+        return $value;
     }
 
 }

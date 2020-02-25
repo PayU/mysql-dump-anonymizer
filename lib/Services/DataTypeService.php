@@ -3,6 +3,7 @@
 namespace PayU\MysqlDumpAnonymizer\Services;
 
 
+use PayU\MysqlDumpAnonymizer\DataType\BankData;
 use PayU\MysqlDumpAnonymizer\DataType\BinaryData;
 use PayU\MysqlDumpAnonymizer\DataType\CardData;
 use PayU\MysqlDumpAnonymizer\DataType\Credentials;
@@ -22,6 +23,7 @@ use PayU\MysqlDumpAnonymizer\DataType\Serialized;
 use PayU\MysqlDumpAnonymizer\DataType\Url;
 use PayU\MysqlDumpAnonymizer\DataType\Username;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationColumnConfig;
+use PayU\MysqlDumpAnonymizer\Entity\DatabaseValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use RuntimeException;
 
@@ -41,7 +43,7 @@ class DataTypeService
         }
 
         if ($anonymizationColumnConfig->getDataType() === true) {
-            $eavAttribute = $row[$anonymizationColumnConfig->getEavAttributeName()]->getValue();
+            $eavAttribute = $row[$anonymizationColumnConfig->getEavAttributeName()]->getValue()->getValue();
             $eavValues = $anonymizationColumnConfig->getEavAttributeValuesDataType();
             if (array_key_exists($eavAttribute, $eavValues)) {
                 $dataType = $eavValues[$eavAttribute];
@@ -56,7 +58,7 @@ class DataTypeService
 
     }
 
-    public function anonymizeValue(Value $value, InterfaceDataType $dataType) : string
+    public function anonymizeValue(Value $value, InterfaceDataType $dataType) : DatabaseValue
     {
         return $dataType->anonymize($value->getValue());
 
@@ -67,7 +69,7 @@ class DataTypeService
 
         switch ($dataType) {
             case 'BankData':
-                return new SensitiveFreeText();
+                return new BankData();
                 break;
             case 'BinaryData':
                 return new BinaryData();
