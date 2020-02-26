@@ -17,6 +17,6 @@ interface InterfaceLineParser {
      * @param Value[][] $values
      * @return string
      */
-    public function rebuildInsertLine(string $table, array $columns, $values);
+    public function rebuildInsertLine(string $table, array $columns, array $values) : string;
 
 }

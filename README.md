@@ -11,6 +11,7 @@ mysql dump must be exported using:
 -  --skip-set-charset
 -  --compact (all 5 above)
 -  --complete-insert
+-  --hex-blob
 -  --extended-insert (default on)
 
 Optional for speed:
@@ -24,7 +25,7 @@ Optional for consistency
 
 Basically the command will look like:
 
-`mysqldump --complete-insert --innodb-optimize-keys --single-transaction --lock-for-backup <database>`
+`mysqldump --complete-insert --hex-blob --innodb-optimize-keys --single-transaction --lock-for-backup <database>`
 and the output of it can be directly passed to anonymizer.
 
 When using --compact dump file will not have @@SQL_MODE setting of the source server. When dealing with options like STRICT_TRANS_TABLES / NO_ZERO_IN_DATE this can be a problem.
@@ -36,4 +37,22 @@ destination server to be at least the same amount as on the source server.
 
 Or pass the sql file at input and at output:
 
-`php bin/mysql-dump-anonymize.php <databse-dump.sql >databse-dump-anonymized.sql`
+`php bin/mysql-dump-anonymize.php --config=FILENAME <databse-dump.sql >databse-dump-anonymized.sql`
+
+```text
+Usage: mysqldump [options] <source-db> | php mysql-dump-anonymize.php --config=FILENAME [OPTIONS] | mysql [options] -D <destination-db>
+
+mysql-dump-anonymize.php options:
+ --config-type          Default Value: yaml
+                        Specifies the type of the config used.
+
+ --line-parser          Default Value: mysqldump
+                        Specifies the type of the line parser used.
+
+ --dump-size            When available, specify the length of the data being anonymized.
+                        This will be used to show progress data at runtime.
+
+ --show-progress        Default value: 1
+                        Set to 0 to not show progress data.
+
+```
