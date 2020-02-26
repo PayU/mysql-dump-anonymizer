@@ -71,6 +71,7 @@ class Anonymizer
 
         $total = $this->commandLineParameters->getEstimatedDumpSize();
         $readSoFar = 0;
+        RuntimeProgress::$output = $errorStream;
         while ($line = fgets($inputStream)) {
             $readSoFar += strlen($line);
             RuntimeProgress::show($readSoFar, $total);

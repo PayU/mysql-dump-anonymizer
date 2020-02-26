@@ -11,6 +11,7 @@ use PayU\MysqlDumpAnonymizer\DataType\Email;
 use PayU\MysqlDumpAnonymizer\DataType\FileName;
 use PayU\MysqlDumpAnonymizer\DataType\FreeText;
 use PayU\MysqlDumpAnonymizer\DataType\Id;
+use PayU\MysqlDumpAnonymizer\DataType\InterfaceDataType;
 use PayU\MysqlDumpAnonymizer\DataType\Ip;
 use PayU\MysqlDumpAnonymizer\DataType\IpInt;
 use PayU\MysqlDumpAnonymizer\DataType\Json;
@@ -22,25 +23,38 @@ use PayU\MysqlDumpAnonymizer\DataType\Username;
 
 final class DataTypes {
 
-    public const BANK_DATA = ['BankData', SensitiveFreeText::class];
-    public const BINARY_DATA = ['BinaryData', BinaryData::class];
-    public const CARD_DATA = ['CardData', CardData::class];
-    public const CREDENTIALS = ['Credentials', Credentials::class];
-    public const DATE = ['Date', Date::class];
-    public const DOCUMENT_DATA = ['DocumentData', DocumentData::class];
-    public const EMAIL = ['Email', Email::class];
-    public const FILENAME = ['FileName', FileName::class];
-    public const FREE_TEXT = ['FreeText', FreeText::class];
-    public const ID = ['Id', Id::class];
-    public const IP = ['Ip', Ip::class];
-    public const IP_INT = ['IpInt', IpInt::class];
-    public const JSON = ['Json', Json::class];
-    public const PHONE = ['Phone', Phone::class];
-    public const SENSITIVE_FREE_TEXT = ['SensitiveFreeText', SensitiveFreeText::class];
-    public const SERIALIZED = ['Serialized', Serialized::class];
-    public const URL = ['Url', Url::class];
-    public const USERNAME = ['Username', Username::class];
+    /** @var array  */
+    private static $dataTypes = [
+        'BankData' => SensitiveFreeText::class,
+        'BinaryData' => BinaryData::class,
+        'CardData' => CardData::class,
+        'Credentials' => Credentials::class,
+        'Date' => Date::class,
+        'DocumentData' => DocumentData::class,
+        'Email' => Email::class,
+        'FileName' => FileName::class,
+        'FreeText' => FreeText::class,
+        'Id' => Id::class,
+        'Ip' => Ip::class,
+        'IpInt' => IpInt::class,
+        'Json' => Json::class,
+        'Phone' => Phone::class,
+        'SensitiveFreeText' => SensitiveFreeText::class,
+        'Serialized' => Serialized::class,
+        'Url' => Url::class,
+        'Username' => Username::class,
+    ];
 
+    /**
+     * @param string $string
+     * @return InterfaceDataType
+     */
+    public function getDataTypeClass(string $string) : InterfaceDataType {
+       return (new self::$dataTypes[$string]);
+    }
 
+    public function dataTypeExists(string $string) : bool {
+        return array_key_exists($string, self::$dataTypes);
+    }
 
 }

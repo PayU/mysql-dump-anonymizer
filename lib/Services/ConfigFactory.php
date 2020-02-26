@@ -2,6 +2,7 @@
 
 namespace PayU\MysqlDumpAnonymizer\Services;
 
+use PayU\MysqlDumpAnonymizer\Entity\DataTypes;
 use PayU\MysqlDumpAnonymizer\Services\ConfigBuilder\InterfaceConfigBuilder;
 use PayU\MysqlDumpAnonymizer\Services\ConfigBuilder\YamlConfig;
 use RuntimeException;
@@ -19,7 +20,7 @@ class ConfigFactory
 
         if ($configType === self::YAML_CONFIG) {
             [$anonFile, $noAnonFile] = explode(',', $configFile, 2);
-            return new YamlConfig($anonFile, $noAnonFile, new Parser());
+            return new YamlConfig($anonFile, $noAnonFile, new Parser(), new DataTypes());
         }
 
         throw new RuntimeException('Cannot build config');

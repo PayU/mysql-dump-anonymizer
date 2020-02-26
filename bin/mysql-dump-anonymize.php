@@ -1,6 +1,7 @@
 <?php
 use PayU\MysqlDumpAnonymizer\Anonymizer;
 use PayU\MysqlDumpAnonymizer\Entity\CommandLineParameters;
+use PayU\MysqlDumpAnonymizer\Entity\DataTypes;
 use PayU\MysqlDumpAnonymizer\Services\ConfigFactory;
 use PayU\MysqlDumpAnonymizer\Services\DataTypeService;
 use PayU\MysqlDumpAnonymizer\Services\LineParserFactory;
@@ -18,7 +19,7 @@ $application = new Anonymizer(
     new CommandLineParameters(),
     new ConfigFactory(),
     new LineParserFactory(),
-    new DataTypeService()
+    new DataTypeService(new DataTypes())
 );
 
 

@@ -5,6 +5,7 @@ namespace PayU\MysqlDumpAnonymizer\Services\ConfigBuilder;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationColumnConfig;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationConfig;
+use PayU\MysqlDumpAnonymizer\Entity\DataTypes;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
@@ -30,11 +31,17 @@ class YamlConfig implements InterfaceConfigBuilder
      */
     private $parser;
 
-    public function __construct($anonymizationFile, $noAnonymizationFile, Parser $parser)
+    /**
+     * @var DataTypes
+     */
+    private $dataTypes;
+
+    public function __construct($anonymizationFile, $noAnonymizationFile, Parser $parser, DataTypes $dataTypes)
     {
         $this->anonymizationFile = $anonymizationFile;
         $this->noAnonymizationFile = $noAnonymizationFile;
         $this->parser = $parser;
+        $this->dataTypes = $dataTypes;
     }
 
     public function validate(): void
@@ -94,6 +101,11 @@ class YamlConfig implements InterfaceConfigBuilder
                     if (!array_key_exists(self::DATA_TYPE_KEY, $columnData)) {
                         throw new ConfigValidationException('Invalid config - no data type key - [' . $table . ' ' . $columnData[self::COLUMN_NAME_KEY] . ']');
                     }
+
+                    if ($this->dataTypes->dataTypeExists($columnData[self::DATA_TYPE_KEY]) === false) {
+                        throw new ConfigValidationException('Invalid config - invalid data type key - [' . $table . ' ' . $columnData[self::DATA_TYPE_KEY] . ']');
+                    }
+
 
                     if (array_key_exists(self::WHERE_KEY, $columnData)) {
                         if (strpos($columnData[self::WHERE_KEY], '=') === false) {
