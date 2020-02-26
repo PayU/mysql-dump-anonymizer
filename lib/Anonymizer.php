@@ -71,10 +71,18 @@ class Anonymizer
 
         $total = $this->commandLineParameters->getEstimatedDumpSize();
         $readSoFar = 0;
-        RuntimeProgress::$output = $errorStream;
+        if ($this->commandLineParameters->isShowProgress()) {
+            RuntimeProgress::$output = $errorStream;
+            RuntimeProgress::output(PHP_EOL . PHP_EOL);
+        }
+
         while ($line = fgets($inputStream)) {
             $readSoFar += strlen($line);
-            RuntimeProgress::show($readSoFar, $total);
+
+            if ($this->commandLineParameters->isShowProgress()) {
+                RuntimeProgress::show($readSoFar, $total);
+            }
+
             fwrite($outputStream, $this->anonymizeLine($line, $config, $lineParser));
         }
     }
@@ -88,22 +96,24 @@ class Anonymizer
             return $line;
         }
 
+        $table = $lineInfo->getTable();
+
         //truncate action doesnt write inserts
-        if ($config->getActionConfig($lineInfo->getTable())->getAction() === AnonymizationActions::TRUNCATE) {
+        if ($config->getActionConfig($table)->getAction() === AnonymizationActions::TRUNCATE) {
             //TODO make fwrite not write '' when no need to write
             return '';
         }
         $lineColumns = $lineInfo->getColumns();
-        $configColumns = $config->getActionConfig($lineInfo->getTable())->getColumns();
+        $configColumns = $config->getActionConfig($table)->getColumns();
 
         //Check if config contains all
         if (count($lineColumns) !== count($configColumns)) {
-            throw new RuntimeException('Number of columns in table ' . $lineInfo->getTable() . ' doesnt match config.');
+            throw new RuntimeException('Number of columns in table ' . $table . ' doesnt match config.');
         }
 
         foreach ($lineColumns as $lineColumn) {
             if (!array_key_exists($lineColumn, $configColumns)) {
-                throw new RuntimeException('Column not found in config ' . $lineColumn . '');
+                throw new RuntimeException('Column not found in config ' . $table.' '.$lineColumn);
             }
         }
 
@@ -113,39 +123,41 @@ class Anonymizer
         }
 
         //we have at least one column to anonymize
-        $dumpQuery = 'INSERT'.' INTO '.$lineInfo->getTable().' (`';
-        $dumpQuery .= implode('`, `', $lineColumns );
-        $dumpQuery .= '`) VALUES ';
+
+        $anonymizedValues = [];
         foreach ($lineParser->getRowFromInsertLine($line) as $row) {
+            $anonymizedValue = [];
             /** @var Value[] $row */
-            $dumpQuery .= '(';
             foreach ($row as $columnIndex => $cell) {
                 $columnName = $lineColumns[$columnIndex];
-                $dumpQuery .= $this->anonymizeValue($configColumns[$columnName], $cell, array_combine($lineColumns, $row))->getQuotedValue();
-                $dumpQuery .= ', ';
+                $anonymizedValue[] = $this->anonymizeValue($configColumns[$columnName], $cell, array_combine($lineColumns, $row));
             }
-            $dumpQuery = substr($dumpQuery, 0, -2);
-            $dumpQuery .= '),';
+            $anonymizedValues[] = $anonymizedValue;
         }
-        return substr($dumpQuery, 0, -1).";\n";
+
+        return $lineParser->rebuildInsertLine($table, $lineColumns, $anonymizedValues);
     }
 
+    /**
+     * @param AnonymizationColumnConfig $columnConfig
+     * @param Value $value
+     * @param Value[] $row Associative array columnName => Value Object
+     * @return Value
+     */
     private function anonymizeValue(AnonymizationColumnConfig $columnConfig, Value $value, $row)
     {
 
         if ($dataType = $this->dataTypeService->getDataType($columnConfig, $row)) {
-            $databaseValue = $this->dataTypeService->anonymizeValue($value, $dataType);
 
-            if ($databaseValue->isExpression()) {
-                $value->setQuotedValue($databaseValue->getValue());
+            // NULL values will not go trough anonymization
+            if ($value->isExpression() && $value->getRawValue() === 'NULL') {
                 return $value;
             }
 
-            $value->setQuotedValue(
-                '\'' . addcslashes($databaseValue->getValue(), "'\\\n") . '\''
-            );
-            return $value;
+            $value = $dataType->anonymize($value);
+
         }
+
         return $value;
     }
 

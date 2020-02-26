@@ -12,12 +12,14 @@ final class CommandLineParameters
     private const PARAM_LINE_PARSER = 'line-parser';
     private const PARAM_CONFIG_TYPE = 'config-type';
     private const PARAM_ESTIMATED_DUMP_SIZE = 'dump-size';
+    private const PARAM_SHOW_PROGRESS = 'show-progress';
 
 
     private $configFile;
     private $lineParser = LineParserFactory::LINE_PARSER_MYSQL_DUMP;
     private $configType = ConfigFactory::DEFAULT_CONFIG_TYPE;
     private $estimatedDumpSize = 1370000000;
+    private $showProgress = 0;
 
 
     public function setCommandLineArguments($args) {
@@ -32,6 +34,8 @@ final class CommandLineParameters
                 $this->configType = $value;
             } elseif (strpos($arg, '--' . self::PARAM_ESTIMATED_DUMP_SIZE) === 0) {
                 $this->estimatedDumpSize = (int)$value;
+            } elseif (strpos($arg, '--' . self::PARAM_SHOW_PROGRESS) === 0) {
+                $this->showProgress = (bool)$value;
             }
         }
     }
@@ -51,15 +55,21 @@ final class CommandLineParameters
 
     public function help() {
         return '
-Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).
-            ' --' .self::PARAM_CONFIG_FILES. '=config1.yml,config2.yml'.
-            ' [--' .self::PARAM_CONFIG_TYPE. '='.ConfigFactory::DEFAULT_CONFIG_TYPE.']'.
-            ' [--' .self::PARAM_LINE_PARSER. '='.LineParserFactory::LINE_PARSER_MYSQL_DUMP.']'.
-            ' [--' .self::PARAM_ESTIMATED_DUMP_SIZE. '=1000000]'.
-            '
-            
-';
+Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .self::PARAM_CONFIG_FILES. '=FILENAME [OPTIONS]'.PHP_EOL.PHP_EOL
+            .'Options:'.PHP_EOL
+            .' --' .$this->pad(self::PARAM_CONFIG_TYPE). ' Default Value: '.ConfigFactory::DEFAULT_CONFIG_TYPE.PHP_EOL
+            .'   ' .$this->pad('').' Specifies the type of the config used.'.PHP_EOL.PHP_EOL
+            .' --' .$this->pad(self::PARAM_LINE_PARSER). ' Default Value: '.LineParserFactory::LINE_PARSER_MYSQL_DUMP.PHP_EOL
+            .'   ' .$this->pad('').' Specifies the type of the line parser used.'.PHP_EOL.PHP_EOL
+            .' --' .$this->pad(self::PARAM_ESTIMATED_DUMP_SIZE).' When available, specify the length of the data being anonymized.'.PHP_EOL
+            .'   ' .$this->pad('').' This will be used to show progress data at runtime. '.PHP_EOL.PHP_EOL
+            .' --' .$this->pad(self::PARAM_SHOW_PROGRESS).' Default value: 1'.PHP_EOL
+            .'   ' .$this->pad('').' Set to 0 to not show progress data. '.PHP_EOL.PHP_EOL
+            .'';
+    }
 
+    private function pad($string) {
+        return str_pad($string, 20, ' ', STR_PAD_RIGHT);
     }
 
     /**
@@ -93,6 +103,16 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).
     {
         return $this->estimatedDumpSize;
     }
+
+    /**
+     * @return bool
+     */
+    public function isShowProgress(): bool
+    {
+        return $this->showProgress;
+    }
+
+
 
 
 }

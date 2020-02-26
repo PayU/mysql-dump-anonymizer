@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Parser;
 
-use PayU\MysqlDumpAnonymizer\Entity\DatabaseValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\InsertLine;
 use PayU\MysqlDumpAnonymizer\InsertLineParser;
@@ -99,12 +98,12 @@ class InsertLineStringParser implements InsertLineParser
                     if ($valueEscaping === '') {
                         if (in_array($char, [' ', ','], true)) {
                             $parseLevel = 1;
-                            $row[] = new Value($rawValue, $this->unEscape($rawValue));
+                            $row[] = new Value($rawValue, $this->unEscape($rawValue), $this->isExpression($rawValue));
                             break;
                         }
                         if ($char === ')') {
                             $parseLevel = 0;
-                            $row[] = new Value($rawValue, $this->unEscape($rawValue));
+                            $row[] = new Value($rawValue, $this->unEscape($rawValue), $this->isExpression($rawValue));
                             yield $row;
                             break;
                         }
@@ -113,7 +112,7 @@ class InsertLineStringParser implements InsertLineParser
                         if ($char === $valueEscaping) {
                             $parseLevel = 1;
                             $rawValue .= $char;
-                            $row[] = new Value($rawValue, $this->unEscape($rawValue));
+                            $row[] = new Value($rawValue, $this->unEscape($rawValue), $this->isExpression($rawValue));
                             break;
                         }
                         if ($char === '\\') {
@@ -128,24 +127,25 @@ class InsertLineStringParser implements InsertLineParser
         }
     }
 
-    private function unEscape($rawValue): DatabaseValue
+    private function isExpression($rawValue) : bool {
+        return (false === (strpos($rawValue, '\'') === 0 && substr($rawValue, -1) === '\''));
+    }
+
+    private function unEscape($rawValue): string
     {
+        //if the inserted value starts and ends with singlequote, it is not an expression
+        if ($this->isExpression($rawValue)) {
+            return $rawValue;
+        }
 
         $replaced = [
             "\\r" => "\r",
             "\\n" => "\n",
             "\\t" => "\t"
         ];
+        $unEscapedValue = str_replace(array_keys($replaced), $replaced, $rawValue);
+        return stripslashes(substr($unEscapedValue, 1, -1));
 
-        $rawValue = str_replace(array_keys($replaced), $replaced, $rawValue);
-
-        //if the inserted value starts and ends with singlequote, it is not an expression
-        if ((strpos($rawValue, '\'') === 0) && (substr($rawValue, -1) === '\'')) {
-            //This is not binary safe because dump content should have --hex-blob
-            return new DatabaseValue(stripslashes(substr($rawValue, 1, -1)), false);
-        }
-
-        return new DatabaseValue($rawValue, true);
     }
 
 }

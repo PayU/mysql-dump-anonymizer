@@ -2,6 +2,7 @@
 
 namespace PayU\MysqlDumpAnonymizer\Entity;
 
+use PayU\MysqlDumpAnonymizer\DataType\BankData;
 use PayU\MysqlDumpAnonymizer\DataType\BinaryData;
 use PayU\MysqlDumpAnonymizer\DataType\CardData;
 use PayU\MysqlDumpAnonymizer\DataType\Credentials;
@@ -25,7 +26,7 @@ final class DataTypes {
 
     /** @var array  */
     private static $dataTypes = [
-        'BankData' => SensitiveFreeText::class,
+        'BankData' => BankData::class,
         'BinaryData' => BinaryData::class,
         'CardData' => CardData::class,
         'Credentials' => Credentials::class,

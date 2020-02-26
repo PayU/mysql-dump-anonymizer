@@ -34,7 +34,7 @@ EOD;
         $actual = $this->sut->parse($query);
         foreach ($actual->getValuesList() as $qwe) {
             foreach ($qwe as $value) {
-                echo $value->getQuotedValue()." == ".$value->getValue()."\n";
+                echo $value->getRawValue()." == ".$value->getUnEscapedValue()."\n";
             }
         echo "==============\n";
         }

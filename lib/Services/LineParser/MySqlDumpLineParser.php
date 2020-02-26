@@ -4,11 +4,9 @@ namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
 use Generator;
+use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\Exceptions\InsertLineParserException;
 use PayU\MysqlDumpAnonymizer\Parser\InsertLineStringParser;
-use PhpMyAdmin\SqlParser\Parser;
-use PhpMyAdmin\SqlParser\Statements\InsertStatement;
-use PhpMyAdmin\SqlParser\Components\IntoKeyword;
-use PhpMyAdmin\SqlParser\Components\Array2d;
 
 class MySqlDumpLineParser implements InterfaceLineParser
 {
@@ -20,24 +18,6 @@ class MySqlDumpLineParser implements InterfaceLineParser
     private const MARK_1_LEN = 4;
     private const MARK_2 = '`) VALUES (';
     private const COL_DELIM = '`, `';
-
-    public function __construct()
-    {
-        Parser::$STATEMENT_PARSERS = [
-            'INSERT' => InsertStatement::class,
-        ];
-
-        Parser::$KEYWORD_PARSERS = [
-            'INTO' => [
-                'class' => IntoKeyword::class,
-                'field' => 'into',
-            ],
-            'VALUES' => [
-                'class' => Array2d::class,
-                'field' => 'values',
-            ],
-        ];
-    }
 
     /**
      * @param string $line
@@ -65,44 +45,37 @@ class MySqlDumpLineParser implements InterfaceLineParser
 
 
     /**
-     * @param $line
-     * @return Generator
-     * @throws \PayU\MysqlDumpAnonymizer\Exceptions\InsertLineParserException
+     * @param string $line
+     * @return Value[][]
+     * @throws InsertLineParserException
+     * @noinspection PhpDocSignatureInspection
      */
-    public function getRowFromInsertLine($line) : Generator
+    public function getRowFromInsertLine(string $line) : Generator
     {
-        $parser = new InsertLineStringParser();
-        $insertLine = $parser->parse($line);
-        foreach ($insertLine->getValuesList() as $a=>$vv) {
-            yield $vv;
-
-        }
-
+        $insertLine = (new InsertLineStringParser())->parse($line);
+        yield from $insertLine->getValuesList();
     }
 
     /**
-     * @param string $line
-     * @return Generator
-     * TODO remove
+     * @param string $table
+     * @param array $columns
+     * @param Value[][] $rows
+     * @return string
      */
-    /*public function getRowFromInsertLineOld($line) : Generator
+    public function rebuildInsertLine(string $table, array $columns, $rows) : string
     {
-        foreach ((new Parser($line))->statements as $statement) {
-            foreach ($statement->values as $key => $values) {
+        $dumpQuery = 'INSERT'.' INTO `'.$table.'` (`';
+        $dumpQuery .= implode('`, `', $columns );
+        $dumpQuery .= '`) VALUES (';
 
-                $return = [];
-                foreach ($values->values as $columnIndex=>$value) {
-                    $return[$columnIndex] = new Value($values->raw[$columnIndex], $value);
-                }
-
-                if (empty($return)) {
-                    throw new RuntimeException('Empty values !');
-                }
-
-                yield $return;
+        foreach ($rows as $row) {
+            foreach ($row as $value) {
+                $dumpQuery .= $value->getRawValue().', ';
             }
+            $dumpQuery = substr($dumpQuery,0 , -2).'), (';
         }
-    }*/
+        return substr($dumpQuery,0 , -3).';';
+    }
 
 
 }

@@ -3,12 +3,14 @@
 namespace PayU\MysqlDumpAnonymizer\DataType;
 
 
-use PayU\MysqlDumpAnonymizer\Entity\DatabaseValue;
+
+
+use PayU\MysqlDumpAnonymizer\Entity\Value;
 
 class Date implements InterfaceDataType
 {
 
-    public function anonymize(DatabaseValue $value): DatabaseValue
+    public function anonymize(Value $value): Value
     {
         return $value;
     }

@@ -24,7 +24,7 @@ class InsertLineMysqlLikeDumper implements InsertLineDumper
             static function ($values) {
                 $valueList = array_map(
                     static function (Value $value) {
-                        return $value->getQuotedValue();
+                        return $value->getRawValue();
                     },
                     $values
                 );
