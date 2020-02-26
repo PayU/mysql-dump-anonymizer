@@ -1,7 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "PayU\\MysqlDumpAnonymizer\\": "lib/"
+            "PayU\\MysqlDumpAnonymizer\\": "lib/",
+            "PayU\\MysqlDumpAnonymizer\\Tests\\": "tests/"
         }
     },
     "config": {

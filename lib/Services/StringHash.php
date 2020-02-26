@@ -1,0 +1,155 @@
+<?php
+
+namespace PayU\MysqlDumpAnonymizer\Services;
+
+class StringHash
+{
+
+    private const PUNCTUATION = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';//32
+
+    private const NUMBERS = 'numbers';
+    private const LETTERS = 'letters';
+    private const SIGNS = 'signs';
+
+
+    /** @var array */
+    private $stacks = [
+        self::NUMBERS => null,
+        self::LETTERS => null,
+        self::SIGNS => null,
+    ];
+
+    /**
+     * @var string
+     */
+    private $hash;
+
+    private $salt;
+
+    public function __construct($salt)
+    {
+        $this->salt = $salt;
+    }
+
+
+    public function hashMe($word, $anonymizePunctuation = false) : string
+    {
+
+        $this->hash = hash('sha256', $word . $this->salt);
+
+        $ret = '';
+
+        $len = strlen($word);
+        for ($i = 0; $i < $len; $i++) {
+            if (ctype_digit($word[$i])) {
+                $ret .= $this->getNextFromStack(self::NUMBERS);
+            } elseif (ctype_upper($word[$i])) {
+                $ret .= strtoupper($this->getNextFromStack(self::LETTERS));
+            } elseif (ctype_lower($word[$i])) {
+                $ret .= strtolower($this->getNextFromStack(self::LETTERS));
+            } elseif (strpos(self::PUNCTUATION, $word[$i]) !== false) {
+                if ($anonymizePunctuation) {
+                    $ret .= $this->getNextFromStack(self::SIGNS);
+                } else {
+                    $ret .= $word[$i];
+                }
+            } elseif ($word[$i] === ' ') {
+                $ret .= ' ';
+            } else {
+                //non printable characters
+                $ret .= $this->getNextFromStack(self::SIGNS);
+            }
+        }
+
+        return $ret;
+
+
+    }
+
+
+    private function generateLetterStack(): void
+    {
+        $this->stacks[self::LETTERS] = str_replace(range(0, 9), '', base_convert($this->hash, 16, 36));
+        if (strlen($this->stacks[self::LETTERS]) < 10) {
+            //in the rare event when the sha hash has less than 10 chars
+            $this->stacks[self::LETTERS] .= $this->numbers2letters(base_convert($this->hash, 16, 10));
+        }
+    }
+
+    private function generateNumbersStack(): void
+    {
+        $this->stacks[self::NUMBERS] = base_convert($this->hash, 16, 10); //64 length
+    }
+
+
+    private function generateSignsStack(): void
+    {
+
+
+        $choose = base_convert($this->hash, 16, 32);
+        $len = strlen($choose);
+        $ret = '';
+        for ($i = 0; $i < $len; $i++) {
+            $index = base_convert($choose[$i], 32, 10);
+            $ret .= self::PUNCTUATION[$index];
+        }
+
+        $this->stacks[self::SIGNS] = $ret;
+    }
+
+
+
+    /**
+     * @param string $numbers 64 number characters
+     * @return string
+     */
+    private function numbers2letters(string $numbers): string
+    {
+        $len = strlen($numbers); //len a
+        $sureLetters = '';
+        for ($i = 0; $i < $len; $i += 2) {
+            $here = (int)"{$numbers[$i]}{$numbers[$i+1]}";
+            $chr = 65;
+            for ($j = 0; $j <= 99; $j += 4) {
+                if ($here >= $j && $here < $j + 3) {
+                    $sureLetters .= strtolower(chr($chr));
+                    break;
+                }
+                $chr++;
+            }
+        }
+        return $sureLetters;
+    }
+
+    private function getNextFromStack(string $string): string
+    {
+        static $cnt = [
+            self::NUMBERS => -1,
+            self::LETTERS => -1,
+            self::SIGNS => -1,
+        ];
+
+        if ($cnt[$string] === -1) {
+            //first run
+            if ($string === self::NUMBERS) {
+                $this->generateNumbersStack();
+            }
+            if ($string === self::LETTERS) {
+                $this->generateLetterStack();
+            }
+            if ($string === self::SIGNS) {
+                $this->generateSignsStack();
+            }
+            $cnt[$string] = 0;
+        }
+
+        if ($cnt[$string] >= strlen($this->stacks[$string])) {
+            $cnt[$string] = 0;
+        }
+
+        $ret = $this->stacks[$string][$cnt[$string]];
+        $cnt[$string]++;
+        return $ret;
+    }
+
+}

@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
+    "hash": "8e4fe4a291018e32ba3d3b53fecdcb21",
     "content-hash": "f045bf7cd0c068eced7480773c175f9c",
     "packages": [
         {
@@ -70,7 +71,7 @@
                 "parser",
                 "sql"
             ],
-            "time": "2020-01-07T23:24:46+00:00"
+            "time": "2020-01-07 23:24:46"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -128,7 +129,7 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2020-01-13T11:15:53+00:00"
+            "time": "2020-01-13 11:15:53"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -187,7 +188,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2020-01-13T11:15:53+00:00"
+            "time": "2020-01-13 11:15:53"
         },
         {
             "name": "symfony/yaml",
@@ -246,7 +247,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2020-01-21T11:12:28+00:00"
+            "time": "2020-01-21 11:12:28"
         }
     ],
     "packages-dev": [
@@ -304,7 +305,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2019-10-21T16:45:58+00:00"
+            "time": "2019-10-21 16:45:58"
         },
         {
             "name": "myclabs/deep-copy",
@@ -352,7 +353,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2020-01-17T21:11:47+00:00"
+            "time": "2020-01-17 21:11:47"
         },
         {
             "name": "phar-io/manifest",
@@ -407,7 +408,7 @@
                 }
             ],
             "description": "Component for reading phar.io manifest information from a PHP Archive (PHAR)",
-            "time": "2018-07-08T19:23:20+00:00"
+            "time": "2018-07-08 19:23:20"
         },
         {
             "name": "phar-io/version",
@@ -454,7 +455,7 @@
                 }
             ],
             "description": "Library for handling version information and constraints",
-            "time": "2018-07-08T19:19:57+00:00"
+            "time": "2018-07-08 19:19:57"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -506,20 +507,20 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2018-08-07T13:53:10+00:00"
+            "time": "2018-08-07 13:53:10"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "5.0.0",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "a48807183a4b819072f26e347bbd0b5199a9d15f"
+                "reference": "cd72d394ca794d3466a3b2fc09d5a6c1dc86b47e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/a48807183a4b819072f26e347bbd0b5199a9d15f",
-                "reference": "a48807183a4b819072f26e347bbd0b5199a9d15f",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/cd72d394ca794d3466a3b2fc09d5a6c1dc86b47e",
+                "reference": "cd72d394ca794d3466a3b2fc09d5a6c1dc86b47e",
                 "shasum": ""
             },
             "require": {
@@ -559,7 +560,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2020-02-09T09:16:15+00:00"
+            "time": "2020-02-22 12:28:44"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -606,7 +607,7 @@
                 }
             ],
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
-            "time": "2019-08-22T18:11:29+00:00"
+            "time": "2019-08-22 18:11:29"
         },
         {
             "name": "phpspec/prophecy",
@@ -669,7 +670,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2020-01-20T15:57:02+00:00"
+            "time": "2020-01-20 15:57:02"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -733,7 +734,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2020-02-19T13:41:19+00:00"
+            "time": "2020-02-19 13:41:19"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -783,7 +784,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2020-02-07T06:05:22+00:00"
+            "time": "2020-02-07 06:05:22"
         },
         {
             "name": "phpunit/php-invoker",
@@ -836,7 +837,7 @@
             "keywords": [
                 "process"
             ],
-            "time": "2020-02-07T06:06:11+00:00"
+            "time": "2020-02-07 06:06:11"
         },
         {
             "name": "phpunit/php-text-template",
@@ -882,7 +883,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2020-02-01T07:43:44+00:00"
+            "time": "2020-02-01 07:43:44"
         },
         {
             "name": "phpunit/php-timer",
@@ -931,7 +932,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2020-02-07T06:08:11+00:00"
+            "time": "2020-02-07 06:08:11"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -980,7 +981,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2020-02-07T06:19:00+00:00"
+            "time": "2020-02-07 06:19:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -1066,7 +1067,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2020-02-07T06:56:17+00:00"
+            "time": "2020-02-07 06:56:17"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1111,7 +1112,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2020-02-07T06:20:13+00:00"
+            "time": "2020-02-07 06:20:13"
         },
         {
             "name": "sebastian/comparator",
@@ -1175,7 +1176,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2020-02-07T06:08:51+00:00"
+            "time": "2020-02-07 06:08:51"
         },
         {
             "name": "sebastian/diff",
@@ -1231,7 +1232,7 @@
                 "unidiff",
                 "unified diff"
             ],
-            "time": "2020-02-07T06:09:38+00:00"
+            "time": "2020-02-07 06:09:38"
         },
         {
             "name": "sebastian/environment",
@@ -1284,7 +1285,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2020-02-19T13:40:20+00:00"
+            "time": "2020-02-19 13:40:20"
         },
         {
             "name": "sebastian/exporter",
@@ -1351,7 +1352,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2020-02-07T06:10:52+00:00"
+            "time": "2020-02-07 06:10:52"
         },
         {
             "name": "sebastian/global-state",
@@ -1405,7 +1406,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2020-02-07T06:11:37+00:00"
+            "time": "2020-02-07 06:11:37"
         },
         {
             "name": "sebastian/object-enumerator",
@@ -1452,7 +1453,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2020-02-07T06:12:23+00:00"
+            "time": "2020-02-07 06:12:23"
         },
         {
             "name": "sebastian/object-reflector",
@@ -1497,7 +1498,7 @@
             ],
             "description": "Allows reflection of object attributes, including inherited and non-public ones",
             "homepage": "https://github.com/sebastianbergmann/object-reflector/",
-            "time": "2020-02-07T06:19:40+00:00"
+            "time": "2020-02-07 06:19:40"
         },
         {
             "name": "sebastian/recursion-context",
@@ -1550,7 +1551,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2020-02-07T06:18:20+00:00"
+            "time": "2020-02-07 06:18:20"
         },
         {
             "name": "sebastian/resource-operations",
@@ -1595,7 +1596,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2020-02-07T06:13:02+00:00"
+            "time": "2020-02-07 06:13:02"
         },
         {
             "name": "sebastian/type",
@@ -1641,7 +1642,7 @@
             ],
             "description": "Collection of value objects that represent the types of the PHP type system",
             "homepage": "https://github.com/sebastianbergmann/type",
-            "time": "2020-02-07T06:13:43+00:00"
+            "time": "2020-02-07 06:13:43"
         },
         {
             "name": "sebastian/version",
@@ -1684,7 +1685,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2020-01-21T06:36:37+00:00"
+            "time": "2020-01-21 06:36:37"
         },
         {
             "name": "theseer/tokenizer",
@@ -1724,7 +1725,7 @@
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
-            "time": "2019-06-13T22:48:21+00:00"
+            "time": "2019-06-13 22:48:21"
         },
         {
             "name": "webmozart/assert",
@@ -1772,7 +1773,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2020-02-14T12:15:55+00:00"
+            "time": "2020-02-14 12:15:55"
         }
     ],
     "aliases": [],

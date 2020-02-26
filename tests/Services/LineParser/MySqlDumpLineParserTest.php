@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace PayU\MysqlDumpAnonymizer\Tests\Services\LineParser;
+
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Services\LineParser\MySqlDumpLineParser;
 use PHPUnit\Framework\MockObject\MockObject;
