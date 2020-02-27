@@ -45,6 +45,7 @@ class Anonymizer
     }
 
 
+
     public function run($inputStream, $outputStream, $errorStream): void
     {
         try {
@@ -76,14 +77,25 @@ class Anonymizer
             RuntimeProgress::output(PHP_EOL . PHP_EOL);
         }
 
+        $startRead = microtime(true);
+        RuntimeProgress::$start = $startRead;
+
         while ($line = fgets($inputStream)) {
+            RuntimeProgress::$readTime += (microtime(true) - $startRead);
             $readSoFar += strlen($line);
+
+            $string = $this->anonymizeLine($line, $config, $lineParser);
+
+            $startWrite = microtime(true);
+            fwrite($outputStream, $string);
+            RuntimeProgress::$writeTime += (microtime(true) - $startWrite);
 
             if ($this->commandLineParameters->isShowProgress()) {
                 RuntimeProgress::show($readSoFar, $total);
             }
 
-            fwrite($outputStream, $this->anonymizeLine($line, $config, $lineParser));
+
+            $startRead = microtime(true);
         }
     }
 
@@ -93,6 +105,11 @@ class Anonymizer
     {
         $lineInfo = $lineParser->lineInfo($line);
         if ($lineInfo->isInsert() === false) {
+            if (!array_key_exists('NOT-INSERT', RuntimeProgress::$anonymizationTimeDataTypes)) {
+                RuntimeProgress::$anonymizationTimeDataTypes['NOT-INSERT'] = 0;
+                RuntimeProgress::$anonymizationTimeDataTypesCount['NOT-INSERT'] = 0;
+            }
+            RuntimeProgress::$anonymizationTimeDataTypesCount['NOT-INSERT']++;
             return $line;
         }
 
@@ -101,6 +118,12 @@ class Anonymizer
         //truncate action doesnt write inserts
         if ($config->getActionConfig($table)->getAction() === AnonymizationActions::TRUNCATE) {
             //TODO make fwrite not write '' when no need to write
+            if (!array_key_exists('TRUNCATE', RuntimeProgress::$anonymizationTimeDataTypes)) {
+                RuntimeProgress::$anonymizationTimeDataTypes['TRUNCATE'] = 0;
+                RuntimeProgress::$anonymizationTimeDataTypesCount['TRUNCATE'] = 0;
+            }
+            RuntimeProgress::$anonymizationTimeDataTypesCount['TRUNCATE']++;
+
             return '';
         }
         $lineColumns = $lineInfo->getColumns();
@@ -119,6 +142,12 @@ class Anonymizer
 
         //no insert or there is not anonymization required for any of the columns
         if ($lineInfo->isInsert() === false || empty(array_filter($configColumns))) {
+            if (!array_key_exists('NO-ANON', RuntimeProgress::$anonymizationTimeDataTypes)) {
+                RuntimeProgress::$anonymizationTimeDataTypes['NO-ANON-LINE'] = 0;
+                RuntimeProgress::$anonymizationTimeDataTypesCount['NO-ANON-LINE'] = 0;
+            }
+            RuntimeProgress::$anonymizationTimeDataTypesCount['NO-ANON-LINE']++;
+
             return $line;
         }
 
@@ -126,6 +155,7 @@ class Anonymizer
 
         $anonymizedValues = [];
         foreach ($lineParser->getRowFromInsertLine($line) as $row) {
+
             $anonymizedValue = [];
             /** @var Value[] $row */
             foreach ($row as $columnIndex => $cell) {
@@ -149,14 +179,44 @@ class Anonymizer
 
         if ($dataType = $this->dataTypeService->getDataType($columnConfig, $row)) {
 
+            /** @noinspection GetClassUsageInspection - no null here ffs*/
+            $gc = get_class($dataType);
+            $a = explode("\\", $gc);
+            $stringDataType = array_pop($a);
+
+            //TODO refactor rimt
+            if (!array_key_exists($stringDataType, RuntimeProgress::$anonymizationTimeDataTypes)) {
+                RuntimeProgress::$anonymizationTimeDataTypes[$stringDataType] = 0;
+                RuntimeProgress::$anonymizationTimeDataTypesCount[$stringDataType] = 0;
+            }
+
             // NULL values will not go trough anonymization
             if ($value->isExpression() && $value->getRawValue() === 'NULL') {
+                if (!array_key_exists('NULL', RuntimeProgress::$anonymizationTimeDataTypes)) {
+                    RuntimeProgress::$anonymizationTimeDataTypes['NULL'] = 0;
+                    RuntimeProgress::$anonymizationTimeDataTypesCount['NULL'] = 0;
+                }
+                RuntimeProgress::$anonymizationTimeDataTypesCount['NULL']++;
                 return $value;
             }
 
+            $startAnon = microtime(true);
             $value = $dataType->anonymize($value);
+            $anonTime = microtime(true) - $startAnon;
+            RuntimeProgress::$anonymizationTime += $anonTime;
+
+
+            RuntimeProgress::$anonymizationTimeDataTypes[$stringDataType] += $anonTime;
+            RuntimeProgress::$anonymizationTimeDataTypesCount[$stringDataType]++;
 
         }
+
+        if (!array_key_exists('NO-ANON', RuntimeProgress::$anonymizationTimeDataTypes)) {
+            RuntimeProgress::$anonymizationTimeDataTypes['NO-ANON'] = 0;
+            RuntimeProgress::$anonymizationTimeDataTypesCount['NO-ANON'] = 0;
+        }
+        RuntimeProgress::$anonymizationTimeDataTypesCount['NO-ANON']++;
+
 
         return $value;
     }

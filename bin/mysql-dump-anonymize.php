@@ -11,9 +11,7 @@ require_once dirname(__DIR__).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-//new CommandLineParameters();
-
-
+//TODO put command line param and here config
 
 $application = new Anonymizer(
     new CommandLineParameters(),

@@ -10,12 +10,15 @@ example_1:
 example_2:
   Action: anonymize
   Columns:
+
     - ColumnName: value
       DataType: Email
       Where: key=EMAIL
     - ColumnName: value
       DataType: Phone
       Where: key=PHONE
+
+
     - ColumnName: value
       DataType: FreeText
       Where: key=COMMENT

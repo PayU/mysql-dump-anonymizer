@@ -2,7 +2,7 @@
 
 namespace PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig;
 
-
+//TODO make an interface for this
 final class AnonymizationConfig {
 
     /** @var AnonymizationActionConfig[]*/

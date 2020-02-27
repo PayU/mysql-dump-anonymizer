@@ -1,5 +1,5 @@
 <?php
-
+//TODO factory this
 namespace PayU\MysqlDumpAnonymizer\Entity;
 
 use PayU\MysqlDumpAnonymizer\DataType\BankData;
@@ -51,6 +51,12 @@ final class DataTypes {
      * @return InterfaceDataType
      */
     public function getDataTypeClass(string $string) : InterfaceDataType {
+        //TODO eav maybe here like
+        /*
+        if ($string = 'Eav') {
+            return (new self::$dataTypes[$string]);
+        }
+        */
        return (new self::$dataTypes[$string]);
     }
 

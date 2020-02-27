@@ -2,7 +2,7 @@
 
 namespace PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig;
 
-
+//TODO rename table config
 final class AnonymizationActionConfig {
 
     private $action;
@@ -33,6 +33,7 @@ final class AnonymizationActionConfig {
 
     /**
      * @return AnonymizationColumnConfig[]|null
+     * TODO use columname directly
      */
     public function getColumns() : ?array {
         return $this->columns;
