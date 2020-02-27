@@ -31,28 +31,28 @@ class Anonymizer
     /** @var DataTypeService */
     private $dataTypeService;
 
+    /** @var Observer */
+    private $observer;
+
     public function __construct(
         CommandLineParameters $commandLineParameters,
         ConfigFactory $configFactory,
         LineParserFactory $lineParserFactory,
-        DataTypeService $dataTypeService
+        DataTypeService $dataTypeService,
+        Observer $observer
     )
     {
         $this->commandLineParameters = $commandLineParameters;
         $this->configFactory = $configFactory;
         $this->lineParserFactory = $lineParserFactory;
         $this->dataTypeService = $dataTypeService;
+        $this->observer = $observer;
     }
-
 
 
     public function run($inputStream, $outputStream, $errorStream): void
     {
         try {
-
-            $this->commandLineParameters->setCommandLineArguments($_SERVER['argv']);
-            $this->commandLineParameters->validate();
-
             $configService = $this->configFactory->make(
                 $this->commandLineParameters->getConfigType(),
                 $this->commandLineParameters->getConfigFile()
@@ -71,45 +71,27 @@ class Anonymizer
         $lineParser = $this->lineParserFactory->chooseLineParser($this->commandLineParameters->getLineParser());
 
         $total = $this->commandLineParameters->getEstimatedDumpSize();
-        $readSoFar = 0;
-        if ($this->commandLineParameters->isShowProgress()) {
-            RuntimeProgress::$output = $errorStream;
-            RuntimeProgress::output(PHP_EOL . PHP_EOL);
-        }
+        $this->observer->notify(Observer::EVENT_BEGIN, $total);
 
-        $startRead = microtime(true);
-        RuntimeProgress::$start = $startRead;
-
-        while ($line = fgets($inputStream)) {
-            RuntimeProgress::$readTime += (microtime(true) - $startRead);
-            $readSoFar += strlen($line);
-
-            $string = $this->anonymizeLine($line, $config, $lineParser);
-
-            $startWrite = microtime(true);
-            fwrite($outputStream, $string);
-            RuntimeProgress::$writeTime += (microtime(true) - $startWrite);
-
-            if ($this->commandLineParameters->isShowProgress()) {
-                RuntimeProgress::show($readSoFar, $total);
-            }
-
-
-            $startRead = microtime(true);
+        while ($line = $this->readLine($inputStream)) {
+            fwrite($outputStream, $this->anonymizeLine($line, $config, $lineParser));
         }
     }
 
+    private function readLine($inputStream)
+    {
+        $this->observer->notify(Observer::EVENT_START_READ);
+        $line = fgets($inputStream);
+        $this->observer->notify(Observer::EVENT_START_READ, strlen($line));
+        return $line;
+    }
 
 
- private function anonymizeLine($line, AnonymizationConfig $config, InterfaceLineParser $lineParser)
+    private function anonymizeLine($line, AnonymizationConfig $config, InterfaceLineParser $lineParser)
     {
         $lineInfo = $lineParser->lineInfo($line);
         if ($lineInfo->isInsert() === false) {
-            if (!array_key_exists('NOT-INSERT', RuntimeProgress::$anonymizationTimeDataTypes)) {
-                RuntimeProgress::$anonymizationTimeDataTypes['NOT-INSERT'] = 0;
-                RuntimeProgress::$anonymizationTimeDataTypesCount['NOT-INSERT'] = 0;
-            }
-            RuntimeProgress::$anonymizationTimeDataTypesCount['NOT-INSERT']++;
+            $this->observer->notify(Observer::EVENT_NOT_AN_INSERT);
             return $line;
         }
 
@@ -117,15 +99,10 @@ class Anonymizer
 
         //truncate action doesnt write inserts
         if ($config->getActionConfig($table)->getAction() === AnonymizationActions::TRUNCATE) {
-            //TODO make fwrite not write '' when no need to write
-            if (!array_key_exists('TRUNCATE', RuntimeProgress::$anonymizationTimeDataTypes)) {
-                RuntimeProgress::$anonymizationTimeDataTypes['TRUNCATE'] = 0;
-                RuntimeProgress::$anonymizationTimeDataTypesCount['TRUNCATE'] = 0;
-            }
-            RuntimeProgress::$anonymizationTimeDataTypesCount['TRUNCATE']++;
-
+            $this->observer->notify(Observer::EVENT_TRUNCATE);
             return '';
         }
+
         $lineColumns = $lineInfo->getColumns();
         $configColumns = $config->getActionConfig($table)->getColumns();
 
@@ -136,18 +113,13 @@ class Anonymizer
 
         foreach ($lineColumns as $lineColumn) {
             if (!array_key_exists($lineColumn, $configColumns)) {
-                throw new RuntimeException('Column not found in config ' . $table.' '.$lineColumn);
+                throw new RuntimeException('Column not found in config ' . $table . ' ' . $lineColumn);
             }
         }
 
         //no insert or there is not anonymization required for any of the columns
         if ($lineInfo->isInsert() === false || empty(array_filter($configColumns))) {
-            if (!array_key_exists('NO-ANON', RuntimeProgress::$anonymizationTimeDataTypes)) {
-                RuntimeProgress::$anonymizationTimeDataTypes['NO-ANON-LINE'] = 0;
-                RuntimeProgress::$anonymizationTimeDataTypesCount['NO-ANON-LINE'] = 0;
-            }
-            RuntimeProgress::$anonymizationTimeDataTypesCount['NO-ANON-LINE']++;
-
+            $this->observer->notify(Observer::EVENT_INSERT_LINE_NO_ANONYMIZATION);
             return $line;
         }
 
@@ -177,45 +149,26 @@ class Anonymizer
     private function anonymizeValue(AnonymizationColumnConfig $columnConfig, Value $value, $row)
     {
 
-        if ($dataType = $this->dataTypeService->getDataType($columnConfig, $row)) {
+        if ($dataTypeString = $this->dataTypeService->getDataType($columnConfig, $row)) {
 
-            /** @noinspection GetClassUsageInspection - no null here ffs*/
-            $gc = get_class($dataType);
-            $a = explode("\\", $gc);
-            $stringDataType = array_pop($a);
+            $dataType = $this->dataTypeService->getDataTypeClass($dataTypeString);
 
-            //TODO refactor rimt
-            if (!array_key_exists($stringDataType, RuntimeProgress::$anonymizationTimeDataTypes)) {
-                RuntimeProgress::$anonymizationTimeDataTypes[$stringDataType] = 0;
-                RuntimeProgress::$anonymizationTimeDataTypesCount[$stringDataType] = 0;
-            }
 
             // NULL values will not go trough anonymization
             if ($value->isExpression() && $value->getRawValue() === 'NULL') {
-                if (!array_key_exists('NULL', RuntimeProgress::$anonymizationTimeDataTypes)) {
-                    RuntimeProgress::$anonymizationTimeDataTypes['NULL'] = 0;
-                    RuntimeProgress::$anonymizationTimeDataTypesCount['NULL'] = 0;
-                }
-                RuntimeProgress::$anonymizationTimeDataTypesCount['NULL']++;
+                $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION);
+                $this->observer->notify(Observer::EVENT_NULL_VALUE, $dataTypeString);
                 return $value;
             }
 
-            $startAnon = microtime(true);
+            $this->observer->notify(Observer::EVENT_ANONYMIZATION_START, $dataTypeString);
+
             $value = $dataType->anonymize($value);
-            $anonTime = microtime(true) - $startAnon;
-            RuntimeProgress::$anonymizationTime += $anonTime;
 
-
-            RuntimeProgress::$anonymizationTimeDataTypes[$stringDataType] += $anonTime;
-            RuntimeProgress::$anonymizationTimeDataTypesCount[$stringDataType]++;
-
+            $this->observer->notify(Observer::EVENT_ANONYMIZATION_END, $dataTypeString);
         }
 
-        if (!array_key_exists('NO-ANON', RuntimeProgress::$anonymizationTimeDataTypes)) {
-            RuntimeProgress::$anonymizationTimeDataTypes['NO-ANON'] = 0;
-            RuntimeProgress::$anonymizationTimeDataTypesCount['NO-ANON'] = 0;
-        }
-        RuntimeProgress::$anonymizationTimeDataTypesCount['NO-ANON']++;
+        $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION);
 
 
         return $value;

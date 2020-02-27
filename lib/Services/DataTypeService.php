@@ -26,7 +26,7 @@ class DataTypeService
      * @param Value[] $row Associative array columnName => Value Object
      * @return InterfaceDataType|null
      */
-    public function getDataType(AnonymizationColumnConfig $anonymizationColumnConfig, $row) : ?InterfaceDataType
+    public function getDataType(AnonymizationColumnConfig $anonymizationColumnConfig, $row) : string
     {
         if ($anonymizationColumnConfig->getDataType() === false) {
             return null;
@@ -38,17 +38,17 @@ class DataTypeService
             if (array_key_exists($eavAttribute, $eavValues)) {
                 $dataType = $eavValues[$eavAttribute];
             }else{
-                //todo what happends when script finds a non-defined attribute for eav ?
+                //todo what happens when script finds a non-defined attribute for eav ?
                 $dataType = 'FreeText';
             }
             return $this->getDataTypeClass($dataType);
         }
 
-        return $this->getDataTypeClass($anonymizationColumnConfig->getDataType());
+        return $anonymizationColumnConfig->getDataType();
 
     }
 
-    private function getDataTypeClass(string $dataType): InterfaceDataType
+    public function getDataTypeClass(string $dataType): InterfaceDataType
     {
         return $this->dataTypes->getDataTypeClass($dataType);
     }
