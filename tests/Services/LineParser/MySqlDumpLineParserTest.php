@@ -45,11 +45,17 @@ EOD;
         $expectedRawNowDoc2 = <<<'EOD'
 'After this there is a backslash-new line-text-newline-backslash [\\\r\nhello\r\n\\]  double-single [\"\']'
 EOD;
-        $expectedEscapedNowDoc2 = <<<'EOD'
+        $expectedEscapedNowDoc2_line1 = <<<'EOD'
 After this there is a backslash-new line-text-newline-backslash [\
+EOD;
+        $expectedEscapedNowDoc2_line2 = <<<'EOD'
 hello
+EOD;
+        $expectedEscapedNowDoc2_line3 = <<<'EOD'
 \]  double-single ["']
 EOD;
+        $expectedEscapedNowDoc2 = $expectedEscapedNowDoc2_line1."\r\n".$expectedEscapedNowDoc2_line2."\r\n".$expectedEscapedNowDoc2_line3;
+
 
         $expected = [
             [
