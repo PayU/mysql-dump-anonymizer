@@ -15,9 +15,9 @@ class DocumentData implements InterfaceDataType
             return new AnonymizedValue($value->getRawValue());
         }
 
-        $escapedValue = (new StringHash('the@salt--'))->hashMe($value->getUnEscapedValue());
+        $anonymizedEscapedValue = (new StringHash('the@salt--'))->hashMe($value->getUnEscapedValue());
 
-        return new AnonymizedValue(EscapeString::escape($escapedValue));
+        return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
     }
 
 }

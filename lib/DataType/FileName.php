@@ -15,9 +15,14 @@ class FileName implements InterfaceDataType
             return new AnonymizedValue($value->getRawValue());
         }
 
-        $escapedValue = (new StringHash('the@salt--'))->hashMe($value->getUnEscapedValue());
+        $unescapedValue = $value->getUnEscapedValue();
 
-        return new AnonymizedValue(EscapeString::escape($escapedValue));
+        $nameWithoutExtension = substr($unescapedValue, 0, strpos($unescapedValue, '.'));
+        $extension = substr($unescapedValue, strpos($unescapedValue, '.') + 1);
+
+        $anonymizedNameWithoutExtension = (new StringHash('the@salt--'))->hashMe($nameWithoutExtension);
+
+        return new AnonymizedValue(EscapeString::escape($anonymizedNameWithoutExtension . $extension));
     }
 
 }
