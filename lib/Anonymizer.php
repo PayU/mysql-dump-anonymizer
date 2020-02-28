@@ -64,17 +64,17 @@ class Anonymizer
 
         } catch (InvalidArgumentException | ConfigValidationException $e) {
             fwrite($errorStream, 'ERROR: ' . $e->getMessage() . "\n");
-            fwrite($errorStream, $this->commandLineParameters->help());
+            fwrite($errorStream, CommandLineParameters::help());
             exit(1);
         }
 
         $lineParser = $this->lineParserFactory->chooseLineParser($this->commandLineParameters->getLineParser());
 
-        $total = $this->commandLineParameters->getEstimatedDumpSize();
-        $this->observer->notify(Observer::EVENT_BEGIN, $total);
+        $this->observer->notify(Observer::EVENT_BEGIN, $this->commandLineParameters->getEstimatedDumpSize());
 
         while ($line = $this->readLine($inputStream)) {
             fwrite($outputStream, $this->anonymizeLine($line, $config, $lineParser));
+            $this->observer->notify(Observer::EVENT_AFTER_LINE_PROCESSING);
         }
     }
 
@@ -82,7 +82,7 @@ class Anonymizer
     {
         $this->observer->notify(Observer::EVENT_START_READ);
         $line = fgets($inputStream);
-        $this->observer->notify(Observer::EVENT_START_READ, strlen($line));
+        $this->observer->notify(Observer::EVENT_END_READ, strlen(is_string($line)?$line:''));
         return $line;
     }
 

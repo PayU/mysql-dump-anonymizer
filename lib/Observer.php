@@ -19,7 +19,7 @@ class Observer
     public const EVENT_NO_ANONYMIZATION = 11;
 
     /** @var ProcessObserverInterface[] */
-    private $observers;
+    private $observers = [];
 
     public function __construct()
     {

@@ -41,6 +41,7 @@ class StringHash
 
     public function hashMe($word, $anonymizePunctuation = false): string
     {
+        $word = (string)$word;
 
         $this->hash = hash('sha256', $word . $this->salt);
 

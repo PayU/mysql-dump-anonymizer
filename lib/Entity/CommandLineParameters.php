@@ -53,22 +53,22 @@ final class CommandLineParameters
 
     }
 
-    public function help() {
+    public static function help() {
         return '
 Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .self::PARAM_CONFIG_FILES. '=FILENAME [OPTIONS]'.PHP_EOL.PHP_EOL
             .'Options:'.PHP_EOL
-            .' --' .$this->pad(self::PARAM_CONFIG_TYPE). ' Default Value: '.ConfigFactory::DEFAULT_CONFIG_TYPE.PHP_EOL
-            .'   ' .$this->pad('').' Specifies the type of the config used.'.PHP_EOL.PHP_EOL
-            .' --' .$this->pad(self::PARAM_LINE_PARSER). ' Default Value: '.LineParserFactory::LINE_PARSER_MYSQL_DUMP.PHP_EOL
-            .'   ' .$this->pad('').' Specifies the type of the line parser used.'.PHP_EOL.PHP_EOL
-            .' --' .$this->pad(self::PARAM_ESTIMATED_DUMP_SIZE).' When available, specify the length of the data being anonymized.'.PHP_EOL
-            .'   ' .$this->pad('').' This will be used to show progress data at runtime. '.PHP_EOL.PHP_EOL
-            .' --' .$this->pad(self::PARAM_SHOW_PROGRESS).' Default value: 1'.PHP_EOL
-            .'   ' .$this->pad('').' Set to 0 to not show progress data. '.PHP_EOL.PHP_EOL
+            .' --' .self::pad(self::PARAM_CONFIG_TYPE). ' Default Value: '.ConfigFactory::DEFAULT_CONFIG_TYPE.PHP_EOL
+            .'   ' .self::pad('').' Specifies the type of the config used.'.PHP_EOL.PHP_EOL
+            .' --' .self::pad(self::PARAM_LINE_PARSER). ' Default Value: '.LineParserFactory::LINE_PARSER_MYSQL_DUMP.PHP_EOL
+            .'   ' .self::pad('').' Specifies the type of the line parser used.'.PHP_EOL.PHP_EOL
+            .' --' .self::pad(self::PARAM_ESTIMATED_DUMP_SIZE).' When available, specify the length of the data being anonymized.'.PHP_EOL
+            .'   ' .self::pad('').' This will be used to show progress data at runtime. '.PHP_EOL.PHP_EOL
+            .' --' .self::pad(self::PARAM_SHOW_PROGRESS).' Default value: 1'.PHP_EOL
+            .'   ' .self::pad('').' Set to 0 to not show progress data. '.PHP_EOL.PHP_EOL
             .'';
     }
 
-    private function pad($string) {
+    private static function pad($string) : string {
         return str_pad($string, 20, ' ', STR_PAD_RIGHT);
     }
 

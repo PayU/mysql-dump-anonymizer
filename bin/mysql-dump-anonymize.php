@@ -12,14 +12,20 @@ require_once dirname(__DIR__).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-//TODO put command line param and here config
-$commandLineParameters = new CommandLineParameters();
-$commandLineParameters->setCommandLineArguments($_SERVER['argv']);
-$commandLineParameters->validate();
 
-$observer = new Observer();
-if ($commandLineParameters->isShowProgress()) {
-    $observer->registerObserver(new Observer\Progress());
+try {
+    $commandLineParameters = new CommandLineParameters();
+    $commandLineParameters->setCommandLineArguments($_SERVER['argv']);
+    $commandLineParameters->validate();
+
+    $observer = new Observer();
+    if ($commandLineParameters->isShowProgress()) {
+        $observer->registerObserver(new Observer\Progress());
+    }
+}catch (InvalidArgumentException $e) {
+    //todo refactor ?
+    fwrite(STDERR, $e->getMessage());
+    fwrite(STDERR, CommandLineParameters::help());
 }
 
 $application = new Anonymizer(

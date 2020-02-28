@@ -5,7 +5,6 @@ namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
 use Generator;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\RuntimeProgress;
 use RuntimeException;
 
 //TODO all-in-one
@@ -85,11 +84,9 @@ class MySqlDumpLineParser implements InterfaceLineParser
      */
     private function parseValuesList(string $insertLineString): Generator
     {
-        $startParsing = microtime(true);
         if (!preg_match(self::INSERT_LINE_PATTERN, $insertLineString, $match)) {
             throw new RuntimeException('Invalid insert line');
         }
-        RuntimeProgress::$parseTime += (microtime(true) - $startParsing);
 
         $rawValues = $match[3];
 
