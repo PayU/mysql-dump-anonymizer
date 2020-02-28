@@ -1,13 +1,13 @@
 <?php
 
-namespace PayU\MysqlDumpAnonymizer\DataType;
+namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Services\EscapeString;
 use PayU\MysqlDumpAnonymizer\Services\StringHash;
 
-class FreeText implements InterfaceDataType
+class Phone implements InterfaceDataType
 {
     public function anonymize(Value $value): AnonymizedValue
     {

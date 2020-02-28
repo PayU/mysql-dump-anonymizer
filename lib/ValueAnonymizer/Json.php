@@ -1,6 +1,6 @@
 <?php
 
-namespace PayU\MysqlDumpAnonymizer\DataType;
+namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
 
 

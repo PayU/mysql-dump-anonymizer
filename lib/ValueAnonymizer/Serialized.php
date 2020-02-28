@@ -1,11 +1,11 @@
 <?php
 
-namespace PayU\MysqlDumpAnonymizer\DataType;
+namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
-class Date implements InterfaceDataType
+class Serialized implements InterfaceDataType
 {
 
     public function anonymize(Value $value): AnonymizedValue

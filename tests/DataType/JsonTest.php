@@ -2,7 +2,7 @@
 
 namespace PayU\MysqlDumpAnonymizer\Tests\DataType;
 
-use PayU\MysqlDumpAnonymizer\DataType\Json;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Json;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PHPUnit\Framework\TestCase;
 

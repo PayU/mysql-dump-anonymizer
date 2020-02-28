@@ -2,7 +2,7 @@
 
 namespace PayU\MysqlDumpAnonymizer\Services;
 
-use PayU\MysqlDumpAnonymizer\DataType\InterfaceDataType;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\InterfaceDataType;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationColumnConfig;
 use PayU\MysqlDumpAnonymizer\Entity\DataTypes;
 use PayU\MysqlDumpAnonymizer\Entity\Value;

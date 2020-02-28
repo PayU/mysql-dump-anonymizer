@@ -2,25 +2,25 @@
 //TODO factory this
 namespace PayU\MysqlDumpAnonymizer\Entity;
 
-use PayU\MysqlDumpAnonymizer\DataType\BankData;
-use PayU\MysqlDumpAnonymizer\DataType\BinaryData;
-use PayU\MysqlDumpAnonymizer\DataType\CardData;
-use PayU\MysqlDumpAnonymizer\DataType\Credentials;
-use PayU\MysqlDumpAnonymizer\DataType\Date;
-use PayU\MysqlDumpAnonymizer\DataType\DocumentData;
-use PayU\MysqlDumpAnonymizer\DataType\Email;
-use PayU\MysqlDumpAnonymizer\DataType\FileName;
-use PayU\MysqlDumpAnonymizer\DataType\FreeText;
-use PayU\MysqlDumpAnonymizer\DataType\Id;
-use PayU\MysqlDumpAnonymizer\DataType\InterfaceDataType;
-use PayU\MysqlDumpAnonymizer\DataType\Ip;
-use PayU\MysqlDumpAnonymizer\DataType\IpInt;
-use PayU\MysqlDumpAnonymizer\DataType\Json;
-use PayU\MysqlDumpAnonymizer\DataType\Phone;
-use PayU\MysqlDumpAnonymizer\DataType\SensitiveFreeText;
-use PayU\MysqlDumpAnonymizer\DataType\Serialized;
-use PayU\MysqlDumpAnonymizer\DataType\Url;
-use PayU\MysqlDumpAnonymizer\DataType\Username;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BankData;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BinaryData;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\CardData;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Credentials;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Date;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\DocumentData;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Email;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\FileName;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\FreeText;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Id;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\InterfaceDataType;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Ip;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\IpInt;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Json;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Phone;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\SensitiveFreeText;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Serialized;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Url;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Username;
 
 final class DataTypes {
 

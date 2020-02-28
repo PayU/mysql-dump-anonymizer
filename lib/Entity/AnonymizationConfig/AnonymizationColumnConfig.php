@@ -2,9 +2,9 @@
 
 namespace PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig;
 
-use PayU\MysqlDumpAnonymizer\DataType\Email;
-use PayU\MysqlDumpAnonymizer\DataType\FreeText;
-use PayU\MysqlDumpAnonymizer\DataType\Phone;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Email;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\FreeText;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Phone;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
 //TODO rename with PROVIDERE-ish
