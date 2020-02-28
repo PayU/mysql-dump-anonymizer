@@ -17,7 +17,7 @@ class Json implements InterfaceDataType
     public function anonymize(Value $value): AnonymizedValue
     {
         if ($value->isExpression()) {
-            return $value;
+            return new AnonymizedValue($value->getRawValue());
         }
 
         $jsonString = str_replace(["\r","\n"], ["\\r","\\n"], $value->getUnEscapedValue());
