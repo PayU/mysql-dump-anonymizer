@@ -15,9 +15,14 @@ class Url implements InterfaceDataType
             return new AnonymizedValue($value->getRawValue());
         }
 
-        $anonymizedEscapedValue = (new StringHash('the@salt--'))->hashMe($value->getUnEscapedValue());
+        $unescapedURL = $value->getUnEscapedValue();
 
-        return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
+        $scheme = parse_url($unescapedURL, PHP_URL_SCHEME);
+        $host = parse_url($unescapedURL, PHP_URL_HOST);
+
+        $anonymizedHost = (new StringHash('the@salt--'))->hashMe($host);
+
+        return new AnonymizedValue(EscapeString::escape($scheme . '://' . $anonymizedHost));
     }
 
 }
