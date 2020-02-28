@@ -2,6 +2,7 @@
 
 namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
 use Generator;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
@@ -46,7 +47,6 @@ class MySqlDumpLineParser implements InterfaceLineParser
         return new LineInfo($isInsert, $table, $columns);
     }
 
-
     /**
      * @param string $line
      * @return Value[][]
@@ -59,7 +59,7 @@ class MySqlDumpLineParser implements InterfaceLineParser
     /**
      * @param string $table
      * @param array $columns
-     * @param Value[][] $rows
+     * @param AnonymizedValue[][] $rows
      * @return string
      */
     public function rebuildInsertLine(string $table, array $columns, array $rows) : string

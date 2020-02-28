@@ -2,15 +2,14 @@
 
 namespace PayU\MysqlDumpAnonymizer\DataType;
 
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
 //TODO rename to ValueAnonymizer
 interface InterfaceDataType {
     /**
      * @param Value $value
-     * @param array<string, Value> $row
-     * @return Value
-     * TODO add $row here?
+     * @return AnonymizedValue
      */
-    public function anonymize(Value $value): Value;
+    public function anonymize(Value $value): AnonymizedValue;
 }

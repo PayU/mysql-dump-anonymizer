@@ -5,6 +5,7 @@ namespace PayU\MysqlDumpAnonymizer\DataType;
 
 
 
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Services\EscapeString;
 use PayU\MysqlDumpAnonymizer\Services\StringHash;
@@ -13,7 +14,7 @@ use RuntimeException;
 class Json implements InterfaceDataType
 {
 
-    public function anonymize(Value $value): Value
+    public function anonymize(Value $value): AnonymizedValue
     {
         if ($value->isExpression()) {
             return $value;
@@ -29,8 +30,7 @@ class Json implements InterfaceDataType
             //TODO do something else ?
             throw new RuntimeException('No support for non array jsons');
         }
-
-        return $value;
+        return new AnonymizedValue(EscapeString::escape(json_encode($this->anonymizeArray($array))));
     }
 
     private function anonymizeArray(array $array) {

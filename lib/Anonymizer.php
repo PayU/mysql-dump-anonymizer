@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationColumnConfig;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationConfig;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\CommandLineParameters;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
@@ -144,34 +145,35 @@ class Anonymizer
      * @param AnonymizationColumnConfig $columnConfig
      * @param Value $value
      * @param Value[] $row Associative array columnName => Value Object
-     * @return Value
+     * @return AnonymizedValue
      */
-    private function anonymizeValue(AnonymizationColumnConfig $columnConfig, Value $value, $row)
+    private function anonymizeValue(AnonymizationColumnConfig $columnConfig, Value $value, $row): AnonymizedValue
     {
 
         if ($dataTypeString = $this->dataTypeService->getDataType($columnConfig, $row)) {
 
             $dataType = $this->dataTypeService->getDataTypeClass($dataTypeString);
 
-
             // NULL values will not go trough anonymization
             if ($value->isExpression() && $value->getRawValue() === 'NULL') {
                 $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION);
                 $this->observer->notify(Observer::EVENT_NULL_VALUE, $dataTypeString);
-                return $value;
+
+                return new AnonymizedValue($value->getRawValue());
             }
 
             $this->observer->notify(Observer::EVENT_ANONYMIZATION_START, $dataTypeString);
 
-            $value = $dataType->anonymize($value);
+            $anonymizedValue = $dataType->anonymize($value);
 
             $this->observer->notify(Observer::EVENT_ANONYMIZATION_END, $dataTypeString);
+
+            return $anonymizedValue;
         }
 
         $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION);
 
-
-        return $value;
+        return new AnonymizedValue($value->getRawValue());
     }
 
 }

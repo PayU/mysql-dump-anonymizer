@@ -2,8 +2,8 @@
 
 namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
 
 interface InterfaceLineParser {
 
@@ -14,7 +14,7 @@ interface InterfaceLineParser {
     /**
      * @param string $table
      * @param array $columns
-     * @param Value[][] $values
+     * @param AnonymizedValue[][] $values
      * @return string
      */
     public function rebuildInsertLine(string $table, array $columns, array $values) : string;

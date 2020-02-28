@@ -4,6 +4,7 @@
 namespace PayU\MysqlDumpAnonymizer\DataType;
 
 
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
 class EavValueAnonymizer implements InterfaceDataType
@@ -27,7 +28,7 @@ class EavValueAnonymizer implements InterfaceDataType
      * @inheritDoc
      * TODO add row !
      */
-    public function anonymize(Value $value): Value
+    public function anonymize(Value $value): AnonymizedValue
     {
 
     }

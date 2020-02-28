@@ -2,22 +2,22 @@
 
 namespace PayU\MysqlDumpAnonymizer\DataType;
 
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Services\EscapeString;
+use PayU\MysqlDumpAnonymizer\Services\StringHash;
 
 class BankData implements InterfaceDataType
 {
-
-    public function anonymize(Value $value): Value
+    public function anonymize(Value $value): AnonymizedValue
     {
         if ($value->isExpression()) {
-            return $value;
+            return new AnonymizedValue($value->getRawValue());
         }
 
-        $newValue = 'ANON'.$value->getUnEscapedValue();
+        $escapedValue = (new StringHash('the@salt--'))->hashMe($value->getUnEscapedValue());
 
-        $value->setRawValue(EscapeString::escape($newValue));
-
-        return $value;
+        return new AnonymizedValue(EscapeString::escape($escapedValue));
     }
+
 }
