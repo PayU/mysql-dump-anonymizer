@@ -3,8 +3,8 @@
 namespace PayU\MysqlDumpAnonymizer\Services\ConfigBuilder;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationColumnConfig;
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationConfig;
+use PayU\MysqlDumpAnonymizer\Provider\ColumnAnonymizationProvider;
+use PayU\MysqlDumpAnonymizer\Provider\AnonymizationProvider;
 use PayU\MysqlDumpAnonymizer\Entity\DataTypes;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -126,18 +126,18 @@ class YamlConfig implements InterfaceConfigBuilder
     }
 
 
-    public function buildConfig(): AnonymizationConfig
+    public function buildConfig(): AnonymizationProvider
     {
         $anonymizationData = $this->parser->parseFile($this->anonymizationFile);
         $noAnonymizationData = $this->parser->parseFile($this->noAnonymizationFile);
 
-        $anonymizationConfig = new AnonymizationConfig();
+        $anonymizationConfig = new AnonymizationProvider();
 
         foreach ($noAnonymizationData as $table => $columns) {
             $anonymizationConfig->addConfig($table, self::ACTION_ANONYMIZE);
             $actionConfig = $anonymizationConfig->getActionConfig($table);
             foreach (array_keys($columns) as $column) {
-                $actionConfig->addColumn($column, new AnonymizationColumnConfig(false, null,null));
+                $actionConfig->addColumn($column, new ColumnAnonymizationProvider(false, null,null));
             }
         }
 
@@ -157,7 +157,7 @@ class YamlConfig implements InterfaceConfigBuilder
                 foreach ($data[self::COLUMNS_KEY] as $columnData) {
 
                     if (!array_key_exists(self::WHERE_KEY, $columnData)) {
-                        $actionConfig->addColumn($columnData[self::COLUMN_NAME_KEY], new AnonymizationColumnConfig($columnData[self::DATA_TYPE_KEY], null, null));
+                        $actionConfig->addColumn($columnData[self::COLUMN_NAME_KEY], new ColumnAnonymizationProvider($columnData[self::DATA_TYPE_KEY], null, null));
                     } else {
                         [$attribute, $value] = explode('=', $columnData[self::WHERE_KEY], 2);
                         $eavColumns[$columnData[self::COLUMN_NAME_KEY]][$attribute][$value] = $columnData[self::DATA_TYPE_KEY];
@@ -166,7 +166,7 @@ class YamlConfig implements InterfaceConfigBuilder
 
                 foreach ($eavColumns as $columnName => $eavInfo) {
                     foreach ($eavInfo as $eavAttribute => $eavValues) {
-                        $actionConfig->addColumn($columnName, new AnonymizationColumnConfig(true, $eavAttribute, $eavValues));
+                        $actionConfig->addColumn($columnName, new ColumnAnonymizationProvider(true, $eavAttribute, $eavValues));
                     }
                 }
 

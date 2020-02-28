@@ -2,7 +2,7 @@
 
 namespace PayU\MysqlDumpAnonymizer\Services\ConfigBuilder;
 
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationConfig;
+use PayU\MysqlDumpAnonymizer\Provider\AnonymizationProvider;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 
 interface InterfaceConfigBuilder {
@@ -12,6 +12,6 @@ interface InterfaceConfigBuilder {
      */
     public function validate() : void;
 
-    public function buildConfig() : AnonymizationConfig;
+    public function buildConfig() : AnonymizationProvider;
 
 }

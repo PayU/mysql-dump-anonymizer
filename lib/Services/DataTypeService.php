@@ -3,7 +3,7 @@
 namespace PayU\MysqlDumpAnonymizer\Services;
 
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\InterfaceDataType;
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationColumnConfig;
+use PayU\MysqlDumpAnonymizer\Provider\ColumnAnonymizationProvider;
 use PayU\MysqlDumpAnonymizer\Entity\DataTypes;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
@@ -22,11 +22,11 @@ class DataTypeService
 
 
     /**
-     * @param AnonymizationColumnConfig $anonymizationColumnConfig
+     * @param \PayU\MysqlDumpAnonymizer\Provider\ColumnAnonymizationProvider $anonymizationColumnConfig
      * @param Value[] $row Associative array columnName => Value Object
      * @return InterfaceDataType|null
      */
-    public function getDataType(AnonymizationColumnConfig $anonymizationColumnConfig, $row) : ?string
+    public function getDataType(ColumnAnonymizationProvider $anonymizationColumnConfig, $row) : ?string
     {
         if ($anonymizationColumnConfig->getDataType() === false) {
             return null;

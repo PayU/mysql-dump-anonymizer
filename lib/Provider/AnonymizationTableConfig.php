@@ -1,13 +1,12 @@
 <?php
 
-namespace PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig;
+namespace PayU\MysqlDumpAnonymizer\Provider;
 
-//TODO rename table config
-final class AnonymizationActionConfig {
+final class AnonymizationTableConfig {
 
     private $action;
 
-    /** @var AnonymizationColumnConfig[]|null */
+    /** @var ColumnAnonymizationProvider[]|null */
     private $columns;
 
     /**
@@ -19,7 +18,7 @@ final class AnonymizationActionConfig {
         $this->action = $action;
     }
 
-    public function addColumn($columnName, AnonymizationColumnConfig $columnConfig) {
+    public function addColumn($columnName, ColumnAnonymizationProvider $columnConfig) {
         $this->columns[$columnName] = $columnConfig;
     }
 
@@ -32,7 +31,7 @@ final class AnonymizationActionConfig {
     }
 
     /**
-     * @return AnonymizationColumnConfig[]|null
+     * @return ColumnAnonymizationProvider[]|null
      * TODO use columname directly
      */
     public function getColumns() : ?array {

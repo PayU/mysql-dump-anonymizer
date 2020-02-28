@@ -1,14 +1,10 @@
 <?php
 
-namespace PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig;
+namespace PayU\MysqlDumpAnonymizer\Provider;
 
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Email;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\FreeText;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Phone;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
-//TODO rename with PROVIDERE-ish
-final class AnonymizationColumnConfig
+final class ColumnAnonymizationProvider
 {
     /** @var string|boolean */
     private $dataType;

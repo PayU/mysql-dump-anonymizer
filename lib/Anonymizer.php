@@ -6,8 +6,8 @@ namespace PayU\MysqlDumpAnonymizer;
 
 use InvalidArgumentException;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationColumnConfig;
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationConfig\AnonymizationConfig;
+use PayU\MysqlDumpAnonymizer\Provider\ColumnAnonymizationProvider;
+use PayU\MysqlDumpAnonymizer\Provider\AnonymizationProvider;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\CommandLineParameters;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
@@ -88,7 +88,7 @@ class Anonymizer
     }
 
 
-    private function anonymizeLine($line, AnonymizationConfig $config, InterfaceLineParser $lineParser)
+    private function anonymizeLine($line, AnonymizationProvider $config, InterfaceLineParser $lineParser)
     {
         $lineInfo = $lineParser->lineInfo($line);
         if ($lineInfo->isInsert() === false) {
@@ -142,12 +142,12 @@ class Anonymizer
     }
 
     /**
-     * @param AnonymizationColumnConfig $columnConfig
+     * @param \PayU\MysqlDumpAnonymizer\Provider\ColumnAnonymizationProvider $columnConfig
      * @param Value $value
      * @param Value[] $row Associative array columnName => Value Object
      * @return AnonymizedValue
      */
-    private function anonymizeValue(AnonymizationColumnConfig $columnConfig, Value $value, $row): AnonymizedValue
+    private function anonymizeValue(ColumnAnonymizationProvider $columnConfig, Value $value, $row): AnonymizedValue
     {
 
         if ($dataTypeString = $this->dataTypeService->getDataType($columnConfig, $row)) {
