@@ -17,8 +17,8 @@ class FileName implements ValueAnonymizerInterface
 
         $unescapedValue = $value->getUnEscapedValue();
 
-        $nameWithoutExtension = substr($unescapedValue, 0, strpos($unescapedValue, '.'));
-        $extension = substr($unescapedValue, strpos($unescapedValue, '.') + 1);
+        $nameWithoutExtension = substr($unescapedValue, 0, strrpos($unescapedValue, '.'));
+        $extension = substr($unescapedValue, strrpos($unescapedValue, '.') + 1);
 
         $anonymizedNameWithoutExtension = $config->getHashStringHelper()->hashMe($nameWithoutExtension);
 

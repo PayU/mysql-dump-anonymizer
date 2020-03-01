@@ -22,7 +22,7 @@ class Eav implements ValueAnonymizerInterface
      * EavValueAnonymizer constructor.
      * @param $attributeColumnName
      * @param array $attributeValues
-     * @param \PayU\MysqlDumpAnonymizer\Services\DataTypeFactory $dataTypes
+     * @param DataTypeFactory $dataTypes
      */
     public function __construct($attributeColumnName, array $attributeValues, DataTypeFactory $dataTypes)
     {
