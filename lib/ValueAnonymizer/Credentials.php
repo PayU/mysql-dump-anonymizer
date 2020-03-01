@@ -19,5 +19,4 @@ class Credentials implements ValueAnonymizerInterface
 
         return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
     }
-
 }

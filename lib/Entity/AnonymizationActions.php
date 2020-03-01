@@ -2,7 +2,8 @@
 
 namespace PayU\MysqlDumpAnonymizer\Entity;
 
-final class AnonymizationActions {
+final class AnonymizationActions
+{
 
     public const ANONYMIZE = 1;
     public const TRUNCATE = 2;
@@ -11,7 +12,4 @@ final class AnonymizationActions {
         'anonymize' => self::ANONYMIZE,
         'truncate' => self::TRUNCATE,
     ];
-
-
-
 }

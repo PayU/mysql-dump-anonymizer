@@ -38,8 +38,7 @@ class Anonymizer
         LineParserInterface $lineParser,
         Observer $observer,
         Config $config
-    )
-    {
+    ) {
         $this->commandLineParameters = $commandLineParameters;
         $this->anonymizationProvider = $anonymizationProvider;
         $this->lineParser = $lineParser;
@@ -59,7 +58,6 @@ class Anonymizer
         }
 
         $this->observer->notify(Observer::EVENT_END);
-
     }
 
     private function readLine($inputStream)
@@ -114,11 +112,9 @@ class Anonymizer
 
         $anonymizedValues = [];
         foreach ($this->lineParser->getRowFromInsertLine($line) as $row) {
-
             $anonymizedValue = [];
             /** @var Value[] $row */
-            foreach ($row as $columnIndex => $cell)
-            {
+            foreach ($row as $columnIndex => $cell) {
                 $anonymizedValue[] = $this->anonymizeValue(
                     $this->anonymizationProvider->getAnonymizationFor($table, $lineColumns[$columnIndex]),
                     $cell,
@@ -146,7 +142,7 @@ class Anonymizer
             return new AnonymizedValue('NULL');
         }
 
-        if ($valueAnonymizer instanceof NoAnonymization ) {
+        if ($valueAnonymizer instanceof NoAnonymization) {
             $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION);
         }
 
@@ -155,5 +151,4 @@ class Anonymizer
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_END, get_class($valueAnonymizer));
         return $ret;
     }
-
 }

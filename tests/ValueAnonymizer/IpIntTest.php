@@ -36,7 +36,6 @@ class IpIntTest extends TestCase
         $actual = $this->sut->anonymize(new Value('\'test\'', 'test', false), [], $configMock);
 
         $this->assertSame($expectedIp, $actual->getRawValue());
-
     }
 
     public function hashes()

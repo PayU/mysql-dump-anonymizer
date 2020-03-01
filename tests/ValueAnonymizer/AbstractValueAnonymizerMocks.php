@@ -7,9 +7,11 @@ use PayU\MysqlDumpAnonymizer\Config;
 use PayU\MysqlDumpAnonymizer\Helper\StringHash;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractValueAnonymizerMocks extends TestCase {
+abstract class AbstractValueAnonymizerMocks extends TestCase
+{
 
-    protected function anonymizerConfigMock($hashMeReturns) {
+    protected function anonymizerConfigMock($hashMeReturns)
+    {
 
         $configMock = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
         if (!empty($hashMeReturns)) {
@@ -20,5 +22,4 @@ abstract class AbstractValueAnonymizerMocks extends TestCase {
 
         return $configMock;
     }
-
 }

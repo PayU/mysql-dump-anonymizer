@@ -64,16 +64,16 @@ class MySqlDumpLineParser implements LineParserInterface
     public function rebuildInsertLine(string $table, array $columns, array $rows) : string
     {
         $dumpQuery = 'INSERT'.' INTO `'.$table.'` (`';
-        $dumpQuery .= implode('`, `', $columns );
+        $dumpQuery .= implode('`, `', $columns);
         $dumpQuery .= '`) VALUES (';
 
         foreach ($rows as $row) {
             foreach ($row as $value) {
                 $dumpQuery .= $value->getRawValue().', ';
             }
-            $dumpQuery = substr($dumpQuery,0 , -2).'), (';
+            $dumpQuery = substr($dumpQuery, 0, -2).'), (';
         }
-        return substr($dumpQuery,0 , -3).';';
+        return substr($dumpQuery, 0, -3).';';
     }
 
     /**
@@ -160,7 +160,8 @@ class MySqlDumpLineParser implements LineParserInterface
         }
     }
 
-    private function isExpression($rawValue) : bool {
+    private function isExpression($rawValue) : bool
+    {
         return (false === (strpos($rawValue, '\'') === 0 && substr($rawValue, -1) === '\''));
     }
 
@@ -177,8 +178,5 @@ class MySqlDumpLineParser implements LineParserInterface
         ];
         $unEscapedValue = str_replace(array_keys($replaced), $replaced, $rawValue);
         return stripslashes(substr($unEscapedValue, 1, -1));
-
     }
-
-
 }

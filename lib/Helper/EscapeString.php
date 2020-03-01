@@ -2,12 +2,11 @@
 
 namespace PayU\MysqlDumpAnonymizer\Helper;
 
-
-class EscapeString {
+class EscapeString
+{
 
     public static function escape(string $string): string
     {
         return '\'' . addcslashes($string, "'\\\n") . '\'';
     }
-
 }

@@ -2,10 +2,10 @@
 
 namespace PayU\MysqlDumpAnonymizer\Services;
 
-interface InterfaceSqlParser {
+interface InterfaceSqlParser
+{
 
     public function getColumns($insertLine);
 
     public function getValues($insertLine);
-
 }

@@ -19,5 +19,4 @@ class BankData implements ValueAnonymizerInterface
 
         return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
     }
-
 }

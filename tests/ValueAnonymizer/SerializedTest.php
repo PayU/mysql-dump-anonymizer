@@ -9,7 +9,6 @@ use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Serialized;
 use PHPUnit\Framework\MockObject\MockObject;
 
-
 class SerializedTest extends AbstractValueAnonymizerMocks
 {
     /**
@@ -49,6 +48,5 @@ class SerializedTest extends AbstractValueAnonymizerMocks
         $actual = $this->sut->anonymize($value, [], $configMock);
 
         $this->assertEquals($expected, $actual);
-
     }
 }

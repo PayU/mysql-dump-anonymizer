@@ -7,7 +7,6 @@ use PayU\MysqlDumpAnonymizer\Helper\StringHash;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-
 final class StringHashTest extends TestCase
 {
     /**
@@ -20,8 +19,6 @@ final class StringHashTest extends TestCase
         parent::setUp();
 
         $this->sut = new StringHash('test-salt');
-
-
     }
 
     public function testme(): void
@@ -32,7 +29,6 @@ final class StringHashTest extends TestCase
 
         $actual = $this->sut->hashMe($word);
         $this->assertSame($expected, $actual);
-
     }
 
     public function testUnixLines(): void

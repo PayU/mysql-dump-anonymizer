@@ -19,5 +19,4 @@ class Id implements ValueAnonymizerInterface
 
         return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
     }
-
 }

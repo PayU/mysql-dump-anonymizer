@@ -2,7 +2,6 @@
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
-
 use JsonException;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
@@ -27,13 +26,10 @@ class Json implements ValueAnonymizerInterface
             if (is_array($array)) {
                 return new AnonymizedValue(EscapeString::escape(json_encode($this->anonymizeArray($array, $config))));
             }
-
         } catch (JsonException $e) {
-
         }
 
         return (new FreeText())->anonymize($value, $row, $config);
-
     }
 
     private function anonymizeArray(array $array, Config $config): array
@@ -53,7 +49,5 @@ class Json implements ValueAnonymizerInterface
             }
         }
         return $ret;
-
     }
-
 }

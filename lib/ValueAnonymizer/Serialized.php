@@ -39,6 +39,5 @@ class Serialized implements ValueAnonymizerInterface
             }
         }
         return $ret;
-
     }
 }

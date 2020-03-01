@@ -57,6 +57,5 @@ final class JsonTest extends AbstractValueAnonymizerMocks
 
         $this->assertEquals($expected, $actual);
         $this->assertSame($expected->getRawValue(), $actual->getRawValue());
-
     }
 }

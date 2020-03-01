@@ -24,5 +24,4 @@ class Url implements ValueAnonymizerInterface
 
         return new AnonymizedValue(EscapeString::escape($scheme . '://' . $anonymizedHost));
     }
-
 }

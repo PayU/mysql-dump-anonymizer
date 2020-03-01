@@ -2,10 +2,10 @@
 
 namespace PayU\MysqlDumpAnonymizer\Provider;
 
-
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\ValueAnonymizerInterface;
 
-final class AnonymizationProvider implements AnonymizationProviderInterface {
+final class AnonymizationProvider implements AnonymizationProviderInterface
+{
 
     /** @var array  */
     private $tablesAction;
@@ -40,16 +40,17 @@ final class AnonymizationProvider implements AnonymizationProviderInterface {
         $this->tableColumnNotFoundAnonymizer = $notFoundAnonymizer;
     }
 
-    public function getTableAction($table) {
+    public function getTableAction($table)
+    {
         if (array_key_exists($table, $this->tablesAction)) {
             return $this->tablesAction[$table];
         }
         return $this->tableNotFoundAction;
     }
 
-    public function getAnonymizationFor($table, $column) : ValueAnonymizerInterface {
-        if (
-            array_key_exists($table, $this->tableColumnsAnonymizationProvider)
+    public function getAnonymizationFor($table, $column) : ValueAnonymizerInterface
+    {
+        if (array_key_exists($table, $this->tableColumnsAnonymizationProvider)
             && array_key_exists($column, $this->tableColumnsAnonymizationProvider[$table])
         ) {
             return $this->tableColumnsAnonymizationProvider[$table][$column];
@@ -57,6 +58,4 @@ final class AnonymizationProvider implements AnonymizationProviderInterface {
 
         return $this->tableColumnNotFoundAnonymizer;
     }
-
-
 }

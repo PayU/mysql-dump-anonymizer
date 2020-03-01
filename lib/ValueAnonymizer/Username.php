@@ -19,5 +19,4 @@ class Username implements ValueAnonymizerInterface
 
         return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
     }
-
 }

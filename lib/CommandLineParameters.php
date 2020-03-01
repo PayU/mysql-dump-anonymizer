@@ -63,7 +63,6 @@ final class CommandLineParameters
         if (ftell(STDIN) === false) {
                 throw new InvalidArgumentException('No STDIN detected.');
         }
-
     }
 
     public static function help(): string
@@ -76,13 +75,16 @@ final class CommandLineParameters
         $more = ' '.$dataTypesCount-$showTheFirst.' more';
 
         return '
-Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .self::PARAM_CONFIG_FILES. '=FILENAME [OPTIONS]'.PHP_EOL.PHP_EOL
+Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .self::PARAM_CONFIG_FILES. '=FILENAME [OPTIONS]'
+            .PHP_EOL.PHP_EOL
             .'Options:'.PHP_EOL
             .' --' .self::pad(self::PARAM_CONFIG_TYPE). ' Default Value: '.ProviderFactory::DEFAULT_CONFIG_TYPE.PHP_EOL
             .'   ' .self::pad('').' Specifies the type of the config used.'.PHP_EOL.PHP_EOL
             .' --' .self::pad(self::PARAM_LINE_PARSER). ' Default Value: '.LineParserFactory::LINE_PARSER_MYSQL_DUMP.PHP_EOL
             .'   ' .self::pad('').' Specifies the type of the line parser used.'.PHP_EOL.PHP_EOL
-            .' --' .self::pad(self::PARAM_ESTIMATED_DUMP_SIZE).' When available, specify the length of the data being anonymized.'.PHP_EOL
+            .' --' .self::pad(self::PARAM_ESTIMATED_DUMP_SIZE)
+            .' When available, specify the length of the data being anonymized.'
+            .PHP_EOL
             .'   ' .self::pad('').' This will be used to show progress data at runtime. '.PHP_EOL.PHP_EOL
             .' --' .self::pad(self::PARAM_SHOW_PROGRESS).' Default value: 1'.PHP_EOL
             .'   ' .self::pad('').' Set to 0 to not show progress data. '.PHP_EOL.PHP_EOL
@@ -90,14 +92,16 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .s
                 .array_search(AnonymizationActions::ANONYMIZE, AnonymizationActions::DESC, true)
                 .PHP_EOL
             .'   ' .self::pad('').' Action to be taken when script reads a table that is not present in the config.'.PHP_EOL
-            .'   ' .self::pad('').' Possible values: '.implode(', ', array_keys(AnonymizationActions::DESC)).'. '.PHP_EOL.PHP_EOL
+            .'   ' .self::pad('').' Possible values: '.implode(', ', array_keys(AnonymizationActions::DESC))
+            .'. '.PHP_EOL.PHP_EOL
             .' --' .self::pad(self::PARAM_ON_NOT_CONFIGURED_COLUMN).' Default value: '.DataTypeFactory::NO_ANONYMIZATION.PHP_EOL
             .'   ' .self::pad('').' Anonymization type for columns not present in the config.'.PHP_EOL
             .'   ' .self::pad('').' Possible values: '.$dataTypesShow.' ('.$more.')'.PHP_EOL.PHP_EOL
             .'';
     }
 
-    private static function pad($string) : string {
+    private static function pad($string) : string
+    {
         return str_pad($string, 24, ' ', STR_PAD_RIGHT);
     }
 
@@ -156,9 +160,4 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .s
     {
         return $this->onNotConfiguredColumn;
     }
-
-
-
-
-
 }

@@ -26,4 +26,3 @@ $application = new Anonymizer(
 );
 
 $application->run(STDIN, STDOUT);
-

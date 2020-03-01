@@ -24,7 +24,7 @@ class BinaryData implements ValueAnonymizerInterface
             $i += 64;
 
             //TODO see how big the blob can be - maybe config ?
-            if ( $i >= (64*30000)) {
+            if ($i >= (64*30000)) {
                 break;
             }
         } while ($i < strlen($hexExpression));

@@ -19,5 +19,4 @@ class CardData implements ValueAnonymizerInterface
 
         return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
     }
-
 }

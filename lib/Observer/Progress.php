@@ -146,7 +146,11 @@ class Progress implements ProcessObserverInterface
     private function round($microseconds, $decimals = 2, $pad = 6)
     {
         return str_pad(
-            number_format(round($microseconds, $decimals), $decimals), $pad, ' ', STR_PAD_LEFT);
+            number_format(round($microseconds, $decimals), $decimals),
+            $pad,
+            ' ',
+            STR_PAD_LEFT
+        );
     }
 
     private function show(): void
@@ -169,7 +173,7 @@ class Progress implements ProcessObserverInterface
 
         if ($percent === 0) {
             $eta = '?';
-        }else{
+        } else {
             $eta = floor($this->readTimeTotal * 100 / $percent);
         }
 
@@ -205,7 +209,6 @@ class Progress implements ProcessObserverInterface
 
         $output = '';
         foreach ($this->anonymizationTypes as $dataType => $microtime) {
-
             if ($this->anonymizationTotal > 0) {
                 $div = $microtime['time'] / $this->anonymizationTotal;
             } else {
@@ -220,7 +223,6 @@ class Progress implements ProcessObserverInterface
         $this->output($output);
 
         $this->goup = $goup;
-
     }
 
     private function pad($string): string
@@ -245,7 +247,4 @@ class Progress implements ProcessObserverInterface
     {
         $this->output(chr(27) . '[' . $times . 'A');
     }
-
-
 }
-

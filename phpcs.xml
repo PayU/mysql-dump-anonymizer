@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<rule name="Standard">
+    <description>This standard changes the line length</description>
+    <file>.</file>
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <rule ref="PSR2"/>
+    <rule ref="Generic.Files.LineLength">
+        <exclude-pattern>tests/Services/LineParser/MySqlDumpLineParserTest.php</exclude-pattern>
+        <properties>
+            <property name="lineLimit" value="135"/>
+            <property name="absoluteLineLimit" value="520"/>
+        </properties>
+    </rule>
+    <rule ref="Generic.Files.LineEndings">
+        <severity>0</severity>
+    </rule>
+</rule>

@@ -77,8 +77,6 @@ class StringHash
         }
 
         return $ret;
-
-
     }
 
 
@@ -153,7 +151,6 @@ class StringHash
                 $this->generateSignsStack();
                 $this->cnt[$string] = 0;
             }
-
         }
 
         if ($this->cnt[$string] >= strlen($this->stacks[$string])) {
@@ -165,5 +162,4 @@ class StringHash
 
         return $ret;
     }
-
 }

@@ -39,10 +39,10 @@ class Ip implements ValueAnonymizerInterface
         $hashUniqueNumbersLength = strlen($hashUniqueNumbers);
 
         return new AnonymizedValue('\''
-            .base_convert(substr($hash, $hashUniqueNumbers[0], 2), 16 , 10)
-            .'.'.base_convert(substr($hash, $hashUniqueNumbers[2], 2), 16 , 10)
-            .'.'.base_convert(substr(strrev($hash), $hashUniqueNumbers[$hashUniqueNumbersLength-4], 2), 16 , 10)
-            .'.'.base_convert(substr(strrev($hash), $hashUniqueNumbers[$hashUniqueNumbersLength-2], 2), 16 , 10)
+            .base_convert(substr($hash, $hashUniqueNumbers[0], 2), 16, 10)
+            .'.'.base_convert(substr($hash, $hashUniqueNumbers[2], 2), 16, 10)
+            .'.'.base_convert(substr(strrev($hash), $hashUniqueNumbers[$hashUniqueNumbersLength-4], 2), 16, 10)
+            .'.'.base_convert(substr(strrev($hash), $hashUniqueNumbers[$hashUniqueNumbersLength-2], 2), 16, 10)
             .'\'');
     }
 }

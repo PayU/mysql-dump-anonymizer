@@ -6,7 +6,8 @@ use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
 
-interface LineParserInterface {
+interface LineParserInterface
+{
 
     public function lineInfo(string $line) : LineInfo;
 
@@ -23,5 +24,4 @@ interface LineParserInterface {
      * @return string
      */
     public function rebuildInsertLine(string $table, array $columns, array $values) : string;
-
 }

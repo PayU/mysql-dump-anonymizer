@@ -39,7 +39,5 @@ class ProviderFactory
         }
 
         throw new RuntimeException('Cannot build config');
-
     }
-
 }

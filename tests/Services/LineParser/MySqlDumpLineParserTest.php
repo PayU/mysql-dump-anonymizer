@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 
 final class MySqlDumpLineParserTest extends TestCase
 {
+
+    
     /**
      * @var MySqlDumpLineParser|MockObject
      */
@@ -105,8 +107,8 @@ EOD;
             $cnt2 = 0;
             $this->assertIsArray($row, 'Invalid row at '.$cnt1.'-'.$cnt2);
             foreach ($row as $value) {
-                $this->assertInstanceOf(Value::class, $value,'Not a value object at '.$cnt1.'-'.$cnt2);
-                $this->assertSame($expected[$cnt1][$cnt2][0], $value->getRawValue(),'Invalid raw value at '.$cnt1.'-'.$cnt2);
+                $this->assertInstanceOf(Value::class, $value, 'Not a value object at '.$cnt1.'-'.$cnt2);
+                $this->assertSame($expected[$cnt1][$cnt2][0], $value->getRawValue(), 'Invalid raw value at '.$cnt1.'-'.$cnt2);
                 $this->assertSame($expected[$cnt1][$cnt2][1], $value->getUnEscapedValue(), 'Invalid un-escaped value at '.$cnt1.'-'.$cnt2);
                 $this->assertSame($expected[$cnt1][$cnt2][2], $value->isExpression(), 'Invalid expression setting at '.$cnt1.'-'.$cnt2);
                 $cnt2++;
@@ -114,7 +116,5 @@ EOD;
             $cnt1++;
         }
         //var_dump($actual);
-
-
     }
 }

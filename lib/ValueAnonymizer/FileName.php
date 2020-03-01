@@ -24,5 +24,4 @@ class FileName implements ValueAnonymizerInterface
 
         return new AnonymizedValue(EscapeString::escape($anonymizedNameWithoutExtension . $extension));
     }
-
 }

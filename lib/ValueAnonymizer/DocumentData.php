@@ -7,7 +7,6 @@ use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Config;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
-
 class DocumentData implements ValueAnonymizerInterface
 {
     public function anonymize(Value $value, array $row, Config $config): AnonymizedValue
@@ -20,5 +19,4 @@ class DocumentData implements ValueAnonymizerInterface
 
         return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
     }
-
 }

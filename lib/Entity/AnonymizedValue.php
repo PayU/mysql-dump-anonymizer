@@ -22,5 +22,4 @@ final class AnonymizedValue
     {
         return $this->rawValue;
     }
-
 }

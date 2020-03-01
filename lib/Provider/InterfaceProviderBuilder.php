@@ -4,7 +4,8 @@ namespace PayU\MysqlDumpAnonymizer\Provider;
 
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 
-interface InterfaceProviderBuilder {
+interface InterfaceProviderBuilder
+{
 
     /**
      * @throws ConfigValidationException
@@ -12,5 +13,4 @@ interface InterfaceProviderBuilder {
     public function validate() : void;
 
     public function buildProvider() : AnonymizationProviderInterface;
-
 }

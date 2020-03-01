@@ -2,7 +2,8 @@
 
 namespace PayU\MysqlDumpAnonymizer\Entity;
 
-final class LineInfo {
+final class LineInfo
+{
 
     private $isInsert;
     private $table;
@@ -39,6 +40,4 @@ final class LineInfo {
     {
         return $this->columns;
     }
-
-
 }

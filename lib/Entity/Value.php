@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Entity;
 
-
 final class Value
 {
     /** @var string raw value in insert statement */
@@ -54,9 +53,4 @@ final class Value
     {
         $this->rawValue = $rawValue;
     }
-
-
-
-
-
 }

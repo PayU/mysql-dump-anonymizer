@@ -3,7 +3,6 @@
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
-
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Services\DataTypeFactory;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
@@ -47,6 +46,5 @@ class Eav implements ValueAnonymizerInterface
         }
 
         return $this->dataTypes->getDataTypeClass('FreeText', [])->anonymize($value, $row, $config);
-
     }
 }

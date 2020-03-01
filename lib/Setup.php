@@ -9,7 +9,8 @@ use PayU\MysqlDumpAnonymizer\Services\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\Services\LineParser\LineParserInterface;
 use PayU\MysqlDumpAnonymizer\Services\LineParserFactory;
 
-class Setup {
+class Setup
+{
 
     /** @var CommandLineParameters */
     private $commandLineParameters;
@@ -51,7 +52,6 @@ class Setup {
             $lineParser = $this->lineParserFactory->chooseLineParser($this->commandLineParameters->getLineParser());
 
             return [$anonymizationProvider, $lineParser];
-
         } catch (InvalidArgumentException | ConfigValidationException $e) {
             fwrite($errorStream, 'ERROR: ' . $e->getMessage() . "\n");
         }
@@ -59,6 +59,4 @@ class Setup {
         fwrite($errorStream, CommandLineParameters::help());
         exit(1);
     }
-
-
 }

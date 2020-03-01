@@ -23,7 +23,8 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Serialized;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Url;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Username;
 
-final class DataTypeFactory {
+final class DataTypeFactory
+{
 
     /** @var array  */
     private static $dataTypes = [
@@ -59,7 +60,8 @@ final class DataTypeFactory {
      * @param array|null $constructArguments
      * @return ValueAnonymizerInterface
      */
-    public function getDataTypeClass( string $string, array $constructArguments) : ValueAnonymizerInterface {
+    public function getDataTypeClass(string $string, array $constructArguments) : ValueAnonymizerInterface
+    {
         if (!empty($constructArguments)) {
             return new self::$dataTypes[$string](...$constructArguments);
         }
@@ -68,17 +70,18 @@ final class DataTypeFactory {
             $this->instances[$string] = new self::$dataTypes[$string]();
         }
 
-       return $this->instances[$string];
+        return $this->instances[$string];
     }
 
-    public function dataTypeExists(string $string) : bool {
+    public function dataTypeExists(string $string) : bool
+    {
         return array_key_exists($string, self::$dataTypes);
     }
 
-    public static function getDataTypes() : array {
+    public static function getDataTypes() : array
+    {
         return array_map(static function ($value) {
             return substr(strrchr($value, '\\'), 1);
         }, self::$dataTypes);
     }
-
 }

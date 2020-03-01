@@ -6,7 +6,8 @@ use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Config;
 
-interface ValueAnonymizerInterface {
+interface ValueAnonymizerInterface
+{
     /**
      * @param Value $value
      * @param array $row

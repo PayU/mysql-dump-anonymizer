@@ -6,11 +6,13 @@ use PayU\MysqlDumpAnonymizer\Services\LineParser\LineParserInterface;
 use PayU\MysqlDumpAnonymizer\Services\LineParser\MySqlDumpLineParser;
 use RuntimeException;
 
-class LineParserFactory {
+class LineParserFactory
+{
 
     public const LINE_PARSER_MYSQL_DUMP = 'mysqldump';
 
-    public function chooseLineParser($configString) : LineParserInterface {
+    public function chooseLineParser($configString) : LineParserInterface
+    {
 
         if ($configString === self::LINE_PARSER_MYSQL_DUMP) {
             return new MySqlDumpLineParser();
@@ -18,6 +20,4 @@ class LineParserFactory {
 
         throw new RuntimeException('Invalid line parser config');
     }
-
-
 }
