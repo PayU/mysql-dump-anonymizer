@@ -27,7 +27,7 @@ final class LineInfo {
     /**
      * @return string
      */
-    public function getTable()
+    public function getTable(): ?string
     {
         return $this->table;
     }
@@ -35,7 +35,7 @@ final class LineInfo {
     /**
      * @return array
      */
-    public function getColumns()
+    public function getColumns(): ?array
     {
         return $this->columns;
     }

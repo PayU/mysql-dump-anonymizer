@@ -1,20 +1,25 @@
 <?php
 
-namespace PayU\MysqlDumpAnonymizer\Services\ConfigBuilder;
+namespace PayU\MysqlDumpAnonymizer\Provider;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
-use PayU\MysqlDumpAnonymizer\Provider\ColumnAnonymizationProvider;
-use PayU\MysqlDumpAnonymizer\Provider\AnonymizationProvider;
-use PayU\MysqlDumpAnonymizer\Entity\DataTypes;
+use PayU\MysqlDumpAnonymizer\Services\DataTypeFactory;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
-class YamlConfig implements InterfaceConfigBuilder
+class YamlProviderBuilder implements InterfaceProviderBuilder
 {
 
-    public const ACTION_ANONYMIZE = AnonymizationActions::ANONYMIZE;
-    public const ACTION_TRUNCATE = AnonymizationActions::TRUNCATE;
+    public const ACTION_ANONYMIZE = 'anonymize';
+    public const ACTION_TRUNCATE = 'truncate';
+
+    public const ACTION_MAP  = [
+        self::ACTION_ANONYMIZE => AnonymizationActions::ANONYMIZE,
+        self::ACTION_TRUNCATE => AnonymizationActions::TRUNCATE,
+    ];
+
+
     public const ACTION_KEY = 'Action';
     public const COLUMNS_KEY = 'Columns';
     public const COLUMN_NAME_KEY = 'ColumnName';
@@ -24,24 +29,28 @@ class YamlConfig implements InterfaceConfigBuilder
     /** @var string */
     private $anonymizationFile;
 
-    /** @var string */
-    private $noAnonymizationFile;
     /**
      * @var Parser
      */
     private $parser;
 
     /**
-     * @var DataTypes
+     * @var \PayU\MysqlDumpAnonymizer\Services\DataTypeFactory
      */
     private $dataTypes;
 
-    public function __construct($anonymizationFile, $noAnonymizationFile, Parser $parser, DataTypes $dataTypes)
+    private $onNotConfiguredTable;
+
+    private $onNotConfiguredColumn;
+
+    public function __construct($anonymizationFile, Parser $parser, DataTypeFactory $dataTypes, int $onNotConfiguredTable, string $onNotConfiguredColumn)
     {
         $this->anonymizationFile = $anonymizationFile;
-        $this->noAnonymizationFile = $noAnonymizationFile;
         $this->parser = $parser;
         $this->dataTypes = $dataTypes;
+        $this->onNotConfiguredTable = $onNotConfiguredTable;
+        $this->onNotConfiguredColumn = $onNotConfiguredColumn;
+
     }
 
     public function validate(): void
@@ -49,21 +58,11 @@ class YamlConfig implements InterfaceConfigBuilder
         if (!file_exists($this->anonymizationFile)) {
             throw new ConfigValidationException('Cannot find config file 1 ' . $this->anonymizationFile);
         }
-        if (!file_exists($this->noAnonymizationFile)) {
-            throw new ConfigValidationException('Cannot find config file 2 ' . $this->noAnonymizationFile);
-        }
 
         try {
             $anonymizationData = $this->parser->parseFile($this->anonymizationFile);
-            $noAnonymizationData = $this->parser->parseFile($this->noAnonymizationFile);
         } catch (ParseException $e) {
             throw new ConfigValidationException('Cannot parse yml format : ' . $e->getMessage());
-        }
-
-        foreach ($noAnonymizationData as $table => $columns) {
-            if (!is_array($columns)) {
-                throw new ConfigValidationException('No anonymization file table ' . $table . ' doesnt contain any columns');
-            }
         }
 
         foreach ($anonymizationData as $table => $value) {
@@ -76,7 +75,7 @@ class YamlConfig implements InterfaceConfigBuilder
                 throw new ConfigValidationException('Invalid config - Action key must be present - [' . $table . ']');
             }
 
-            if (!in_array($value[self::ACTION_KEY], [self::ACTION_TRUNCATE, self::ACTION_ANONYMIZE], true)) {
+            if (!array_key_exists($value[self::ACTION_KEY], self::ACTION_MAP)) {
                 throw new ConfigValidationException('Invalid Action - [' . $table . ']');
             }
 
@@ -87,6 +86,7 @@ class YamlConfig implements InterfaceConfigBuilder
             if ($value[self::ACTION_KEY] === self::ACTION_ANONYMIZE) {
 
                 $eavColumns = [];
+                $normalColumns = [];
 
                 foreach ($value[self::COLUMNS_KEY] as $key => $columnData) {
 
@@ -108,11 +108,19 @@ class YamlConfig implements InterfaceConfigBuilder
 
 
                     if (array_key_exists(self::WHERE_KEY, $columnData)) {
+                        if (array_key_exists($columnData[self::COLUMN_NAME_KEY], $normalColumns)) {
+                            throw new ConfigValidationException('Invalid config - mixed eav/normal data type [' . $table . ' ' . $columnData[self::DATA_TYPE_KEY] . ']');
+                        }
                         if (strpos($columnData[self::WHERE_KEY], '=') === false) {
                             throw new ConfigValidationException('Invalid config - invalid where - [' . $table . ' ' . $columnData[self::COLUMN_NAME_KEY] . ']');
                         }
                         [$attribute, $value] = explode('=', $columnData[self::WHERE_KEY], 2);
                         $eavColumns[$columnData[self::COLUMN_NAME_KEY]][$attribute][] = $value;
+                    }else{
+                        if (array_key_exists($columnData[self::COLUMN_NAME_KEY], $eavColumns)) {
+                            throw new ConfigValidationException('Invalid config - mixed eav/normal data type [' . $table . ' ' . $columnData[self::DATA_TYPE_KEY] . ']');
+                        }
+                        $normalColumns[] = $columnData[self::COLUMN_NAME_KEY];
                     }
                 }
 
@@ -125,56 +133,52 @@ class YamlConfig implements InterfaceConfigBuilder
         }
     }
 
-
-    public function buildConfig(): AnonymizationProvider
+    public function buildProvider(): AnonymizationProviderInterface
     {
         $anonymizationData = $this->parser->parseFile($this->anonymizationFile);
-        $noAnonymizationData = $this->parser->parseFile($this->noAnonymizationFile);
 
-        $anonymizationConfig = new AnonymizationProvider();
-
-        foreach ($noAnonymizationData as $table => $columns) {
-            $anonymizationConfig->addConfig($table, self::ACTION_ANONYMIZE);
-            $actionConfig = $anonymizationConfig->getActionConfig($table);
-            foreach (array_keys($columns) as $column) {
-                $actionConfig->addColumn($column, new ColumnAnonymizationProvider(false, null,null));
-            }
-        }
-
+        $tableActions = [];
+        $tableColumnsData = [];
 
         foreach ($anonymizationData as $table => $data) {
 
+            $tableActions[$table] = self::ACTION_MAP[$data[self::ACTION_KEY]];
+            $tableColumnsData[$table] = [];
+
             if ($data[self::ACTION_KEY] === self::ACTION_TRUNCATE) {
-                $anonymizationConfig->addConfig($table, self::ACTION_TRUNCATE);
+                continue;
             }
 
-            if ($data[self::ACTION_KEY] === self::ACTION_ANONYMIZE) {
+            $eavColumns = [];
+            foreach ($data[self::COLUMNS_KEY] as $columnData) {
 
-                $anonymizationConfig->addConfig($table, self::ACTION_ANONYMIZE);
-                $actionConfig = $anonymizationConfig->getActionConfig($table);
-
-                $eavColumns = [];
-                foreach ($data[self::COLUMNS_KEY] as $columnData) {
-
-                    if (!array_key_exists(self::WHERE_KEY, $columnData)) {
-                        $actionConfig->addColumn($columnData[self::COLUMN_NAME_KEY], new ColumnAnonymizationProvider($columnData[self::DATA_TYPE_KEY], null, null));
-                    } else {
-                        [$attribute, $value] = explode('=', $columnData[self::WHERE_KEY], 2);
-                        $eavColumns[$columnData[self::COLUMN_NAME_KEY]][$attribute][$value] = $columnData[self::DATA_TYPE_KEY];
-                    }
+                if (!array_key_exists(self::WHERE_KEY, $columnData)) {
+                    $tableColumnsData[$table][$columnData[self::COLUMN_NAME_KEY]] = $this->dataTypes->getDataTypeClass($columnData[self::DATA_TYPE_KEY], []);
+                } else {
+                    [$attribute, $value] = explode('=', $columnData[self::WHERE_KEY], 2);
+                    $eavColumns[$columnData[self::COLUMN_NAME_KEY]][$attribute][$value] = $columnData[self::DATA_TYPE_KEY];
                 }
+            }
 
-                foreach ($eavColumns as $columnName => $eavInfo) {
-                    foreach ($eavInfo as $eavAttribute => $eavValues) {
-                        $actionConfig->addColumn($columnName, new ColumnAnonymizationProvider(true, $eavAttribute, $eavValues));
-                    }
+            foreach ($eavColumns as $columnName => $eavInfos) {
+
+                //TODO replace below with array_key_first on php7.3
+                $attribute = null;
+                /** @noinspection LoopWhichDoesNotLoopInspection  */
+                foreach ($eavInfos as $key=> $value) {
+                    $attribute = $key;
+                    break;
                 }
-
+                $tableColumnsData[$table][$columnName] = $this->dataTypes->getDataTypeClass('Eav', [$attribute, $eavInfos[$attribute], $this->dataTypes]);
             }
         }
 
-        return $anonymizationConfig;
-
+        return new AnonymizationProvider(
+            $tableActions,
+            $this->onNotConfiguredTable,
+            $tableColumnsData,
+            $this->dataTypes->getDataTypeClass($this->onNotConfiguredColumn, [])
+    );
 
     }
 

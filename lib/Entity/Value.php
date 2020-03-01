@@ -34,7 +34,7 @@ final class Value
         return $this->rawValue;
     }
 
-    public function getUnEscapedValue()
+    public function getUnEscapedValue(): string
     {
         return $this->unEscapedValue;
     }

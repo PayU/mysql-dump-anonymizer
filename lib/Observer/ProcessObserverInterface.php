@@ -26,4 +26,5 @@ interface ProcessObserverInterface
 
     public function onNoAnonymization() : void;
 
+    public function onEnd() : void;
 }

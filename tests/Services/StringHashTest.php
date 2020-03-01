@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\Services;
 
-use PayU\MysqlDumpAnonymizer\Services\StringHash;
+use PayU\MysqlDumpAnonymizer\Helper\StringHash;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,8 @@ final class StringHashTest extends TestCase
 
     }
 
-    public function testme() {
+    public function testme(): void
+    {
 
         $word = 'Str. Hello 1213 AA-AA|A&AA%☻AAAAAAAA ';
         for ($i=1;$i<=2;$i++) {

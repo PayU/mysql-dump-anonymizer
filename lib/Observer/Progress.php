@@ -40,10 +40,13 @@ class Progress implements ProcessObserverInterface
      */
     private $anonymizationTotal = 0;
 
+    private $goup;
+
 
     public function onBegin($estimatedTotalInputLength): void
     {
         $this->memoryLimit = ini_get('memory_limit');
+
         switch (substr($this->memoryLimit, -1)) {
             case 'M':
                 $this->memoryLimit = substr($this->memoryLimit, 0, -1) * 1024 * 1024;
@@ -114,8 +117,16 @@ class Progress implements ProcessObserverInterface
         $this->show();
     }
 
+    public function onEnd(): void
+    {
+        $this->output(PHP_EOL);
+    }
+
+
     private function &getAnonymizationType($key): array
     {
+        $key = substr(strrchr($key, '\\'), 1);
+
         if (!array_key_exists($key, $this->anonymizationTypes)) {
             $this->anonymizationTypes[$key] = [
                 'nulls' => 0,
@@ -127,7 +138,7 @@ class Progress implements ProcessObserverInterface
         return $this->anonymizationTypes[$key];
     }
 
-    private function output($string)
+    private function output($string): void
     {
         fwrite(self::$output, $string);
     }
@@ -138,8 +149,16 @@ class Progress implements ProcessObserverInterface
             number_format(round($microseconds, $decimals), $decimals), $pad, ' ', STR_PAD_LEFT);
     }
 
-    private function show()
+    private function show(): void
     {
+
+        if ($this->goup !== null) {
+        //go back where you printed first
+            $this->output("\r");
+            $this->goUp($this->goup);
+        }
+
+
         $timeFar = microtime(true) - $this->startedAt;
 
         $percent = $this->totalReadBytes / $this->total * 100;
@@ -163,7 +182,7 @@ class Progress implements ProcessObserverInterface
             $this->pad('Used Memory')
             . $this->round($usedMem, 0, 15)
             . ' / '
-            . $this->round($this->memoryLimit, 0, 15)
+            . ($this->memoryLimit === '-1' ? ' not limited!' : $this->round($this->memoryLimit, 0, 15))
             . ' (' . $this->round($usedMem / $this->memoryLimit * 100) . '%) 
             ' . PHP_EOL
 
@@ -200,17 +219,16 @@ class Progress implements ProcessObserverInterface
         }
         $this->output($output);
 
-        //go back where you printed first
-        $this->output("\r");
-        $this->goUp($goup);
+        $this->goup = $goup;
+
     }
 
-    private function pad($string)
+    private function pad($string): string
     {
         return str_pad($string, 30, ' ', STR_PAD_LEFT) . ':';
     }
 
-    private function showProgressBar($full, $empty, $percentage)
+    private function showProgressBar($full, $empty, $percentage): void
     {
         $progress = '';
         for ($i = 1; $i <= 100; $i++) {
@@ -223,7 +241,7 @@ class Progress implements ProcessObserverInterface
         $this->output('  ' . $progress . ' ' . $percentage);
     }
 
-    private function goUp($times = 1)
+    private function goUp($times = 1): void
     {
         $this->output(chr(27) . '[' . $times . 'A');
     }

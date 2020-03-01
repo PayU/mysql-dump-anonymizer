@@ -17,6 +17,7 @@ class Observer
     public const EVENT_BEGIN = 9;
     public const EVENT_NULL_VALUE = 10;
     public const EVENT_NO_ANONYMIZATION = 11;
+    public const EVENT_END = 12;
 
     /** @var ProcessObserverInterface[] */
     private $observers = [];
@@ -66,6 +67,9 @@ class Observer
                     break;
                 case self::EVENT_NO_ANONYMIZATION:
                     $observer->onNoAnonymization();
+                    break;
+                case self::EVENT_END:
+                    $observer->onEnd();
                     break;
             }
         }

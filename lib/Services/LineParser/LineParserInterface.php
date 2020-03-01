@@ -2,14 +2,19 @@
 
 namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 
+use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
 
-interface InterfaceLineParser {
+interface LineParserInterface {
 
     public function lineInfo(string $line) : LineInfo;
 
-    public function getRowFromInsertLine(string $line);
+    /**
+     * @param string $line
+     * @return Value[][]  iterate the rows from the (multiple) insert line
+     */
+    public function getRowFromInsertLine(string $line) : iterable;
 
     /**
      * @param string $table

@@ -3,23 +3,59 @@
 namespace PayU\MysqlDumpAnonymizer\Provider;
 
 
-final class AnonymizationProvider {
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\ValueAnonymizerInterface;
 
-    /** @var AnonymizationTableConfig[]*/
-    private $tables = [];
+final class AnonymizationProvider implements AnonymizationProviderInterface {
+
+    /** @var array  */
+    private $tablesAction;
+
+    /** @var ValueAnonymizerInterface[][]  */
+    private $tableColumnsAnonymizationProvider;
+
+    /** @var  int */
+    private $tableNotFoundAction;
 
     /**
-     * @param string $table
-     * @param string $action
+     * @var ValueAnonymizerInterface
      */
-    public function addConfig($table, $action) : void {
-        if (!array_key_exists($table, $this->tables)) {
-            $this->tables[$table] = new AnonymizationTableConfig($action);
-        }
+    private $tableColumnNotFoundAnonymizer;
+
+    /**
+     * AnonymizationProvider constructor.
+     * @param array $tablesAction
+     * @param int $tableNotFoundAction
+     * @param array $tableColumnsAnonymizationProvider
+     * @param ValueAnonymizerInterface $notFoundAnonymizer
+     */
+    public function __construct(
+        $tablesAction,
+        $tableNotFoundAction,
+        array $tableColumnsAnonymizationProvider,
+        ValueAnonymizerInterface $notFoundAnonymizer
+    ) {
+        $this->tablesAction = $tablesAction;
+        $this->tableNotFoundAction = $tableNotFoundAction;
+        $this->tableColumnsAnonymizationProvider = $tableColumnsAnonymizationProvider;
+        $this->tableColumnNotFoundAnonymizer = $notFoundAnonymizer;
     }
 
-    public function getActionConfig($table) : AnonymizationTableConfig {
-        return $this->tables[$table];
+    public function getTableAction($table) {
+        if (array_key_exists($table, $this->tablesAction)) {
+            return $this->tablesAction[$table];
+        }
+        return $this->tableNotFoundAction;
+    }
+
+    public function getAnonymizationFor($table, $column) : ValueAnonymizerInterface {
+        if (
+            array_key_exists($table, $this->tableColumnsAnonymizationProvider)
+            && array_key_exists($column, $this->tableColumnsAnonymizationProvider[$table])
+        ) {
+            return $this->tableColumnsAnonymizationProvider[$table][$column];
+        }
+
+        return $this->tableColumnNotFoundAnonymizer;
     }
 
 

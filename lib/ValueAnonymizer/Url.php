@@ -4,12 +4,12 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Services\EscapeString;
-use PayU\MysqlDumpAnonymizer\Services\StringHash;
+use PayU\MysqlDumpAnonymizer\Config;
+use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
-class Url implements InterfaceDataType
+class Url implements ValueAnonymizerInterface
 {
-    public function anonymize(Value $value): AnonymizedValue
+    public function anonymize(Value $value, array $row, Config $config): AnonymizedValue
     {
         if ($value->isExpression()) {
             return new AnonymizedValue($value->getRawValue());
@@ -18,9 +18,9 @@ class Url implements InterfaceDataType
         $unescapedURL = $value->getUnEscapedValue();
 
         $scheme = parse_url($unescapedURL, PHP_URL_SCHEME);
-        $host = parse_url($unescapedURL, PHP_URL_HOST);
+        $rest = substr($unescapedURL, strlen($scheme)+3);
 
-        $anonymizedHost = (new StringHash('the@salt--'))->hashMe($host);
+        $anonymizedHost = $config->getHashStringHelper()->hashMe($rest);
 
         return new AnonymizedValue(EscapeString::escape($scheme . '://' . $anonymizedHost));
     }

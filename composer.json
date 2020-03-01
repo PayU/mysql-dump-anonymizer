@@ -19,6 +19,7 @@
     },
     "require": {
         "phpmyadmin/sql-parser": "^5.2",
-        "symfony/yaml": "^5.0"
+        "symfony/yaml": "^5.0",
+      "ext-json": "*"
     }
 }

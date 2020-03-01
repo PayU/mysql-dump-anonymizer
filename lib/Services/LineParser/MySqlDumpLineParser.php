@@ -4,12 +4,11 @@ namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
-use Generator;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use RuntimeException;
 
 //TODO all-in-one
-class MySqlDumpLineParser implements InterfaceLineParser
+class MySqlDumpLineParser implements LineParserInterface
 {
 
     public const INSERT_START_STRING = 'INSERT INTO';
@@ -80,12 +79,11 @@ class MySqlDumpLineParser implements InterfaceLineParser
     /**
      * @param string $insertLineString
      * @return Value[][]
-     * @noinspection PhpDocSignatureInspection
      */
-    private function parseValuesList(string $insertLineString): Generator
+    private function parseValuesList(string $insertLineString): iterable
     {
-        if (!preg_match(self::INSERT_LINE_PATTERN, $insertLineString, $match)) {
-            throw new RuntimeException('Invalid insert line');
+        if (!preg_match(self::INSERT_LINE_PATTERN, rtrim($insertLineString), $match)) {
+            throw new RuntimeException('Invalid insert line:'.substr($insertLineString, 0, 500));
         }
 
         $rawValues = $match[3];

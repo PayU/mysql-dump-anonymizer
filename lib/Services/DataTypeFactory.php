@@ -1,6 +1,5 @@
 <?php
-//TODO factory this
-namespace PayU\MysqlDumpAnonymizer\Entity;
+namespace PayU\MysqlDumpAnonymizer\Services;
 
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BankData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BinaryData;
@@ -8,11 +7,13 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizer\CardData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Credentials;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Date;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\DocumentData;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Eav;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Email;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\FileName;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\FreeText;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Id;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\InterfaceDataType;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\NoAnonymization;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizer\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Ip;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\IpInt;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Json;
@@ -22,10 +23,11 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Serialized;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Url;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Username;
 
-final class DataTypes {
+final class DataTypeFactory {
 
     /** @var array  */
     private static $dataTypes = [
+        'FreeText' => FreeText::class,
         'BankData' => BankData::class,
         'BinaryData' => BinaryData::class,
         'CardData' => CardData::class,
@@ -34,7 +36,6 @@ final class DataTypes {
         'DocumentData' => DocumentData::class,
         'Email' => Email::class,
         'FileName' => FileName::class,
-        'FreeText' => FreeText::class,
         'Id' => Id::class,
         'Ip' => Ip::class,
         'IpInt' => IpInt::class,
@@ -44,24 +45,40 @@ final class DataTypes {
         'Serialized' => Serialized::class,
         'Url' => Url::class,
         'Username' => Username::class,
+        'Eav' => Eav::class,
+        'NoAnonymization' => NoAnonymization::class
     ];
+
+    public const NO_ANONYMIZATION = 'NoAnonymization';
+
+    /** @var ValueAnonymizerInterface[]  */
+    private $instances = [];
 
     /**
      * @param string $string
-     * @return InterfaceDataType
+     * @param array|null $constructArguments
+     * @return ValueAnonymizerInterface
      */
-    public function getDataTypeClass(string $string) : InterfaceDataType {
-        //TODO eav maybe here like
-        /*
-        if ($string = 'Eav') {
-            return (new self::$dataTypes[$string]);
+    public function getDataTypeClass( string $string, array $constructArguments) : ValueAnonymizerInterface {
+        if (!empty($constructArguments)) {
+            return new self::$dataTypes[$string](...$constructArguments);
         }
-        */
-       return (new self::$dataTypes[$string]);
+
+        if (!array_key_exists($string, $this->instances)) {
+            $this->instances[$string] = new self::$dataTypes[$string]();
+        }
+
+       return $this->instances[$string];
     }
 
     public function dataTypeExists(string $string) : bool {
         return array_key_exists($string, self::$dataTypes);
+    }
+
+    public static function getDataTypes() : array {
+        return array_map(static function ($value) {
+            return substr(strrchr($value, '\\'), 1);
+        }, self::$dataTypes);
     }
 
 }

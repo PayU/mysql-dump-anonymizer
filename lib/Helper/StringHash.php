@@ -1,6 +1,6 @@
 <?php
 
-namespace PayU\MysqlDumpAnonymizer\Services;
+namespace PayU\MysqlDumpAnonymizer\Helper;
 
 class StringHash
 {
@@ -38,8 +38,13 @@ class StringHash
         $this->salt = $salt;
     }
 
+    public function sha256($string, $raw_output = false): string
+    {
+        return hash('sha256', $string.$this->salt, $raw_output);
+    }
 
-    public function hashMe($word, $anonymizePunctuation = false): string
+
+    public function hashMe($word, $anonymizePunctuation = false) : string
     {
         $word = (string)$word;
 
