@@ -37,11 +37,11 @@ final class StringHashTest extends TestCase
     public function manyProvider()
     {
         return [
-            ['Str. Hello 1213 AA-AA|A&AA%☻AAAAAAAA ', 'Nxz. Ymfas 9298 KW-WG|C&WW%g@?OKSWOKKW '],
-            ['/admin/log_monitor.php', '/odfeb/ymt_wecgccw.gsw'],
-            ['newline' . "\n" . 'end', 'uqhxkzp' . "\n" . 'wsk'],
-            ['newline' . "\r\n" . 'end', 'qjkeiou' . "\r\n" . 'wks'],
-            ['newline' . "\t" . 'end', 'slmeavk' . "\t" . 'qmz'],
+            ['Str. Hello 1213 AA-AA|A&AA%☻AAAAAAAA ', 'Oss. Cwogo 0288 KW-WO|C&CS%o!!CGKSKGCC '],
+            ['/admin/log_monitor.php', '/sckgs/wco_gowwowo.wsw'],
+            ['newline' . "\n" . 'end', 'gwscksc'."\n".'wsk'],
+            ['newline' . "\r\n" . 'end', 'sowwgko'."\r\n".'gkw'],
+            ['newline' . "\t" . 'end', 'ocsswcc'."\t".'wko'],
         ];
     }
 }
