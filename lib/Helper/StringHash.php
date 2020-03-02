@@ -4,7 +4,6 @@ namespace PayU\MysqlDumpAnonymizer\Helper;
 
 class StringHash
 {
-
     private const PUNCTUATION = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';//32
 
     private const NUMBERS = 'numbers';
@@ -25,7 +24,6 @@ class StringHash
         self::SIGNS => -1,
     ];
 
-
     /**
      * @var string
      */
@@ -38,17 +36,16 @@ class StringHash
         $this->salt = $salt;
     }
 
-    public function sha256($string, $raw_output = false): string
+    public function sha256($string, $rawOutput = false): string
     {
-        return hash('sha256', $string.$this->salt, $raw_output);
+        return hash('sha256', $string . $this->salt, $rawOutput);
     }
-
 
     public function hashMe($word, $anonymizePunctuation = false) : string
     {
         $word = (string)$word;
 
-        $this->hash = hash('sha256', $word . $this->salt);
+        $this->hash = $this->sha256($word);
 
         $ret = '';
 
@@ -79,13 +76,12 @@ class StringHash
         return $ret;
     }
 
-
     private function generateLetterStack(): void
     {
         $this->stacks[self::LETTERS] = str_replace(range(0, 9), '', base_convert($this->hash, 16, 36));
         if (strlen($this->stacks[self::LETTERS]) < 10) {
             //in the rare event when the sha hash has less than 10 chars
-            $this->stacks[self::LETTERS] .= $this->numbers2letters(base_convert($this->hash, 16, 10));
+            $this->stacks[self::LETTERS] .= $this->numbersToLetters(base_convert($this->hash, 16, 10));
         }
     }
 
@@ -94,11 +90,8 @@ class StringHash
         $this->stacks[self::NUMBERS] = base_convert($this->hash, 16, 10); //64 length
     }
 
-
     private function generateSignsStack(): void
     {
-
-
         $choose = base_convert($this->hash, 16, 32);
         $len = strlen($choose);
         $ret = '';
@@ -110,12 +103,11 @@ class StringHash
         $this->stacks[self::SIGNS] = $ret;
     }
 
-
     /**
      * @param string $numbers 64 number characters
      * @return string
      */
-    private function numbers2letters(string $numbers): string
+    private function numbersToLetters(string $numbers): string
     {
         $len = strlen($numbers); //len a
         $sureLetters = '';
@@ -130,13 +122,12 @@ class StringHash
                 $chr++;
             }
         }
+
         return $sureLetters;
     }
 
     private function getNextFromStack(string $string): string
     {
-
-
         if ($this->cnt[$string] === -1) {
             //first run
             if ($string === self::NUMBERS) {
