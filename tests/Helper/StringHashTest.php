@@ -63,4 +63,23 @@ final class StringHashTest extends TestCase
 
         $this->assertSame($expected, $actual);
     }
+
+    /**
+     * @dataProvider manyProvider
+     * @param string $input
+     * @param string $expected
+     */
+    public function testMany($input, $expected) {
+
+        $actual = $this->sut->hashMe($input);
+        $this->assertSame($expected, $actual);
+
+    }
+
+    public function manyProvider()
+    {
+        return [
+            ['/admin/log_monitor.php', '/odfeb/ymt_wecgccw.gsw']
+        ];
+    }
 }

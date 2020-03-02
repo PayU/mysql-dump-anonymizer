@@ -22,6 +22,6 @@ class FileName implements ValueAnonymizerInterface
 
         $anonymizedNameWithoutExtension = $config->getHashStringHelper()->hashMe($nameWithoutExtension);
 
-        return new AnonymizedValue(EscapeString::escape($anonymizedNameWithoutExtension . $extension));
+        return new AnonymizedValue(EscapeString::escape($anonymizedNameWithoutExtension . '.'.$extension));
     }
 }
