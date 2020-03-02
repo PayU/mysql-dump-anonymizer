@@ -1,6 +1,5 @@
 <?php
 
-
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
@@ -18,7 +17,7 @@ class Eav implements ValueAnonymizerInterface
     private $dataTypes;
 
     /**
-     * EavValueAnonymizer constructor.
+     * Eav constructor.
      * @param $attributeColumnName
      * @param array $attributeValues
      * @param DataTypeFactory $dataTypes
