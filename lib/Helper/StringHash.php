@@ -43,9 +43,18 @@ class StringHash
 
     public function hashMe($word, $anonymizePunctuation = false) : string
     {
+
+        $this->cnt = [
+            self::NUMBERS => -1,
+            self::LETTERS => -1,
+            self::SIGNS => -1,
+        ];
+
+
         $word = (string)$word;
 
-        $this->hash = $this->sha256($word);
+        $this->hash = $this->sha256($word.strrev($word));
+        $this->hash .= $this->sha256(strrev($word).$word);
 
         $ret = '';
 
