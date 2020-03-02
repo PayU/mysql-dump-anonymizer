@@ -15,7 +15,14 @@ class Username implements ValueAnonymizerInterface
             return new AnonymizedValue($value->getRawValue());
         }
 
-        $anonymizedEscapedValue = $config->getHashStringHelper()->hashMe($value->getUnEscapedValue());
+        $unescapedValue = $value->getUnEscapedValue();
+
+        //we want the anonymizedValue length to be at least 7
+        if (strlen($unescapedValue) >= 7) {
+            $anonymizedEscapedValue = $config->getHashStringHelper()->hashMe($unescapedValue);
+        } else {
+            $anonymizedEscapedValue = substr($config->getHashStringHelper()->sha256($unescapedValue), 0, 7);
+        }
 
         return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
     }
