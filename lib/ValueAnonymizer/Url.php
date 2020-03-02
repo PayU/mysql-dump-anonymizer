@@ -18,10 +18,15 @@ class Url implements ValueAnonymizerInterface
         $unescapedURL = $value->getUnEscapedValue();
 
         $scheme = parse_url($unescapedURL, PHP_URL_SCHEME);
-        $rest = substr($unescapedURL, strlen($scheme) + 3);
 
-        $anonymizedHost = $config->getHashStringHelper()->hashMe($rest);
+        if ($scheme !== null) {
+            $host = substr($unescapedURL, strlen($scheme) + 3);
+            $anonymizedHost = $config->getHashStringHelper()->hashMe($host);
+            $anonymizedUrl = $scheme . '://' . $anonymizedHost;
+        } else {
+            $anonymizedUrl = $config->getHashStringHelper()->hashMe($unescapedURL);
+        }
 
-        return new AnonymizedValue(EscapeString::escape($scheme . '://' . $anonymizedHost));
+        return new AnonymizedValue(EscapeString::escape($anonymizedUrl));
     }
 }
