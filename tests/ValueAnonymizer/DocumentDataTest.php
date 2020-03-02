@@ -22,11 +22,10 @@ class DocumentDataTest extends TestCase
         $this->sut = new DocumentData();
     }
 
-    /** @dataProvider hashes */
-    public function testAnonymize($hash, $expectedDocumentDataHash)
+    public function testAnonymize()
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
-        $hashStringMock->method('hashMe')->willReturn($hash);
+        $hashStringMock->method('hashMe')->willReturn('74eca695');
 
         /** @var Config|MockObject $configMock */
         $configMock = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
@@ -34,15 +33,6 @@ class DocumentDataTest extends TestCase
 
         $actual = $this->sut->anonymize(new Value('\'RO427320\'', 'RO427320', false), [], $configMock);
 
-        $this->assertSame($expectedDocumentDataHash, $actual->getRawValue());
-    }
-
-    public function hashes()
-    {
-        return [
-            ['74eca695', '\'74eca695\''],
-            ['78f92788', '\'78f92788\''],
-            ['57ea99ae3', '\'57ea99ae3\''],
-        ];
+        $this->assertSame('\'74eca695\'', $actual->getRawValue());
     }
 }

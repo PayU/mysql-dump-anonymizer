@@ -18,7 +18,7 @@ class Url implements ValueAnonymizerInterface
         $unescapedURL = $value->getUnEscapedValue();
 
         $scheme = parse_url($unescapedURL, PHP_URL_SCHEME);
-        $rest = substr($unescapedURL, strlen($scheme)+3);
+        $rest = substr($unescapedURL, strlen($scheme) + 3);
 
         $anonymizedHost = $config->getHashStringHelper()->hashMe($rest);
 
