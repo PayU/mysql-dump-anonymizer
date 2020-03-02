@@ -1,10 +1,10 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
+use PayU\MysqlDumpAnonymizer\LineDump\LineDump;
 use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Provider\AnonymizationProviderInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
@@ -15,9 +15,6 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizer\ValueAnonymizerInterface;
 
 class Anonymizer
 {
-    /** @var CommandLineParameters */
-    private $commandLineParameters;
-
     /** @var Observer */
     private $observer;
 
@@ -32,16 +29,21 @@ class Anonymizer
     /** @var LineParserInterface */
     private $lineParser;
 
+    /**
+     * @var LineDump
+     */
+    private $lineDump;
+
     public function __construct(
-        CommandLineParameters $commandLineParameters,
         AnonymizationProviderInterface $anonymizationProvider,
         LineParserInterface $lineParser,
+        LineDump $lineDump,
         Observer $observer,
         Config $config
     ) {
-        $this->commandLineParameters = $commandLineParameters;
         $this->anonymizationProvider = $anonymizationProvider;
         $this->lineParser = $lineParser;
+        $this->lineDump = $lineDump;
         $this->observer = $observer;
         $this->config = $config;
     }
@@ -49,8 +51,6 @@ class Anonymizer
 
     public function run($inputStream, $outputStream): void
     {
-
-        $this->observer->notify(Observer::EVENT_BEGIN, $this->commandLineParameters->getEstimatedDumpSize());
 
         while ($line = $this->readLine($inputStream)) {
             fwrite($outputStream, $this->anonymizeLine($line));
@@ -126,7 +126,7 @@ class Anonymizer
             $anonymizedValues[] = $anonymizedValue;
         }
 
-        return $this->lineParser->rebuildInsertLine($table, $lineColumns, $anonymizedValues);
+        return $this->lineDump->rebuildInsertLine($table, $lineColumns, $anonymizedValues);
     }
 
     /**

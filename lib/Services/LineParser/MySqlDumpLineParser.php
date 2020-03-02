@@ -2,7 +2,6 @@
 
 namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use RuntimeException;
@@ -53,27 +52,6 @@ class MySqlDumpLineParser implements LineParserInterface
     public function getRowFromInsertLine(string $line) : iterable
     {
         yield from $this->parseValuesList($line);
-    }
-
-    /**
-     * @param string $table
-     * @param array $columns
-     * @param AnonymizedValue[][] $rows
-     * @return string
-     */
-    public function rebuildInsertLine(string $table, array $columns, array $rows) : string
-    {
-        $dumpQuery = 'INSERT'.' INTO `'.$table.'` (`';
-        $dumpQuery .= implode('`, `', $columns);
-        $dumpQuery .= '`) VALUES (';
-
-        foreach ($rows as $row) {
-            foreach ($row as $value) {
-                $dumpQuery .= $value->getRawValue().', ';
-            }
-            $dumpQuery = substr($dumpQuery, 0, -2).'), (';
-        }
-        return substr($dumpQuery, 0, -3).';';
     }
 
     /**

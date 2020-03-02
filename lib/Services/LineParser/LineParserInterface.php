@@ -3,7 +3,6 @@
 namespace PayU\MysqlDumpAnonymizer\Services\LineParser;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
 
 interface LineParserInterface
@@ -17,11 +16,4 @@ interface LineParserInterface
      */
     public function getRowFromInsertLine(string $line) : iterable;
 
-    /**
-     * @param string $table
-     * @param array $columns
-     * @param AnonymizedValue[][] $values
-     * @return string
-     */
-    public function rebuildInsertLine(string $table, array $columns, array $values) : string;
 }

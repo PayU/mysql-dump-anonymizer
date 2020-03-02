@@ -2,6 +2,7 @@
 use PayU\MysqlDumpAnonymizer\Anonymizer;
 use PayU\MysqlDumpAnonymizer\CommandLineParameters;
 use PayU\MysqlDumpAnonymizer\Config;
+use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use PayU\MysqlDumpAnonymizer\Observer;
 use PayU\MysqlDumpAnonymizer\Setup;
 
@@ -14,15 +15,26 @@ $commandLineParameters = new CommandLineParameters();
 $observer = new Observer();
 $config = new Config();
 
+try {
 
-[$anonymizationProvider, $lineParser] = (new Setup($commandLineParameters, $observer))->setup(STDERR);
+    $setup = new Setup($commandLineParameters, $observer);
+    $setup->setup();
 
-$application = new Anonymizer(
-    $commandLineParameters,
-    $anonymizationProvider,
-    $lineParser,
-    $observer,
-    $config
-);
+    $observer->notify(Observer::EVENT_BEGIN, $this->commandLineParameters->getEstimatedDumpSize());
 
-$application->run(STDIN, STDOUT);
+    $application = new Anonymizer(
+        $setup->getAnonymizationProvider(),
+        $setup->getLineParser(),
+        $setup->getLineDump(),
+        $observer,
+        $config
+    );
+
+    $application->run(STDIN, STDOUT);
+
+} catch (InvalidArgumentException | ConfigValidationException $e) {
+    fwrite(STDERR, 'ERROR: ' . $e->getMessage() . "\n");
+    fwrite(STDERR, CommandLineParameters::help());
+    exit(1);
+}
+
