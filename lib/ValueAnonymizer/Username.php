@@ -17,11 +17,13 @@ class Username implements ValueAnonymizerInterface
 
         $unescapedValue = $value->getUnEscapedValue();
 
-        //we want the anonymizedValue length to be at least 7
-        if (strlen($unescapedValue) >= 7) {
+        //we want the anonymizedValue length to be at least 12
+        if (strlen($unescapedValue) >= 12) {
             $anonymizedEscapedValue = $config->getHashStringHelper()->hashMe($unescapedValue);
         } else {
-            $anonymizedEscapedValue = substr($config->getHashStringHelper()->sha256($unescapedValue), 0, 7);
+            $anonymizedEscapedValue = $config->getHashStringHelper()->hashMe(
+                    substr($config->getHashStringHelper()->sha256($unescapedValue), 0, 12)
+            );
         }
 
         return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
