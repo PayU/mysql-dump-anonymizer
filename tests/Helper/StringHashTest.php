@@ -21,55 +21,13 @@ final class StringHashTest extends TestCase
         $this->sut = new StringHash('test-salt');
     }
 
-    public function testme(): void
-    {
-
-        $word = 'Str. Hello 1213 AA-AA|A&AA%☻AAAAAAAA ';
-        $expected = 'Nxz. Ymfas 9298 KW-WG|C&WW%g@?OKSWOKKW ';
-
-        $actual = $this->sut->hashMe($word);
-        $this->assertSame($expected, $actual);
-    }
-
-    public function testUnixLines(): void
-    {
-
-        $word = 'newline'."\n". 'end';
-        $expected = 'uqhxkzp'."\n".'wsk';
-
-        $actual = $this->sut->hashMe($word);
-
-        $this->assertSame($expected, $actual);
-    }
-
-    public function testWindowsLines(): void
-    {
-
-        $word = 'newline'."\r\n". 'end';
-        $expected = 'qjkeiou'."\r\n".'wks';
-
-        $actual = $this->sut->hashMe($word);
-
-        $this->assertSame($expected, $actual);
-    }
-
-    public function testTabs(): void
-    {
-
-        $word = 'newline'."\t". 'end';
-        $expected = 'slmeavk'."\t".'qmz';
-
-        $actual = $this->sut->hashMe($word);
-
-        $this->assertSame($expected, $actual);
-    }
-
     /**
      * @dataProvider manyProvider
      * @param string $input
      * @param string $expected
      */
-    public function testMany($input, $expected) {
+    public function testMany($input, $expected)
+    {
 
         $actual = $this->sut->hashMe($input);
         $this->assertSame($expected, $actual);
@@ -79,7 +37,11 @@ final class StringHashTest extends TestCase
     public function manyProvider()
     {
         return [
-            ['/admin/log_monitor.php', '/odfeb/ymt_wecgccw.gsw']
+            ['Str. Hello 1213 AA-AA|A&AA%☻AAAAAAAA ', 'Nxz. Ymfas 9298 KW-WG|C&WW%g@?OKSWOKKW '],
+            ['/admin/log_monitor.php', '/odfeb/ymt_wecgccw.gsw'],
+            ['newline' . "\n" . 'end', 'uqhxkzp' . "\n" . 'wsk'],
+            ['newline' . "\r\n" . 'end', 'qjkeiou' . "\r\n" . 'wks'],
+            ['newline' . "\t" . 'end', 'slmeavk' . "\t" . 'qmz'],
         ];
     }
 }
