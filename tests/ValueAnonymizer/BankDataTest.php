@@ -35,4 +35,11 @@ class BankDataTest extends TestCase
 
         $this->assertSame('\'84fc\'', $actual->getRawValue());
     }
+
+    public function testAnonymizeReturnSameValueIfExpression()
+    {
+        $actual = $this->sut->anonymize(new Value('\'expression\'', 'expression', true), [], new Config());
+
+        $this->assertSame('\'expression\'', $actual->getRawValue());
+    }
 }
