@@ -3,7 +3,7 @@
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
-use PayU\MysqlDumpAnonymizer\Services\DataTypeFactory;
+use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Config;
 
@@ -12,21 +12,21 @@ class Eav implements ValueAnonymizerInterface
     private $attributeColumnName;
     private $attributeValues;
     /**
-     * @var DataTypeFactory
+     * @var ValueAnonymizerFactory
      */
-    private $dataTypes;
+    private $valueAnonymizerFactory;
 
     /**
      * Eav constructor.
      * @param $attributeColumnName
      * @param array $attributeValues
-     * @param DataTypeFactory $dataTypes
+     * @param ValueAnonymizerFactory $valueAnonymizerFactory
      */
-    public function __construct($attributeColumnName, array $attributeValues, DataTypeFactory $dataTypes)
+    public function __construct($attributeColumnName, array $attributeValues, ValueAnonymizerFactory $valueAnonymizerFactory)
     {
         $this->attributeColumnName = $attributeColumnName;
         $this->attributeValues = $attributeValues;
-        $this->dataTypes = $dataTypes;
+        $this->valueAnonymizerFactory = $valueAnonymizerFactory;
     }
 
 
@@ -40,10 +40,10 @@ class Eav implements ValueAnonymizerInterface
     {
         foreach ($this->attributeValues as $onValue => $anonymizeLikeThis) {
             if ($row[$this->attributeColumnName]->getUnEscapedValue() === $onValue) {
-                return $this->dataTypes->getDataTypeClass($anonymizeLikeThis, [])->anonymize($value, $row, $config);
+                return $this->valueAnonymizerFactory->getValueAnonymizerClass($anonymizeLikeThis, [])->anonymize($value, $row, $config);
             }
         }
 
-        return $this->dataTypes->getDataTypeClass('FreeText', [])->anonymize($value, $row, $config);
+        return $this->valueAnonymizerFactory->getValueAnonymizerClass('FreeText', [])->anonymize($value, $row, $config);
     }
 }

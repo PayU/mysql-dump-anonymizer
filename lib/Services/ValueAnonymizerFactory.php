@@ -23,11 +23,11 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Serialized;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Url;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Username;
 
-final class DataTypeFactory
+final class ValueAnonymizerFactory
 {
 
     /** @var array  */
-    private static $dataTypes = [
+    private static $valueAnonymizers = [
         'FreeText' => FreeText::class,
         'BankData' => BankData::class,
         'BinaryData' => BinaryData::class,
@@ -60,28 +60,28 @@ final class DataTypeFactory
      * @param array|null $constructArguments
      * @return ValueAnonymizerInterface
      */
-    public function getDataTypeClass(string $string, array $constructArguments) : ValueAnonymizerInterface
+    public function getValueAnonymizerClass(string $string, array $constructArguments) : ValueAnonymizerInterface
     {
         if (!empty($constructArguments)) {
-            return new self::$dataTypes[$string](...$constructArguments);
+            return new self::$valueAnonymizers[$string](...$constructArguments);
         }
 
         if (!array_key_exists($string, $this->instances)) {
-            $this->instances[$string] = new self::$dataTypes[$string]();
+            $this->instances[$string] = new self::$valueAnonymizers[$string]();
         }
 
         return $this->instances[$string];
     }
 
-    public function dataTypeExists(string $string) : bool
+    public function valueAnonymizerExists(string $string) : bool
     {
-        return array_key_exists($string, self::$dataTypes);
+        return array_key_exists($string, self::$valueAnonymizers);
     }
 
-    public static function getDataTypes() : array
+    public static function getValueAnonymizers() : array
     {
         return array_map(static function ($value) {
             return substr(strrchr($value, '\\'), 1);
-        }, self::$dataTypes);
+        }, self::$valueAnonymizers);
     }
 }

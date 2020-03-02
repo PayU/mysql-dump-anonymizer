@@ -3,7 +3,7 @@
 namespace PayU\MysqlDumpAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
-use PayU\MysqlDumpAnonymizer\Services\DataTypeFactory;
+use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Services\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\Services\LineParserFactory;
 use InvalidArgumentException;
@@ -26,7 +26,7 @@ final class CommandLineParameters
     private $showProgress = 1;
     /** @var string  */
     private $onNotConfiguredTable = AnonymizationActions::ANONYMIZE;
-    private $onNotConfiguredColumn = DataTypeFactory::NO_ANONYMIZATION;
+    private $onNotConfiguredColumn = ValueAnonymizerFactory::NO_ANONYMIZATION;
 
 
     public function setCommandLineArguments($args): void
@@ -68,11 +68,11 @@ final class CommandLineParameters
     public static function help(): string
     {
 
-        $dataTypes = DataTypeFactory::getDataTypes();
-        $dataTypesCount = count($dataTypes);
+        $valueAnonymizers = ValueAnonymizerFactory::getValueAnonymizers();
+        $valueAnonymizersCount = count($valueAnonymizers);
         $showTheFirst = 6;
-        $dataTypesShow = implode(',', array_slice($dataTypes, 0, 6));
-        $more = ' '.$dataTypesCount-$showTheFirst.' more';
+        $valueAnonymizersShow = implode(',', array_slice($valueAnonymizers, 0, 6));
+        $more = ' '.$valueAnonymizersCount-$showTheFirst.' more';
 
         return '
 Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .self::PARAM_CONFIG_FILES. '=FILENAME [OPTIONS]'
@@ -94,9 +94,9 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .s
             .'   ' .self::pad('').' Action to be taken when script reads a table that is not present in the config.'.PHP_EOL
             .'   ' .self::pad('').' Possible values: '.implode(', ', array_keys(AnonymizationActions::DESC))
             .'. '.PHP_EOL.PHP_EOL
-            .' --' .self::pad(self::PARAM_ON_NOT_CONFIGURED_COLUMN).' Default value: '.DataTypeFactory::NO_ANONYMIZATION.PHP_EOL
+            .' --' .self::pad(self::PARAM_ON_NOT_CONFIGURED_COLUMN).' Default value: '.ValueAnonymizerFactory::NO_ANONYMIZATION.PHP_EOL
             .'   ' .self::pad('').' Anonymization type for columns not present in the config.'.PHP_EOL
-            .'   ' .self::pad('').' Possible values: '.$dataTypesShow.' ('.$more.')'.PHP_EOL.PHP_EOL
+            .'   ' .self::pad('').' Possible values: '.$valueAnonymizersShow.' ('.$more.')'.PHP_EOL.PHP_EOL
             .'';
     }
 

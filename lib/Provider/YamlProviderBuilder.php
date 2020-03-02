@@ -3,7 +3,7 @@
 namespace PayU\MysqlDumpAnonymizer\Provider;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
-use PayU\MysqlDumpAnonymizer\Services\DataTypeFactory;
+use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
@@ -35,9 +35,9 @@ class YamlProviderBuilder implements InterfaceProviderBuilder
     private $parser;
 
     /**
-     * @var \PayU\MysqlDumpAnonymizer\Services\DataTypeFactory
+     * @var \PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory
      */
-    private $dataTypes;
+    private $valueAnonymizerFactory;
 
     private $onNotConfiguredTable;
 
@@ -46,13 +46,13 @@ class YamlProviderBuilder implements InterfaceProviderBuilder
     public function __construct(
         $anonymizationFile,
         Parser $parser,
-        DataTypeFactory $dataTypes,
+        ValueAnonymizerFactory $valueAnonymizerFactory,
         int $onNotConfiguredTable,
         string $onNotConfiguredColumn
     ) {
         $this->anonymizationFile = $anonymizationFile;
         $this->parser = $parser;
-        $this->dataTypes = $dataTypes;
+        $this->valueAnonymizerFactory = $valueAnonymizerFactory;
         $this->onNotConfiguredTable = $onNotConfiguredTable;
         $this->onNotConfiguredColumn = $onNotConfiguredColumn;
     }
@@ -109,7 +109,7 @@ class YamlProviderBuilder implements InterfaceProviderBuilder
                         );
                     }
 
-                    if ($this->dataTypes->dataTypeExists($columnData[self::DATA_TYPE_KEY]) === false) {
+                    if ($this->valueAnonymizerFactory->valueAnonymizerExists($columnData[self::DATA_TYPE_KEY]) === false) {
                         throw new ConfigValidationException(
                             'Invalid config - invalid data type key - [' . $table . ' ' . $columnData[self::DATA_TYPE_KEY] . ']'
                         );
@@ -168,7 +168,7 @@ class YamlProviderBuilder implements InterfaceProviderBuilder
             $eavColumns = [];
             foreach ($data[self::COLUMNS_KEY] as $columnData) {
                 if (!array_key_exists(self::WHERE_KEY, $columnData)) {
-                    $tableColumnsData[$table][$columnData[self::COLUMN_NAME_KEY]] = $this->dataTypes->getDataTypeClass(
+                    $tableColumnsData[$table][$columnData[self::COLUMN_NAME_KEY]] = $this->valueAnonymizerFactory->getValueAnonymizerClass(
                         $columnData[self::DATA_TYPE_KEY],
                         []
                     );
@@ -186,9 +186,9 @@ class YamlProviderBuilder implements InterfaceProviderBuilder
                     $attribute = $key;
                     break;
                 }
-                $tableColumnsData[$table][$columnName] = $this->dataTypes->getDataTypeClass(
+                $tableColumnsData[$table][$columnName] = $this->valueAnonymizerFactory->getValueAnonymizerClass(
                     'Eav',
-                    [$attribute, $eavInfos[$attribute], $this->dataTypes]
+                    [$attribute, $eavInfos[$attribute], $this->valueAnonymizerFactory]
                 );
             }
         }
@@ -197,7 +197,7 @@ class YamlProviderBuilder implements InterfaceProviderBuilder
             $tableActions,
             $this->onNotConfiguredTable,
             $tableColumnsData,
-            $this->dataTypes->getDataTypeClass($this->onNotConfiguredColumn, [])
+            $this->valueAnonymizerFactory->getValueAnonymizerClass($this->onNotConfiguredColumn, [])
         );
     }
 }

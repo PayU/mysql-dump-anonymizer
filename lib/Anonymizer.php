@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
-use PayU\MysqlDumpAnonymizer\Services\DataTypeFactory;
+use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Provider\AnonymizationProviderInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
@@ -96,7 +96,7 @@ class Anonymizer
         $insertRequiresAnonymization = false;
         foreach ($lineColumns as $column) {
             $valueAnonymizer = $this->anonymizationProvider->getAnonymizationFor($table, $column);
-            if (get_class($valueAnonymizer) !== DataTypeFactory::getDataTypes()[DataTypeFactory::NO_ANONYMIZATION]) {
+            if (get_class($valueAnonymizer) !== ValueAnonymizerFactory::getValueAnonymizers()[ValueAnonymizerFactory::NO_ANONYMIZATION]) {
                 $insertRequiresAnonymization = true;
                 break;
             }

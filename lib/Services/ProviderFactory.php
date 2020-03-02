@@ -32,7 +32,7 @@ class ProviderFactory
             return new YamlProviderBuilder(
                 $this->commandLineParameters->getConfigFile(),
                 new Parser(),
-                new DataTypeFactory(),
+                new ValueAnonymizerFactory(),
                 $this->commandLineParameters->getOnNotConfiguredTable(),
                 $this->commandLineParameters->getOnNotConfiguredColumn()
             );
