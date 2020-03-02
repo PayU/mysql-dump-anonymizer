@@ -15,8 +15,15 @@ class FreeText implements ValueAnonymizerInterface
             return new AnonymizedValue($value->getRawValue());
         }
 
-        $anonymizedEscapedValue = $config->getHashStringHelper()->hashMe($value->getUnEscapedValue());
+        $string = $value->getUnEscapedValue();
+        if (strlen($string) < 12) {
+            $anonymizedString = $config->getHashStringHelper()->hashMe(
+                substr($config->getHashStringHelper()->sha256($string), 0 ,12)
+            );
+        }else{
+            $anonymizedString = $config->getHashStringHelper()->hashMe($value->getUnEscapedValue());
+        }
 
-        return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
+        return new AnonymizedValue(EscapeString::escape($anonymizedString));
     }
 }
