@@ -24,7 +24,6 @@ class StringHash
         self::SIGNS => -1,
     ];
 
-
     /**
      * @var string
      */
@@ -46,7 +45,7 @@ class StringHash
     {
         $word = (string)$word;
 
-        $this->hash = hash('sha256', $word . $this->salt);
+        $this->hash = $this->sha256($word);
 
         $ret = '';
 
