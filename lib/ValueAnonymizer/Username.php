@@ -22,7 +22,7 @@ class Username implements ValueAnonymizerInterface
             $anonymizedEscapedValue = $config->getHashStringHelper()->hashMe($unescapedValue);
         } else {
             $anonymizedEscapedValue = $config->getHashStringHelper()->hashMe(
-                    substr($config->getHashStringHelper()->sha256($unescapedValue), 0, 12)
+                substr($config->getHashStringHelper()->sha256($unescapedValue), 0, 12)
             );
         }
 
