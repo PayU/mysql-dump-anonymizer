@@ -111,7 +111,7 @@ class Anonymizer
         //we have at least one column to anonymize
 
         $anonymizedValues = [];
-        foreach ($this->lineParser->getRowFromInsertLine($line) as $row) {
+        foreach ($lineInfo->getValuesParser() as $row) {
             $anonymizedValue = [];
             /** @var Value[] $row */
             foreach ($row as $columnIndex => $cell) {

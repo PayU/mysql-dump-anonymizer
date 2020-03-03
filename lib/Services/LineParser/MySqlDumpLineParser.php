@@ -44,14 +44,14 @@ class MySqlDumpLineParser implements LineParserInterface
             $columns = explode(self::COL_DELIM, $columnsString);
         }
 
-        return new LineInfo($isInsert, $table, $columns);
+        return new LineInfo($isInsert, $table, $columns, $this->getRowFromInsertLine($line));
     }
 
     /**
      * @param string $line
      * @return Value[][]
      */
-    public function getRowFromInsertLine(string $line) : iterable
+    private function getRowFromInsertLine(string $line) : iterable
     {
         yield from $this->parseValuesList($line);
     }

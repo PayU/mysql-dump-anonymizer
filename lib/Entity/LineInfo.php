@@ -12,11 +12,17 @@ final class LineInfo
     private $table;
     private $columns;
 
-    public function __construct(bool $isInsert, ?string $table, ?array $columns)
+    /**
+     * @var iterable
+     */
+    private $valuesParser;
+
+    public function __construct(bool $isInsert, ?string $table, ?array $columns, iterable $valuesParser)
     {
         $this->isInsert = $isInsert;
         $this->table = $table;
         $this->columns = $columns;
+        $this->valuesParser = $valuesParser;
     }
 
     /**
@@ -43,4 +49,14 @@ final class LineInfo
     {
         return $this->columns;
     }
+
+    /**
+     * @return iterable
+     */
+    public function getValuesParser(): iterable
+    {
+        return $this->valuesParser;
+    }
+
+
 }
