@@ -9,7 +9,7 @@ use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
-class Credentials implements ValueAnonymizerInterface
+final class Credentials implements ValueAnonymizerInterface
 {
     public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
     {

@@ -10,7 +10,7 @@ use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 
-class YamlProviderBuilder implements InterfaceProviderBuilder
+final class YamlProviderBuilder implements InterfaceProviderBuilder
 {
 
     public const ACTION_ANONYMIZE = 'anonymize';

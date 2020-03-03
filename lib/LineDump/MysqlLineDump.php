@@ -3,7 +3,7 @@ namespace PayU\MysqlDumpAnonymizer\LineDump;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 
-class MysqlLineDump implements LineDump
+final class MysqlLineDump implements LineDump
 {
     /**
      * @param string $table

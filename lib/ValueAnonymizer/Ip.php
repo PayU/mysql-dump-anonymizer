@@ -8,7 +8,7 @@ use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
-class Ip implements ValueAnonymizerInterface
+final class Ip implements ValueAnonymizerInterface
 {
     public const BASE_16 = 16;
     public const BASE_10 = 10;

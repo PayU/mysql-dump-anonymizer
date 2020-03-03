@@ -10,7 +10,7 @@ use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
-class Eav implements ValueAnonymizerInterface
+final class Eav implements ValueAnonymizerInterface
 {
     private $attributeColumnName;
     private $attributeValues;

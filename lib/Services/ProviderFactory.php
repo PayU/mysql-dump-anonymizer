@@ -10,7 +10,7 @@ use PayU\MysqlDumpAnonymizer\Provider\YamlProviderBuilder;
 use RuntimeException;
 use Symfony\Component\Yaml\Parser;
 
-class ProviderFactory
+final class ProviderFactory
 {
 
     public const DEFAULT_CONFIG_TYPE = self::YAML_CONFIG;

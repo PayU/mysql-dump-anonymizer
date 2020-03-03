@@ -8,7 +8,7 @@ use PayU\MysqlDumpAnonymizer\Services\LineParser\LineParserInterface;
 use PayU\MysqlDumpAnonymizer\Services\LineParser\MySqlDumpLineParser;
 use RuntimeException;
 
-class LineParserFactory
+final class LineParserFactory
 {
 
     public const LINE_PARSER_MYSQL_DUMP = 'mysqldump';

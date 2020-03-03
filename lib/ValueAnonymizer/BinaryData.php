@@ -8,7 +8,7 @@ use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
-class BinaryData implements ValueAnonymizerInterface
+final class BinaryData implements ValueAnonymizerInterface
 {
 
     public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue

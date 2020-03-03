@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Observer;
 
-class Progress implements ProcessObserverInterface
+final class Progress implements ProcessObserverInterface
 {
 
     private const FULL = "\u{2588}";
