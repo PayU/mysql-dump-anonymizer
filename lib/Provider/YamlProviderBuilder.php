@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PayU\MysqlDumpAnonymizer\Provider;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;

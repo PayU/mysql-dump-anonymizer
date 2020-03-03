@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Config;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\Services\LineParser;
@@ -11,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 final class MySqlDumpLineParserTest extends TestCase
 {
 
-    
+
     /**
      * @var MySqlDumpLineParser|MockObject
      */

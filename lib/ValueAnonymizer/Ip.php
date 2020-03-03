@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
@@ -8,6 +10,8 @@ use PayU\MysqlDumpAnonymizer\Config;
 
 class Ip implements ValueAnonymizerInterface
 {
+    const BASE_16 = 16;
+    const BASE_10 = 10;
 
     /**
      * SHA256            = aabbccddee ff00112233 4455667788 99aabbccdd eeff0011223 344556677 8899
@@ -32,17 +36,17 @@ class Ip implements ValueAnonymizerInterface
     public function anonymize(Value $value, array $row, Config $config): AnonymizedValue
     {
         $hash = $config->getHashStringHelper()->sha256($value->getUnEscapedValue());
-        $qweqwe = base_convert($hash, 16, 10);
-        $hashUniqueNumbers = implode('', array_unique(str_split($qweqwe)));
+        $hashNumbers = base_convert($hash, 16, 10);
+        $hashUniqueNumbers = implode('', array_unique(str_split($hashNumbers)));
 
         $hashUniqueNumbers = str_repeat($hashUniqueNumbers, 4);
         $hashUniqueNumbersLength = strlen($hashUniqueNumbers);
 
         return new AnonymizedValue('\''
-            .base_convert(substr($hash, $hashUniqueNumbers[0], 2), 16, 10)
-            .'.'.base_convert(substr($hash, $hashUniqueNumbers[2], 2), 16, 10)
-            .'.'.base_convert(substr(strrev($hash), $hashUniqueNumbers[$hashUniqueNumbersLength-4], 2), 16, 10)
-            .'.'.base_convert(substr(strrev($hash), $hashUniqueNumbers[$hashUniqueNumbersLength-2], 2), 16, 10)
+            .base_convert(substr($hash, (int)$hashUniqueNumbers[0], 2), self::BASE_16, self::BASE_10)
+            .'.'.base_convert(substr($hash, (int)$hashUniqueNumbers[2], 2), self::BASE_16, self::BASE_10)
+            .'.'.base_convert(substr(strrev($hash), (int)$hashUniqueNumbers[$hashUniqueNumbersLength - 4], 2), self::BASE_16, self::BASE_10)
+            .'.'.base_convert(substr(strrev($hash), (int)$hashUniqueNumbers[$hashUniqueNumbersLength - 2], 2), self::BASE_16, self::BASE_10)
             .'\'');
     }
 }

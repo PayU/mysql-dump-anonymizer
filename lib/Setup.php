@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace PayU\MysqlDumpAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;

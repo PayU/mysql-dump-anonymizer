@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Config;
@@ -48,7 +51,7 @@ class IpTest extends TestCase
             ['ee00000000000000000000000000000000000000000000000000000000eeeeee', '0.238.238.238'],
             ['0000000000000000000000000000000000000000000000000000000000eeeeee', '0.0.0.238'],
             ['aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899', '170.187.136.85']
-            
+
         ];
     }
 }

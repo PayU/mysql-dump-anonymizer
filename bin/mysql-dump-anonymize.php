@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 use PayU\MysqlDumpAnonymizer\Anonymizer;
 use PayU\MysqlDumpAnonymizer\CommandLineParameters;
 use PayU\MysqlDumpAnonymizer\Config;
@@ -9,7 +12,7 @@ use PayU\MysqlDumpAnonymizer\Setup;
 require_once dirname(__DIR__).DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', '1');
 
 $commandLineParameters = new CommandLineParameters();
 $observer = new Observer();
