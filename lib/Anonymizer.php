@@ -54,17 +54,17 @@ class Anonymizer
 
         while ($line = $this->readLine($inputStream)) {
             fwrite($outputStream, $this->anonymizeLine($line));
-            $this->observer->notify(Observer::EVENT_AFTER_LINE_PROCESSING);
+            $this->observer->notify(Observer::EVENT_AFTER_LINE_PROCESSING, null);
         }
 
-        $this->observer->notify(Observer::EVENT_END);
+        $this->observer->notify(Observer::EVENT_END, null);
     }
 
     private function readLine($inputStream)
     {
-        $this->observer->notify(Observer::EVENT_START_READ);
+        $this->observer->notify(Observer::EVENT_START_READ, null);
         $line = fgets($inputStream);
-        $this->observer->notify(Observer::EVENT_END_READ, strlen(is_string($line)?$line:''));
+        $this->observer->notify(Observer::EVENT_END_READ, strlen(is_string($line) ? $line : ''));
         return $line;
     }
 
@@ -73,7 +73,7 @@ class Anonymizer
     {
         $lineInfo = $this->lineParser->lineInfo($line);
         if ($lineInfo->isInsert() === false) {
-            $this->observer->notify(Observer::EVENT_NOT_AN_INSERT);
+            $this->observer->notify(Observer::EVENT_NOT_AN_INSERT, null);
             return $line;
         }
 
@@ -81,12 +81,12 @@ class Anonymizer
 
         //truncate action doesnt write inserts
         if ($this->anonymizationProvider->getTableAction($table) === AnonymizationActions::TRUNCATE) {
-            $this->observer->notify(Observer::EVENT_TRUNCATE);
+            $this->observer->notify(Observer::EVENT_TRUNCATE, null);
             return '';
         }
 
         if ($lineInfo->isInsert() === false) {
-            $this->observer->notify(Observer::EVENT_NOT_AN_INSERT);
+            $this->observer->notify(Observer::EVENT_NOT_AN_INSERT, null);
             return $line;
         }
 
@@ -104,7 +104,7 @@ class Anonymizer
 
         //When insert line doesnt have anything to anonymize, return it as-is
         if ($insertRequiresAnonymization === false) {
-            $this->observer->notify(Observer::EVENT_INSERT_LINE_NO_ANONYMIZATION);
+            $this->observer->notify(Observer::EVENT_INSERT_LINE_NO_ANONYMIZATION, null);
             return $line;
         }
 
@@ -143,7 +143,7 @@ class Anonymizer
         }
 
         if ($valueAnonymizer instanceof NoAnonymization) {
-            $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION);
+            $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION, null);
         }
 
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_START, get_class($valueAnonymizer));

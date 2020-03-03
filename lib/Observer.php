@@ -34,7 +34,7 @@ class Observer
         $this->observers[] = $observer;
     }
 
-    public function notify($event, $data = null) : void
+    public function notify($event, $data) : void
     {
         foreach ($this->observers as $observer) {
             switch ($event) {
