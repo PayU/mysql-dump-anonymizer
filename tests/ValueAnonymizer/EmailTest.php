@@ -35,7 +35,7 @@ class EmailTest extends TestCase
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(
-            new Value('\'office@roviniete.ro\'', 'office@roviniete.ro', false),
+            new Value('\'abyhfi@ijuyhoung.ro\'', 'abyhfi@ijuyhoung.ro', false),
             [],
             $configMock
         );

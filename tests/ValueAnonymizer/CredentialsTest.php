@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\ConfigInterface;
@@ -28,18 +27,18 @@ class CredentialsTest extends TestCase
     public function testAnonymize(): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
-        $hashStringMock->method('hashMe')->willReturn('9|3y)Y8[62f%S~?i%%#e');
+        $hashStringMock->method('hashMe')->willReturn('pass~?i%%#e');
 
         /** @var ConfigInterface|MockObject $configMock */
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(
-            new Value('\'6|4x)V2[75g%P~?h%%#y\'', '6|4x)V2[75g%P~?h%%#y', false),
+            new Value('\'afdg$%^&@w\'', 'afdg$%^&@w', false),
             [],
             $configMock
         );
 
-        $this->assertSame('\'9|3y)Y8[62f%S~?i%%#e\'', $actual->getRawValue());
+        $this->assertSame('\'pass~?i%%#e\'', $actual->getRawValue());
     }
 }
