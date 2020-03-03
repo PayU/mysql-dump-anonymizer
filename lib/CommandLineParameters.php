@@ -27,7 +27,7 @@ final class CommandLineParameters
     private $configType = ProviderFactory::DEFAULT_CONFIG_TYPE;
     private $estimatedDumpSize = 1370000000;
     private $showProgress = 1;
-    /** @var string  */
+
     private $onNotConfiguredTable = AnonymizationActions::ANONYMIZE;
     private $onNotConfiguredColumn = ValueAnonymizerFactory::NO_ANONYMIZATION;
 
@@ -145,7 +145,7 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .s
      */
     public function isShowProgress(): bool
     {
-        return $this->showProgress;
+        return (bool)$this->showProgress;
     }
 
     /**
