@@ -6,15 +6,15 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
 use JsonException;
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Config;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 class Json implements ValueAnonymizerInterface
 {
 
-    public function anonymize(Value $value, array $row, Config $config): AnonymizedValue
+    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
     {
         if ($value->isExpression()) {
             return new AnonymizedValue($value->getRawValue());
@@ -39,7 +39,7 @@ class Json implements ValueAnonymizerInterface
         }
     }
 
-    private function anonymizeArray(array $array, Config $config): array
+    private function anonymizeArray(array $array, ConfigInterface $config): array
     {
         $ret = [];
         foreach ($array as $key => $value) {

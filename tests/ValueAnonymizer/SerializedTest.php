@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Config;
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
@@ -25,7 +25,7 @@ class SerializedTest extends AbstractValueAnonymizerMocks
         $this->sut = new Serialized();
     }
 
-    public function testAnonymize()
+    public function testAnonymize(): void
     {
         $input = [
             'a'=>'next is unix line end:'."\n". 'end',
@@ -36,7 +36,7 @@ class SerializedTest extends AbstractValueAnonymizerMocks
 
         $value = new Value('raw', $serializedString, false);
 
-        /** @var Config|MockObject $configMock */
+        /** @var ConfigInterface|MockObject $configMock */
         $configMock = $this->anonymizerConfigMock([
             'a',
             'b',

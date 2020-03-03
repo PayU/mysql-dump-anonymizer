@@ -5,15 +5,15 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Config;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 class Serialized implements ValueAnonymizerInterface
 {
 
-    public function anonymize(Value $value, array $row, Config $config): AnonymizedValue
+    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
     {
         $serializedString = $value->getUnEscapedValue();
         $array = unserialize($serializedString, ['allowed_classes' => false]);
@@ -25,7 +25,7 @@ class Serialized implements ValueAnonymizerInterface
         return (new FreeText())->anonymize($value, $row, $config);
     }
 
-    private function anonymizeArray(array $array, Config $config): array
+    private function anonymizeArray(array $array, ConfigInterface $config): array
     {
         $ret = [];
         foreach ($array as $key => $value) {

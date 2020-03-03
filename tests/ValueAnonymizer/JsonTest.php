@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Config;
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Json;
@@ -46,7 +46,7 @@ final class JsonTest extends AbstractValueAnonymizerMocks
             EscapeString::escape(json_encode($expectedJson))
         );
 
-        /** @var Config|MockObject $configMock */
+        /** @var ConfigInterface|MockObject $configMock */
         $configMock = $this->anonymizerConfigMock([
             $expectedJson['test1'],
             $expectedJson[0]['test2'],

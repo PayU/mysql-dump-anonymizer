@@ -5,11 +5,10 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Config;
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\FileName;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
 class FileNameTest extends AbstractValueAnonymizerMocks
 {
@@ -26,10 +25,9 @@ class FileNameTest extends AbstractValueAnonymizerMocks
 
     public function testAnonymize()
     {
-        //cggkskk-/admin/search.php
         $input = '/admin/log_monitor.php';
 
-        /** @var Config|MockObject $configMock */
+        /** @var ConfigInterface|MockObject $configMock */
         $configMock = $this->anonymizerConfigMock([
             '/odfeb/ymt_wecgccw'
         ]);

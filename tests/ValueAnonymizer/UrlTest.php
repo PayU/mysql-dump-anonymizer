@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Config;
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Helper\StringHash;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Url;
@@ -32,8 +32,8 @@ class UrlTest extends TestCase
             ->with('www.fashiondays.hu/generatetoken')
             ->willReturn('ubp.huhkosocgww.og/wwgwoockkokcg');
 
-        /** @var Config|MockObject $configMock */
-        $configMock = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        /** @var ConfigInterface|MockObject $configMock */
+        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')
             ->willReturn($hashStringMock);
 
@@ -53,8 +53,8 @@ class UrlTest extends TestCase
             ->with('www.alphabank.ro')
             ->willReturn('ubp.huhkosocg.og');
 
-        /** @var Config|MockObject $configMock */
-        $configMock = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        /** @var ConfigInterface|MockObject $configMock */
+        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')
             ->willReturn($hashStringMock);
 

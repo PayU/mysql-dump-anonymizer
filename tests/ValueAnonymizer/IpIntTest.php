@@ -5,14 +5,13 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Config;
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Helper\StringHash;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\IpInt;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-class IpIntTest extends TestCase
+class IpIntTest extends AbstractValueAnonymizerMocks
 {
     /**
      * @var IpInt
@@ -26,14 +25,17 @@ class IpIntTest extends TestCase
     }
 
 
-    /** @dataProvider hashes */
+    /** @dataProvider hashes
+     * @param string $hash
+     * @param string $expectedIp
+     */
     public function testAnonymize($hash, $expectedIp): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('sha256')->willReturn($hash);
 
-        /** @var Config|MockObject $configMock */
-        $configMock = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        /** @var ConfigInterface|MockObject $configMock */
+        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(new Value('\'test\'', 'test', false), [], $configMock);
@@ -53,9 +55,7 @@ class IpIntTest extends TestCase
             ['000000000000000000000000000000000000000000000000000000000000000e', '0'], //'0.0.0.0'
             ['ee00000000000000000000000000000000000000000000000000000000eeeeee', '15658734'], //'0.238.238.238'
             ['0000000000000000000000000000000000000000000000000000000000eeeeee', '238'], //'0.0.0.238'
-            ['aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899',
-                (PHP_INT_SIZE === 4 ? '-1430550443' : '2864416853')
-            ]
+            ['aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899', (PHP_INT_SIZE === 4 ? '-1430550443' : '2864416853')]
         ];
     }
 }

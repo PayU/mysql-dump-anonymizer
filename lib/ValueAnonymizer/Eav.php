@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Config;
 
 class Eav implements ValueAnonymizerInterface
 {
@@ -36,10 +36,10 @@ class Eav implements ValueAnonymizerInterface
     /**
      * @param Value $value
      * @param Value[] $row
-     * @param Config $config
+     * @param ConfigInterface $config
      * @return AnonymizedValue
      */
-    public function anonymize(Value $value, array $row, Config $config): AnonymizedValue
+    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
     {
         foreach ($this->attributeValues as $onValue => $anonymizeLikeThis) {
             if ($row[$this->attributeColumnName]->getUnEscapedValue() === $onValue) {

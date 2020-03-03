@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Config;
 
 class Ip implements ValueAnonymizerInterface
 {
@@ -30,10 +30,10 @@ class Ip implements ValueAnonymizerInterface
      *
      * @param Value $value
      * @param array $row
-     * @param Config $config
+     * @param ConfigInterface $config
      * @return AnonymizedValue
      */
-    public function anonymize(Value $value, array $row, Config $config): AnonymizedValue
+    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
     {
         $hash = $config->getHashStringHelper()->sha256($value->getUnEscapedValue());
         $hashNumbers = base_convert($hash, 16, 10);

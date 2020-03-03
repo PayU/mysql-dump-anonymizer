@@ -8,7 +8,7 @@ namespace PayU\MysqlDumpAnonymizer;
 use PayU\MysqlDumpAnonymizer\Helper\StringHash;
 use PayU\MysqlDumpAnonymizer\Helper\StringHashSha256;
 
-class Config
+final class Config implements ConfigInterface
 {
 
     /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Config;
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Helper\StringHash;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -12,10 +12,14 @@ use PHPUnit\Framework\TestCase;
 abstract class AbstractValueAnonymizerMocks extends TestCase
 {
 
+    /**
+     * @param array $hashMeReturns
+     * @return ConfigInterface|MockObject
+     */
     protected function anonymizerConfigMock($hashMeReturns)
     {
 
-        $configMock = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         if (!empty($hashMeReturns)) {
 
             /**  @var StringHash|MockObject $stringHashMock */

@@ -5,14 +5,10 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Config;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\StringHash;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Id;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-class IdTest extends TestCase
+class IdTest extends AbstractValueAnonymizerMocks
 {
     /**
      * @var Id
@@ -25,15 +21,13 @@ class IdTest extends TestCase
         $this->sut = new Id();
     }
 
-    /** @dataProvider hashes */
+    /** @dataProvider hashes
+     * @param string $hash
+     * @param string $expectedIdHash
+     */
     public function testAnonymize($hash, $expectedIdHash): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
-        $hashStringMock->method('hashMe')->willReturn($hash);
-
-        /** @var Config|MockObject $configMock */
-        $configMock = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
+        $configMock = $this->anonymizerConfigMock([$hash]);
 
         $actual = $this->sut->anonymize(new Value('\'2836143\'', '2836143', false), [], $configMock);
 

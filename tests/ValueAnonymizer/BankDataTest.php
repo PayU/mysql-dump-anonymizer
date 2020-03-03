@@ -6,12 +6,9 @@ namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Config;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\StringHash;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BankData;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
-class BankDataTest extends TestCase
+class BankDataTest extends AbstractValueAnonymizerMocks
 {
     /**
      * @var BankData
@@ -24,14 +21,9 @@ class BankDataTest extends TestCase
         $this->sut = new BankData();
     }
 
-    public function testAnonymize()
+    public function testAnonymize(): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
-        $hashStringMock->method('hashMe')->willReturn('84fc');
-
-        /** @var Config|MockObject $configMock */
-        $configMock = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
+        $configMock = $this->anonymizerConfigMock(['84fc']);
 
         $actual = $this->sut->anonymize(new Value('\'BCRL\'', 'BCRL', false), [], $configMock);
 
