@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
 use PayU\MysqlDumpAnonymizer\LineDump\LineDump;
 use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Provider\AnonymizationProviderInterface;
@@ -80,7 +80,7 @@ class Anonymizer
         $table = $lineInfo->getTable();
 
         //truncate action doesnt write inserts
-        if ($this->anonymizationProvider->getTableAction($table) === AnonymizationActions::TRUNCATE) {
+        if ($this->anonymizationProvider->getTableAction($table) === AnonymizationAction::TRUNCATE) {
             $this->observer->notify(Observer::EVENT_TRUNCATE, null);
             return '';
         }

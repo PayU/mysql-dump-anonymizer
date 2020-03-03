@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Provider;
 
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
 use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -17,10 +17,9 @@ class YamlProviderBuilder implements InterfaceProviderBuilder
     public const ACTION_TRUNCATE = 'truncate';
 
     public const ACTION_MAP  = [
-        self::ACTION_ANONYMIZE => AnonymizationActions::ANONYMIZE,
-        self::ACTION_TRUNCATE => AnonymizationActions::TRUNCATE,
+        self::ACTION_ANONYMIZE => AnonymizationAction::ANONYMIZE,
+        self::ACTION_TRUNCATE => AnonymizationAction::TRUNCATE,
     ];
-
 
     public const ACTION_KEY = 'Action';
     public const COLUMNS_KEY = 'Columns';

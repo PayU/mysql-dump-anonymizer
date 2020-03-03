@@ -21,6 +21,7 @@
     "require": {
         "phpmyadmin/sql-parser": "^5.2",
         "symfony/yaml": "^5.0",
-      "ext-json": "*"
+        "ext-json": "*",
+        "myclabs/php-enum": "^1.7.1"
     }
 }

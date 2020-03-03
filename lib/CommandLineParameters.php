@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
 use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Services\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\Services\LineParserFactory;
@@ -28,7 +28,7 @@ final class CommandLineParameters
     private $estimatedDumpSize = 1370000000;
     private $showProgress = 1;
 
-    private $onNotConfiguredTable = AnonymizationActions::ANONYMIZE;
+    private $onNotConfiguredTable = AnonymizationAction::ANONYMIZE;
     private $onNotConfiguredColumn = ValueAnonymizerFactory::NO_ANONYMIZATION;
 
 
@@ -50,7 +50,7 @@ final class CommandLineParameters
             } elseif (strpos($arg, '--' . self::PARAM_ON_NOT_CONFIGURED_COLUMN) === 0) {
                 $this->onNotConfiguredColumn = $value;
             } elseif (strpos($arg, '--' . self::PARAM_ON_NOT_CONFIGURED_TABLE) === 0) {
-                $this->onNotConfiguredTable = AnonymizationActions::DESC[$value];
+                $this->onNotConfiguredTable = AnonymizationAction::toArray()[$value];
             }
         }
     }
@@ -92,10 +92,10 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .s
             .' --' .self::pad(self::PARAM_SHOW_PROGRESS).' Default value: 1'.PHP_EOL
             .'   ' .self::pad('').' Set to 0 to not show progress data. '.PHP_EOL.PHP_EOL
             .' --' .self::pad(self::PARAM_ON_NOT_CONFIGURED_TABLE).' Default value: '
-                .array_search(AnonymizationActions::ANONYMIZE, AnonymizationActions::DESC, true)
+                . array_search(AnonymizationAction::ANONYMIZE, AnonymizationAction::toArray(), true)
                 .PHP_EOL
             .'   ' .self::pad('').' Action to be taken when script reads a table that is not present in the config.'.PHP_EOL
-            .'   ' .self::pad('').' Possible values: '.implode(', ', array_keys(AnonymizationActions::DESC))
+            .'   ' .self::pad('').' Possible values: '.implode(', ', AnonymizationAction::keys())
             .'. '.PHP_EOL.PHP_EOL
             .' --' .self::pad(self::PARAM_ON_NOT_CONFIGURED_COLUMN).' Default value: '.ValueAnonymizerFactory::NO_ANONYMIZATION.PHP_EOL
             .'   ' .self::pad('').' Anonymization type for columns not present in the config.'.PHP_EOL
