@@ -40,8 +40,6 @@ all_allow_null:
       DataType: CardData
     - ColumnName: Credentials
       DataType: Credentials
-    - ColumnName: Date
-      DataType: Date
     - ColumnName: DocumentData
       DataType: DocumentData
     - ColumnName: Email

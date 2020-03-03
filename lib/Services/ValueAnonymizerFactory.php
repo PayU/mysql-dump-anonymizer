@@ -8,7 +8,6 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BankData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BinaryData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\CardData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Credentials;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Date;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\DocumentData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Eav;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Email;
@@ -36,7 +35,6 @@ final class ValueAnonymizerFactory
         'BinaryData' => BinaryData::class,
         'CardData' => CardData::class,
         'Credentials' => Credentials::class,
-        'Date' => Date::class,
         'DocumentData' => DocumentData::class,
         'Email' => Email::class,
         'FileName' => FileName::class,
