@@ -27,7 +27,7 @@ class UsernameTest extends TestCase
 
     public function testAnonymizeUsernameWithLengthBiggerThan12()
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('cgodertgy.dndem');
 
         /** @var Config|MockObject $configMock */
@@ -45,7 +45,7 @@ class UsernameTest extends TestCase
 
     public function testAnonymizeUsernameWithLengthSmallerThan12()
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('sha256')->willReturn('eee.fgdjf');
         $hashStringMock->method('hashMe')->with('eee.fgdjf')->willReturn('cgo.dndem');
 

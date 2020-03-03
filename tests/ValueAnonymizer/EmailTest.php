@@ -27,7 +27,7 @@ class EmailTest extends TestCase
 
     public function testAnonymize()
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('djbtxh@kwkogksok.ok');
 
         /** @var Config|MockObject $configMock */

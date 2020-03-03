@@ -26,7 +26,7 @@ class BankDataTest extends TestCase
 
     public function testAnonymize()
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('84fc');
 
         /** @var Config|MockObject $configMock */

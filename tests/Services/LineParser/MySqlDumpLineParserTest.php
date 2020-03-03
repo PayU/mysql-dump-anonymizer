@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\Services\LineParser;
 
+use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Services\LineParser\MySqlDumpLineParser;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -104,7 +105,11 @@ EOD;
 
 
         $cnt1 = 0;
-        foreach ($this->sut->getRowFromInsertLine($query) as $row) {
+        /** @var LineInfo $lineInfo */
+        $lineInfo = $this->sut->lineInfo($query);
+
+        foreach ($lineInfo->getValuesParser() as $row) {
+            /** @var Value[] $row */
             $cnt2 = 0;
             $this->assertIsArray($row, 'Invalid row at '.$cnt1.'-'.$cnt2);
             foreach ($row as $value) {

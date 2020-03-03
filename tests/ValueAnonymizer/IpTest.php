@@ -28,7 +28,7 @@ class IpTest extends TestCase
     /** @dataProvider hashes */
     public function testAnonymize($hash, $expectedIp)
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('sha256')->willReturn($hash);
 
         /** @var Config|MockObject $configMock */

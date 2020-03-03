@@ -25,9 +25,9 @@ class FreeTextTest extends TestCase
         $this->sut = new FreeText();
     }
 
-    public function testAnonymize()
+    public function testAnonymize(): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('Vkr.Hgcscgw Swgokwkgs,ks3-8,Gsgosowg Kwkovkr Hgcsc-Gwswg ok Wkgs,Ksgs6');
 
         /** @var Config|MockObject $configMock */

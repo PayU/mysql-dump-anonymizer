@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\Helper;
 
-use PayU\MysqlDumpAnonymizer\Helper\StringHash;
+use PayU\MysqlDumpAnonymizer\Helper\StringHashSha256;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class StringHashTest extends TestCase
 {
     /**
-     * @var StringHash|MockObject
+     * @var StringHashSha256|MockObject
      */
     private $sut;
 
@@ -19,7 +19,7 @@ final class StringHashTest extends TestCase
     {
         parent::setUp();
 
-        $this->sut = new StringHash('test-salt');
+        $this->sut = new StringHashSha256('test-salt');
     }
 
     /**

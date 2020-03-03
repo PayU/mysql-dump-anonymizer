@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Helper\StringHash;
+use PayU\MysqlDumpAnonymizer\Helper\StringHashSha256;
 
 class Config
 {
@@ -17,7 +18,7 @@ class Config
 
     public function __construct()
     {
-        $this->hashStringHelper = new StringHash(hash('sha256', (string)microtime(true)));
+        $this->hashStringHelper = new StringHashSha256(hash('sha256', (string)microtime(true)));
     }
 
     public function getHashStringHelper() : StringHash

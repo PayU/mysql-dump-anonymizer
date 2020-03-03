@@ -28,7 +28,7 @@ class PhoneTest extends TestCase
     /** @dataProvider hashes */
     public function testAnonymize($hash, $expectedFinalHash)
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn($hash);
 
         /** @var Config|MockObject $configMock */

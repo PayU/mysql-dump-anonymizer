@@ -27,7 +27,7 @@ class SensitiveFreeTextTest extends TestCase
 
     public function testAnonymize()
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('XGV Zkmtao Wggkcckg WOO');
 
         /** @var Config|MockObject $configMock */

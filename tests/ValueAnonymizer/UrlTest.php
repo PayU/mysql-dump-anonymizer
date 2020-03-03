@@ -27,7 +27,7 @@ class UrlTest extends TestCase
 
     public function testAnonymizeUrlWithScheme()
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')
             ->with('www.fashiondays.hu/generatetoken')
             ->willReturn('ubp.huhkosocgww.og/wwgwoockkokcg');
@@ -48,7 +48,7 @@ class UrlTest extends TestCase
 
     public function testAnonymizeUrlWithoutScheme()
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->disableOriginalConstructor()->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')
             ->with('www.alphabank.ro')
             ->willReturn('ubp.huhkosocg.og');
