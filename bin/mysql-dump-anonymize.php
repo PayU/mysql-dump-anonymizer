@@ -23,7 +23,7 @@ try {
     $setup = new Setup($commandLineParameters, $observer);
     $setup->setup();
 
-    $observer->notify(Observer::EVENT_BEGIN, $this->commandLineParameters->getEstimatedDumpSize());
+    $observer->notify(Observer::EVENT_BEGIN, $commandLineParameters->getEstimatedDumpSize());
 
     $application = new Anonymizer(
         $setup->getAnonymizationProvider(),
