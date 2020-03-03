@@ -147,7 +147,7 @@ class Progress implements ProcessObserverInterface
     private function round($microseconds, $decimals = 2, $pad = 6)
     {
         return str_pad(
-            number_format(round($microseconds, $decimals), $decimals),
+            number_format((float)round($microseconds, $decimals), $decimals),
             $pad,
             ' ',
             STR_PAD_LEFT
