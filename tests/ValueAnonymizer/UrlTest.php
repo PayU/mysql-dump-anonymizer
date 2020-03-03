@@ -25,7 +25,7 @@ class UrlTest extends TestCase
         $this->sut = new Url();
     }
 
-    public function testAnonymizeUrlWithScheme()
+    public function testAnonymizeUrlWithScheme(): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')
@@ -46,7 +46,7 @@ class UrlTest extends TestCase
         $this->assertSame('\'http://ubp.huhkosocgww.og/wwgwoockkokcg\'', $actual->getRawValue());
     }
 
-    public function testAnonymizeUrlWithoutScheme()
+    public function testAnonymizeUrlWithoutScheme(): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')

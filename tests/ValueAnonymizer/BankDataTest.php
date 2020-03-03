@@ -30,7 +30,7 @@ class BankDataTest extends AbstractValueAnonymizerMocks
         $this->assertSame('\'84fc\'', $actual->getRawValue());
     }
 
-    public function testAnonymizeReturnSameValueIfExpression()
+    public function testAnonymizeReturnSameValueIfExpression(): void
     {
         $actual = $this->sut->anonymize(new Value('\'expression\'', 'expression', true), [], new Config());
 

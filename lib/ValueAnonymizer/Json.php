@@ -33,7 +33,7 @@ class Json implements ValueAnonymizerInterface
 
             return (new FreeText())->anonymize($value, $row, $config);
 
-        } catch (JsonException $e) {
+        } /** @noinspection PhpRedundantCatchClauseInspection */ catch (JsonException $e) {
 
             return (new FreeText())->anonymize($value, $row, $config);
         }

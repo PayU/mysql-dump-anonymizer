@@ -10,8 +10,8 @@ use PayU\MysqlDumpAnonymizer\Entity\Value;
 
 class Ip implements ValueAnonymizerInterface
 {
-    const BASE_16 = 16;
-    const BASE_10 = 10;
+    public const BASE_16 = 16;
+    public const BASE_10 = 10;
 
     /**
      * SHA256            = aabbccddee ff00112233 4455667788 99aabbccdd eeff0011223 344556677 8899
@@ -36,7 +36,7 @@ class Ip implements ValueAnonymizerInterface
     public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
     {
         $hash = $config->getHashStringHelper()->sha256($value->getUnEscapedValue());
-        $hashNumbers = base_convert($hash, 16, 10);
+        $hashNumbers = base_convert($hash, self::BASE_16, self::BASE_10);
         $hashUniqueNumbers = implode('', array_unique(str_split($hashNumbers)));
 
         $hashUniqueNumbers = str_repeat($hashUniqueNumbers, 4);

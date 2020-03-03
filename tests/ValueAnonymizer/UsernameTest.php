@@ -25,7 +25,7 @@ class UsernameTest extends TestCase
         $this->sut = new Username();
     }
 
-    public function testAnonymizeUsernameWithLengthBiggerThan12()
+    public function testAnonymizeUsernameWithLengthBiggerThan12(): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('cgodertgy.dndem');
@@ -43,7 +43,7 @@ class UsernameTest extends TestCase
         $this->assertSame('\'cgodertgy.dndem\'', $actual->getRawValue());
     }
 
-    public function testAnonymizeUsernameWithLengthSmallerThan12()
+    public function testAnonymizeUsernameWithLengthSmallerThan12(): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('sha256')->willReturn('eee.fgdjf');

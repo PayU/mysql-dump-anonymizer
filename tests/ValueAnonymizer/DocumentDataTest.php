@@ -25,7 +25,7 @@ class DocumentDataTest extends TestCase
         $this->sut = new DocumentData();
     }
 
-    public function testAnonymize()
+    public function testAnonymize(): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('74eca695');

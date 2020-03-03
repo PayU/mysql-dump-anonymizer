@@ -43,7 +43,7 @@ class PhoneTest extends TestCase
         $this->assertSame($expectedFinalHash, $actual->getRawValue());
     }
 
-    public function hashes()
+    public function hashes(): array
     {
         return [
             ['0746.258.680', '\'0746.258.680\''],

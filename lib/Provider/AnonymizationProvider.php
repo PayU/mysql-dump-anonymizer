@@ -15,7 +15,7 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
     /** @var ValueAnonymizerInterface[][]  */
     private $tableColumnsAnonymizationProvider;
 
-    /** @var  int */
+    /** @var int */
     private $tableNotFoundAction;
 
     /**

@@ -23,7 +23,7 @@ class NoAnonymizationTest extends TestCase
         $this->sut = new NoAnonymization();
     }
 
-    public function testNoAnonymization()
+    public function testNoAnonymization(): void
     {
         $actual = $this->sut->anonymize(
             new Value('\'safe value\'', 'safe value', false),

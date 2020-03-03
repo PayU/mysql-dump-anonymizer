@@ -27,7 +27,7 @@ final class StringHashTest extends TestCase
      * @param string $input
      * @param string $expected
      */
-    public function testMany($input, $expected)
+    public function testMany($input, $expected): void
     {
 
         $actual = $this->sut->hashMe($input);
@@ -35,7 +35,7 @@ final class StringHashTest extends TestCase
 
     }
 
-    public function manyProvider()
+    public function manyProvider(): array
     {
         return [
             ['Str. Hello 1213 AA-AA|A&AA%☻AAAAAAAA ', 'Oss. Cwogo 0288 KW-WO|C&CS%o!!CGKSKGCC '],

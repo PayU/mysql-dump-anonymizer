@@ -25,7 +25,7 @@ class CardDataTest extends TestCase
         $this->sut = new CardData();
     }
 
-    public function testAnonymize()
+    public function testAnonymize(): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('0760');

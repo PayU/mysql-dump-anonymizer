@@ -25,7 +25,7 @@ class CredentialsTest extends TestCase
         $this->sut = new Credentials();
     }
 
-    public function testAnonymize()
+    public function testAnonymize(): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('9|3y)Y8[62f%S~?i%%#e');

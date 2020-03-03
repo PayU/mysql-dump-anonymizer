@@ -34,7 +34,7 @@ class IdTest extends AbstractValueAnonymizerMocks
         $this->assertSame($expectedIdHash, $actual->getRawValue());
     }
 
-    public function hashes()
+    public function hashes(): array
     {
         return [
             ['4282788', '\'4282788\''],

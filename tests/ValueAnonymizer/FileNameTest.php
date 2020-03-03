@@ -23,7 +23,7 @@ class FileNameTest extends AbstractValueAnonymizerMocks
         $this->sut = new FileName();
     }
 
-    public function testAnonymize()
+    public function testAnonymize(): void
     {
         $input = '/admin/log_monitor.php';
 

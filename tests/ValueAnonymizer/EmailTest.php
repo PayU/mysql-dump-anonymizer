@@ -25,7 +25,7 @@ class EmailTest extends TestCase
         $this->sut = new Email();
     }
 
-    public function testAnonymize()
+    public function testAnonymize(): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('djbtxh@kwkogksok.ok');

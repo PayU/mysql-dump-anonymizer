@@ -25,8 +25,11 @@ class IpTest extends TestCase
         $this->sut = new Ip();
     }
 
-    /** @dataProvider hashes */
-    public function testAnonymize($hash, $expectedIp)
+    /** @dataProvider hashes
+     * @param string $hash
+     * @param string $expectedIp
+     */
+    public function testAnonymize($hash, $expectedIp): void
     {
         $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
         $hashStringMock->method('sha256')->willReturn($hash);
@@ -40,7 +43,7 @@ class IpTest extends TestCase
         $this->assertSame('\''.$expectedIp.'\'', $actual->getRawValue());
     }
 
-    public function hashes()
+    public function hashes(): array
     {
         return [
             ['0000000000000000000000000000000000000000000000000000000000000000', '0.0.0.0'],

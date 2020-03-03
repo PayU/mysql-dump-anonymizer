@@ -43,7 +43,7 @@ class IpIntTest extends AbstractValueAnonymizerMocks
         $this->assertSame($expectedIp, $actual->getRawValue());
     }
 
-    public function hashes()
+    public function hashes(): array
     {
         return [
             ['0000000000000000000000000000000000000000000000000000000000000000', '0'], //'0.0.0.0'

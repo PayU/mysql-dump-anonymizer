@@ -36,7 +36,7 @@ class YamlProviderBuilder implements InterfaceProviderBuilder
     private $parser;
 
     /**
-     * @var \PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory
+     * @var ValueAnonymizerFactory
      */
     private $valueAnonymizerFactory;
 
@@ -81,6 +81,10 @@ class YamlProviderBuilder implements InterfaceProviderBuilder
 
             if (!array_key_exists($value[self::ACTION_KEY], self::ACTION_MAP)) {
                 throw new ConfigValidationException('Invalid Action - [' . $table . ']');
+            }
+
+            if (AnonymizationAction::isValid(self::ACTION_MAP[$value[self::ACTION_KEY]]) === false) {
+                throw new ConfigValidationException('Invalid Anonymization Action ['.self::ACTION_MAP[$value[self::ACTION_KEY]].']- [' . $table . ']');
             }
 
             if ($value[self::ACTION_KEY] !== self::ACTION_TRUNCATE && !array_key_exists(self::COLUMNS_KEY, $value)) {

@@ -12,6 +12,6 @@ use MyCLabs\Enum\Enum;
  */
 final class AnonymizationAction extends Enum
 {
-    const ANONYMIZE = 1;
-    const TRUNCATE = 2;
+    public const ANONYMIZE = 1;
+    public const TRUNCATE = 2;
 }

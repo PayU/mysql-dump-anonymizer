@@ -39,7 +39,7 @@ class Anonymizer
         LineParserInterface $lineParser,
         LineDump $lineDump,
         Observer $observer,
-        Config $config
+        ConfigInterface $config
     ) {
         $this->anonymizationProvider = $anonymizationProvider;
         $this->lineParser = $lineParser;
