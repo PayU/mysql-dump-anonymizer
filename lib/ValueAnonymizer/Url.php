@@ -23,7 +23,7 @@ final class Url implements ValueAnonymizerInterface
         $scheme = parse_url($unescapedURL, PHP_URL_SCHEME);
 
         if ($scheme !== null) {
-            $host = substr($unescapedURL, strlen($scheme) + 3);
+            $host = substr($unescapedURL, strlen((string)$scheme) + 3);
             $anonymizedHost = $config->getHashStringHelper()->hashMe($host);
             $anonymizedUrl = $scheme . '://' . $anonymizedHost;
         } else {

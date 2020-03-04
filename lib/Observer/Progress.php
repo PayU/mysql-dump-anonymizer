@@ -215,7 +215,7 @@ final class Progress implements ProcessObserverInterface
             } else {
                 $div = 0;
             }
-            $output .= $this->pad($anonymizationType) . $this->round($microtime) . 's (' . $this->round($div * 100) . ' %)  '
+            $output .= $this->pad($anonymizationType) . $this->round($microtime['time']) . 's (' . $this->round($div * 100) . ' %)  '
                 . ' (x ' . $this->round($this->anonymizationTypes[$anonymizationType]['count'], 0) . ')'
                 . ' (NULL: ' . $this->round($this->anonymizationTypes[$anonymizationType]['nulls'], 0) . ')'
                 . PHP_EOL;
