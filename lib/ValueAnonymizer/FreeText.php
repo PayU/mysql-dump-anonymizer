@@ -12,7 +12,17 @@ use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class FreeText implements ValueAnonymizerInterface
 {
-    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    public function __construct(ConfigInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ($value->isExpression()) {
             return new AnonymizedValue($value->getRawValue());
@@ -20,11 +30,11 @@ final class FreeText implements ValueAnonymizerInterface
 
         $string = $value->getUnEscapedValue();
         if (strlen($string) < 12) {
-            $anonymizedString = $config->getHashStringHelper()->hashMe(
-                substr($config->getHashStringHelper()->sha256($string), 0 ,12)
+            $anonymizedString = $this->config->getHashStringHelper()->hashMe(
+                substr($this->config->getHashStringHelper()->sha256($string), 0 ,12)
             );
         }else{
-            $anonymizedString = $config->getHashStringHelper()->hashMe($value->getUnEscapedValue());
+            $anonymizedString = $this->config->getHashStringHelper()->hashMe($value->getUnEscapedValue());
         }
 
         return new AnonymizedValue(EscapeString::escape($anonymizedString));

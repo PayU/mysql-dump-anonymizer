@@ -38,7 +38,7 @@ class IpIntTest extends AbstractValueAnonymizerMocks
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(new Value('\'test\'', 'test', false), [], $configMock);
+        $actual = $this->sut->anonymize(new Value('\'test\'', 'test', false), []);
 
         $this->assertSame($expectedIp, $actual->getRawValue());
     }

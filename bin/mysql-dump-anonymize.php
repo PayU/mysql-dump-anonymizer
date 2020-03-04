@@ -20,7 +20,7 @@ $config = new Config();
 
 try {
 
-    $setup = new Setup($commandLineParameters, $observer);
+    $setup = new Setup($commandLineParameters, $observer, $config);
     $setup->setup();
 
     $observer->notify(Observer::EVENT_BEGIN, $commandLineParameters->getEstimatedDumpSize());

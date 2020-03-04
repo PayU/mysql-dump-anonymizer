@@ -54,7 +54,7 @@ final class JsonTest extends AbstractValueAnonymizerMocks
             (string)$expectedJson[0]['float']
         ]);
 
-        $actual = $this->sut->anonymize($av, [], $configMock);
+        $actual = $this->sut->anonymize($av, []);
 
         $this->assertEquals($expected, $actual);
         $this->assertSame($expected->getRawValue(), $actual->getRawValue());

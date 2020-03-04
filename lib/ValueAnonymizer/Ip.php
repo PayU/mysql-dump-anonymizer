@@ -14,6 +14,17 @@ final class Ip implements ValueAnonymizerInterface
     public const BASE_10 = 10;
 
     /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    public function __construct(ConfigInterface $config)
+    {
+        $this->config = $config;
+    }
+
+
+    /**
      * SHA256            = aabbccddee ff00112233 4455667788 99aabbccdd eeff0011223 344556677 8899
      * Position          = 0123456789 0123456789 0123456789 0123456789 01234567890 123456789 0123
      * REVERSED SHA256   = 9988776655 4433221100 ffeeddccbb aa99887766 55443322110 0ffeeddcc bbaa
@@ -30,12 +41,11 @@ final class Ip implements ValueAnonymizerInterface
      *
      * @param Value $value
      * @param array $row
-     * @param ConfigInterface $config
      * @return AnonymizedValue
      */
-    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
+    public function anonymize(Value $value, array $row): AnonymizedValue
     {
-        $hash = $config->getHashStringHelper()->sha256($value->getUnEscapedValue());
+        $hash = $this->config->getHashStringHelper()->sha256($value->getUnEscapedValue());
         $hashNumbers = base_convert($hash, self::BASE_16, self::BASE_10);
         $hashUniqueNumbers = implode('', array_unique(str_split($hashNumbers)));
 

@@ -29,7 +29,7 @@ class IdTest extends AbstractValueAnonymizerMocks
     {
         $configMock = $this->anonymizerConfigMock([$hash]);
 
-        $actual = $this->sut->anonymize(new Value('\'2836143\'', '2836143', false), [], $configMock);
+        $actual = $this->sut->anonymize(new Value('\'2836143\'', '2836143', false), []);
 
         $this->assertSame($expectedIdHash, $actual->getRawValue());
     }

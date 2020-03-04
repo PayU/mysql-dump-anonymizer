@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Services;
 
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BankData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BinaryData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\CardData;
@@ -57,6 +58,16 @@ final class ValueAnonymizerFactory
     private $instances = [];
 
     /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    public function __construct(ConfigInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
      * @param string $string
      * @param array|null $constructArguments
      * @return ValueAnonymizerInterface
@@ -68,7 +79,7 @@ final class ValueAnonymizerFactory
         }
 
         if (!array_key_exists($string, $this->instances)) {
-            $this->instances[$string] = new self::$valueAnonymizers[$string]();
+            $this->instances[$string] = new self::$valueAnonymizers[$string]($this->config);
         }
 
         return $this->instances[$string];

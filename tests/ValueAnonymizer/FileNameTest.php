@@ -34,7 +34,7 @@ class FileNameTest extends AbstractValueAnonymizerMocks
 
         $val = new Value('\''.$input.'\'', $input, false );
 
-        $actual = $this->sut->anonymize($val, [], $configMock);
+        $actual = $this->sut->anonymize($val, []);
 
         $this->assertSame('\'/odfeb/ymt_wecgccw.php\'', $actual->getRawValue());
     }

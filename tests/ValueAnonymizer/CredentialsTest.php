@@ -34,9 +34,7 @@ class CredentialsTest extends TestCase
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(
-            new Value('\'afdg$%^&@w\'', 'afdg$%^&@w', false),
-            [],
-            $configMock
+            new Value('\'afdg$%^&@w\'', 'afdg$%^&@w', false), []
         );
 
         $this->assertSame('\'pass~?i%%#e\'', $actual->getRawValue());

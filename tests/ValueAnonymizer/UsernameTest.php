@@ -35,9 +35,7 @@ class UsernameTest extends TestCase
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(
-            new Value('\'anastasia.matei\'', 'anastasia.matei', false),
-            [],
-            $configMock
+            new Value('\'anastasia.matei\'', 'anastasia.matei', false), []
         );
 
         $this->assertSame('\'cgodertgy.dndem\'', $actual->getRawValue());
@@ -54,9 +52,7 @@ class UsernameTest extends TestCase
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(
-            new Value('\'ana.matei\'', 'ana.matei', false),
-            [],
-            $configMock
+            new Value('\'ana.matei\'', 'ana.matei', false), []
         );
 
         $this->assertSame('\'cgo.dndem\'', $actual->getRawValue());

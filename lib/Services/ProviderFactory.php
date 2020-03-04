@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\Services;
 
 use PayU\MysqlDumpAnonymizer\CommandLineParameters;
+use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Provider\InterfaceProviderBuilder;
 use PayU\MysqlDumpAnonymizer\Provider\YamlProviderBuilder;
 use RuntimeException;
@@ -22,9 +23,15 @@ final class ProviderFactory
      */
     private $commandLineParameters;
 
-    public function __construct(CommandLineParameters $commandLineParameters)
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    public function __construct(CommandLineParameters $commandLineParameters, ConfigInterface $config)
     {
         $this->commandLineParameters = $commandLineParameters;
+        $this->config = $config;
     }
 
     public function make(): InterfaceProviderBuilder
@@ -34,7 +41,7 @@ final class ProviderFactory
             return new YamlProviderBuilder(
                 $this->commandLineParameters->getConfigFile(),
                 new Parser(),
-                new ValueAnonymizerFactory(),
+                new ValueAnonymizerFactory($this->config),
                 $this->commandLineParameters->getOnNotConfiguredTable(),
                 $this->commandLineParameters->getOnNotConfiguredColumn()
             );

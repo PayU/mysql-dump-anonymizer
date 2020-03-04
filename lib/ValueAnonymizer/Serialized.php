@@ -12,27 +12,36 @@ use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class Serialized implements ValueAnonymizerInterface
 {
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
 
-    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
+    public function __construct(ConfigInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    public function anonymize(Value $value, array $row): AnonymizedValue
     {
         $serializedString = $value->getUnEscapedValue();
         $array = unserialize($serializedString, ['allowed_classes' => false]);
         if (is_array($array)) {
-            $anonymizedArray = $this->anonymizeArray($array, $config);
+            $anonymizedArray = $this->anonymizeArray($array);
             return new AnonymizedValue(EscapeString::escape(serialize($anonymizedArray)));
         }
 
-        return (new FreeText())->anonymize($value, $row, $config);
+        return (new FreeText($this->config))->anonymize($value, $row);
     }
 
-    private function anonymizeArray(array $array, ConfigInterface $config): array
+    private function anonymizeArray(array $array): array
     {
         $ret = [];
         foreach ($array as $key => $value) {
             if (is_array($value)) {
-                $ret[$key] = $this->anonymizeArray($value, $config);
+                $ret[$key] = $this->anonymizeArray($value);
             } else {
-                $ret[$key] = $config->getHashStringHelper()->hashMe($value);
+                $ret[$key] = $this->config->getHashStringHelper()->hashMe($value);
                 if (is_int($value)) {
                     $ret[$key] = (int)$ret[$key];
                 }

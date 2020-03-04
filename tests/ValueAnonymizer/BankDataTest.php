@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Config;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BankData;
 
@@ -25,14 +24,14 @@ class BankDataTest extends AbstractValueAnonymizerMocks
     {
         $configMock = $this->anonymizerConfigMock(['84fc']);
 
-        $actual = $this->sut->anonymize(new Value('\'BCRL\'', 'BCRL', false), [], $configMock);
+        $actual = $this->sut->anonymize(new Value('\'BCRL\'', 'BCRL', false), []);
 
         $this->assertSame('\'84fc\'', $actual->getRawValue());
     }
 
     public function testAnonymizeReturnSameValueIfExpression(): void
     {
-        $actual = $this->sut->anonymize(new Value('\'expression\'', 'expression', true), [], new Config());
+        $actual = $this->sut->anonymize(new Value('\'expression\'', 'expression', true), []);
 
         $this->assertSame('\'expression\'', $actual->getRawValue());
     }

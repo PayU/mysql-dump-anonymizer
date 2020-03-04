@@ -1,11 +1,9 @@
 <?php
-
 declare(strict_types=1);
 
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
@@ -30,23 +28,23 @@ final class Eav implements ValueAnonymizerInterface
         $this->attributeColumnName = $attributeColumnName;
         $this->attributeValues = $attributeValues;
         $this->valueAnonymizerFactory = $valueAnonymizerFactory;
+
     }
 
 
     /**
      * @param Value $value
      * @param Value[] $row
-     * @param ConfigInterface $config
      * @return AnonymizedValue
      */
-    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
+    public function anonymize(Value $value, array $row): AnonymizedValue
     {
         foreach ($this->attributeValues as $onValue => $anonymizeLikeThis) {
             if ($row[$this->attributeColumnName]->getUnEscapedValue() === $onValue) {
-                return $this->valueAnonymizerFactory->getValueAnonymizerClass($anonymizeLikeThis, [])->anonymize($value, $row, $config);
+                return $this->valueAnonymizerFactory->getValueAnonymizerClass($anonymizeLikeThis, [])->anonymize($value, $row);
             }
         }
 
-        return $this->valueAnonymizerFactory->getValueAnonymizerClass('FreeText', [])->anonymize($value, $row, $config);
+        return $this->valueAnonymizerFactory->getValueAnonymizerClass('FreeText', [])->anonymize($value, $row);
     }
 }

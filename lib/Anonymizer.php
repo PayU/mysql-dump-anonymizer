@@ -147,7 +147,7 @@ class Anonymizer
         }
 
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_START, get_class($valueAnonymizer));
-        $ret = $valueAnonymizer->anonymize($value, $row, $this->config);
+        $ret = $valueAnonymizer->anonymize($value, $row);
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_END, get_class($valueAnonymizer));
         return $ret;
     }

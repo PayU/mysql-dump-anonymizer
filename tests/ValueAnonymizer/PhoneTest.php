@@ -38,7 +38,7 @@ class PhoneTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(new Value('\'031 425 73 00\'', '031 425 73 00', false), [], $configMock);
+        $actual = $this->sut->anonymize(new Value('\'031 425 73 00\'', '031 425 73 00', false), []);
 
         $this->assertSame($expectedFinalHash, $actual->getRawValue());
     }

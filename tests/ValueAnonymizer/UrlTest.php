@@ -38,9 +38,7 @@ class UrlTest extends TestCase
             ->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(
-            new Value('\'http://www.fashiondays.hu/generatetoken\'', 'http://www.fashiondays.hu/generatetoken', false),
-            [],
-            $configMock
+            new Value('\'http://www.fashiondays.hu/generatetoken\'', 'http://www.fashiondays.hu/generatetoken', false), []
         );
 
         $this->assertSame('\'http://ubp.huhkosocgww.og/wwgwoockkokcg\'', $actual->getRawValue());
@@ -59,9 +57,7 @@ class UrlTest extends TestCase
             ->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(
-            new Value('\'www.alphabank.ro\'', 'www.alphabank.ro', false),
-            [],
-            $configMock
+            new Value('\'www.alphabank.ro\'', 'www.alphabank.ro', false), []
         );
 
         $this->assertSame('\'ubp.huhkosocg.og\'', $actual->getRawValue());

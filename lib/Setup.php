@@ -21,10 +21,16 @@ class Setup
     /** @var Observer */
     private $observer;
 
-    public function __construct(CommandLineParameters $commandLineParameters, Observer $observer)
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    public function __construct(CommandLineParameters $commandLineParameters, Observer $observer, ConfigInterface $config)
     {
         $this->commandLineParameters = $commandLineParameters;
         $this->observer = $observer;
+        $this->config = $config;
     }
 
     public function setup(): void
@@ -48,7 +54,7 @@ class Setup
      */
     public function getAnonymizationProvider(): AnonymizationProviderInterface
     {
-        $providerBuilder = (new ProviderFactory($this->commandLineParameters))->make();
+        $providerBuilder = (new ProviderFactory($this->commandLineParameters, $this->config))->make();
         $providerBuilder->validate();
         return $providerBuilder->buildProvider();
     }

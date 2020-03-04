@@ -12,7 +12,19 @@ use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class Url implements ValueAnonymizerInterface
 {
-    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
+
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    public function __construct(ConfigInterface $config)
+    {
+        $this->config = $config;
+    }
+
+
+    public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ($value->isExpression()) {
             return new AnonymizedValue($value->getRawValue());
@@ -24,10 +36,10 @@ final class Url implements ValueAnonymizerInterface
 
         if ($scheme !== null) {
             $host = substr($unescapedURL, strlen((string)$scheme) + 3);
-            $anonymizedHost = $config->getHashStringHelper()->hashMe($host);
+            $anonymizedHost = $this->config->getHashStringHelper()->hashMe($host);
             $anonymizedUrl = $scheme . '://' . $anonymizedHost;
         } else {
-            $anonymizedUrl = $config->getHashStringHelper()->hashMe($unescapedURL);
+            $anonymizedUrl = $this->config->getHashStringHelper()->hashMe($unescapedURL);
         }
 
         return new AnonymizedValue(EscapeString::escape($anonymizedUrl));

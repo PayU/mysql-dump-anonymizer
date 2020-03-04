@@ -35,9 +35,7 @@ class CardDataTest extends TestCase
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(
-            new Value('\'4893\'', '4893', false),
-            [],
-            $configMock
+            new Value('\'4893\'', '4893', false), []
         );
 
         $this->assertSame('\'0760\'', $actual->getRawValue());

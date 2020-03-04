@@ -35,9 +35,7 @@ class SensitiveFreeTextTest extends TestCase
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
         $actual = $this->sut->anonymize(
-            new Value('\'OLX Online Services SRL\'', 'OLX Online Services SRL', false),
-            [],
-            $configMock
+            new Value('\'OLX Online Services SRL\'', 'OLX Online Services SRL', false), []
         );
 
         $this->assertSame('\'XGV Zkmtao Wggkcckg WOO\'', $actual->getRawValue());

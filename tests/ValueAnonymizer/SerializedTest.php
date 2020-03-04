@@ -48,7 +48,7 @@ class SerializedTest extends AbstractValueAnonymizerMocks
         ])));
 
 
-        $actual = $this->sut->anonymize($value, [], $configMock);
+        $actual = $this->sut->anonymize($value, []);
 
         $this->assertEquals($expected, $actual);
     }

@@ -10,8 +10,17 @@ use PayU\MysqlDumpAnonymizer\Entity\Value;
 
 final class BinaryData implements ValueAnonymizerInterface
 {
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
 
-    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
+    public function __construct(ConfigInterface $config)
+    {
+        $this->config = $config;
+    }
+
+    public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ((empty($value->getUnEscapedValue())) || ($value->isExpression() === false)) {
             return new AnonymizedValue('\'\'');
@@ -22,7 +31,7 @@ final class BinaryData implements ValueAnonymizerInterface
         $anonymizedHexExpression = '';
         do {
             $part = substr($hexExpression, $i, 64);
-            $anonymizedHexExpression .= $config->getHashStringHelper()->sha256($part);
+            $anonymizedHexExpression .= $this->config->getHashStringHelper()->sha256($part);
             $i += 64;
 
             //TODO see how big the blob can be - maybe config ?

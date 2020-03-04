@@ -12,7 +12,19 @@ use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class FileName implements ValueAnonymizerInterface
 {
-    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
+
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
+
+    public function __construct(ConfigInterface $config)
+    {
+        $this->config = $config;
+    }
+
+
+    public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ($value->isExpression()) {
             return new AnonymizedValue($value->getRawValue());
@@ -23,7 +35,7 @@ final class FileName implements ValueAnonymizerInterface
         $nameWithoutExtension = substr($unescapedValue, 0, (int)strrpos($unescapedValue, '.'));
         $extension = substr($unescapedValue, strrpos($unescapedValue, '.') + 1);
 
-        $anonymizedNameWithoutExtension = $config->getHashStringHelper()->hashMe($nameWithoutExtension);
+        $anonymizedNameWithoutExtension = $this->config->getHashStringHelper()->hashMe($nameWithoutExtension);
 
         return new AnonymizedValue(EscapeString::escape($anonymizedNameWithoutExtension . '.'.$extension));
     }

@@ -11,10 +11,19 @@ use PayU\MysqlDumpAnonymizer\Entity\Value;
 
 final class IpInt implements ValueAnonymizerInterface
 {
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
 
-    public function anonymize(Value $value, array $row, ConfigInterface $config): AnonymizedValue
+    public function __construct(ConfigInterface $config)
     {
-        $ip = (new Ip())->anonymize($value, $row, $config)->getRawValue();
+        $this->config = $config;
+    }
+
+    public function anonymize(Value $value, array $row): AnonymizedValue
+    {
+        $ip = (new Ip($this->config))->anonymize($value, $row)->getRawValue();
         return new AnonymizedValue((string)ip2long(substr($ip, 1, -1)));
     }
 }
