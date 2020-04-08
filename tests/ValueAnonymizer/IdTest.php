@@ -10,16 +10,6 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Id;
 
 class IdTest extends AbstractValueAnonymizerMocks
 {
-    /**
-     * @var Id
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new Id();
-    }
 
     /** @dataProvider hashes
      * @param string $hash
@@ -28,8 +18,9 @@ class IdTest extends AbstractValueAnonymizerMocks
     public function testAnonymize($hash, $expectedIdHash): void
     {
         $configMock = $this->anonymizerConfigMock([$hash]);
+        $sut = new Id($configMock);
 
-        $actual = $this->sut->anonymize(new Value('\'2836143\'', '2836143', false), []);
+        $actual = $sut->anonymize(new Value('\'2836143\'', '2836143', false), []);
 
         $this->assertSame($expectedIdHash, $actual->getRawValue());
     }

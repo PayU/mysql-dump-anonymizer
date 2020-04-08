@@ -14,16 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class SensitiveFreeTextTest extends TestCase
 {
-    /**
-     * @var SensitiveFreeText
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new SensitiveFreeText();
-    }
 
     public function testAnonymize(): void
     {
@@ -34,7 +24,7 @@ class SensitiveFreeTextTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(
+        $actual = (new SensitiveFreeText($configMock))->anonymize(
             new Value('\'OLX Online Services SRL\'', 'OLX Online Services SRL', false), []
         );
 

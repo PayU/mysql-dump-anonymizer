@@ -14,16 +14,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class SerializedTest extends AbstractValueAnonymizerMocks
 {
-    /**
-     * @var Serialized
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new Serialized();
-    }
 
     public function testAnonymize(): void
     {
@@ -48,7 +38,7 @@ class SerializedTest extends AbstractValueAnonymizerMocks
         ])));
 
 
-        $actual = $this->sut->anonymize($value, []);
+        $actual = (new Serialized($configMock))->anonymize($value, []);
 
         $this->assertEquals($expected, $actual);
     }

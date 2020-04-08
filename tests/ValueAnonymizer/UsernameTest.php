@@ -14,16 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class UsernameTest extends TestCase
 {
-    /**
-     * @var Username
-     */
-    private $sut;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new Username();
-    }
 
     public function testAnonymizeUsernameWithLengthBiggerThan12(): void
     {
@@ -34,7 +25,7 @@ class UsernameTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(
+        $actual = (new Username($configMock))->anonymize(
             new Value('\'anastasia.matei\'', 'anastasia.matei', false), []
         );
 
@@ -51,7 +42,7 @@ class UsernameTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(
+        $actual = (new Username($configMock))->anonymize(
             new Value('\'ana.matei\'', 'ana.matei', false), []
         );
 

@@ -14,16 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class DocumentDataTest extends TestCase
 {
-    /**
-     * @var DocumentData
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new DocumentData();
-    }
 
     public function testAnonymize(): void
     {
@@ -34,7 +24,9 @@ class DocumentDataTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(new Value('\'RO427320\'', 'RO427320', false), []);
+        $sut = new DocumentData($configMock);
+
+        $actual = $sut->anonymize(new Value('\'RO427320\'', 'RO427320', false), []);
 
         $this->assertSame('\'74eca695\'', $actual->getRawValue());
     }

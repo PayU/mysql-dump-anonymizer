@@ -14,16 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class CardDataTest extends TestCase
 {
-    /**
-     * @var CardData
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new CardData();
-    }
 
     public function testAnonymize(): void
     {
@@ -34,7 +24,9 @@ class CardDataTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(
+        $sut = new CardData($configMock);
+
+        $actual = $sut->anonymize(
             new Value('\'4893\'', '4893', false), []
         );
 

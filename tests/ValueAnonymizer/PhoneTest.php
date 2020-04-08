@@ -14,16 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class PhoneTest extends TestCase
 {
-    /**
-     * @var Phone
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new Phone();
-    }
 
     /** @dataProvider hashes
      * @param string $hash
@@ -38,7 +28,7 @@ class PhoneTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(new Value('\'031 425 73 00\'', '031 425 73 00', false), []);
+        $actual = (new Phone($configMock))->anonymize(new Value('\'031 425 73 00\'', '031 425 73 00', false), []);
 
         $this->assertSame($expectedFinalHash, $actual->getRawValue());
     }

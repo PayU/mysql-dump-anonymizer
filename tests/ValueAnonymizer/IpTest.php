@@ -14,16 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class IpTest extends TestCase
 {
-    /**
-     * @var Ip
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new Ip();
-    }
 
     /** @dataProvider hashes
      * @param string $hash
@@ -38,7 +28,9 @@ class IpTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(new Value('\'test\'', 'test', false), []);
+        $sut = new Ip($configMock);
+
+        $actual = $sut->anonymize(new Value('\'test\'', 'test', false), []);
 
         $this->assertSame('\''.$expectedIp.'\'', $actual->getRawValue());
     }

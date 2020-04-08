@@ -14,16 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class EmailTest extends TestCase
 {
-    /**
-     * @var Email
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new Email();
-    }
 
     public function testAnonymize(): void
     {
@@ -34,7 +24,9 @@ class EmailTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(
+        $sut = new Email($configMock);
+
+        $actual = $sut->anonymize(
             new Value('\'abyhfi@ijuyhoung.ro\'', 'abyhfi@ijuyhoung.ro', false), []
         );
 

@@ -12,16 +12,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class FileNameTest extends AbstractValueAnonymizerMocks
 {
-  /**
-     * @var FileName
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new FileName();
-    }
 
     public function testAnonymize(): void
     {
@@ -32,9 +22,11 @@ class FileNameTest extends AbstractValueAnonymizerMocks
             '/odfeb/ymt_wecgccw'
         ]);
 
+        $sut = new FileName($configMock);
+
         $val = new Value('\''.$input.'\'', $input, false );
 
-        $actual = $this->sut->anonymize($val, []);
+        $actual = $sut->anonymize($val, []);
 
         $this->assertSame('\'/odfeb/ymt_wecgccw.php\'', $actual->getRawValue());
     }

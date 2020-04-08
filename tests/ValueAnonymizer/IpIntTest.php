@@ -13,17 +13,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class IpIntTest extends AbstractValueAnonymizerMocks
 {
-    /**
-     * @var IpInt
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new IpInt();
-    }
-
 
     /** @dataProvider hashes
      * @param string $hash
@@ -38,7 +27,9 @@ class IpIntTest extends AbstractValueAnonymizerMocks
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(new Value('\'test\'', 'test', false), []);
+        $sut = new IpInt($configMock);
+
+        $actual = $sut->anonymize(new Value('\'test\'', 'test', false), []);
 
         $this->assertSame($expectedIp, $actual->getRawValue());
     }

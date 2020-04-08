@@ -8,7 +8,7 @@ use PayU\MysqlDumpAnonymizer\Helper\StringHashSha256;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-final class StringHashTest extends TestCase
+final class StringHashSha256Test extends TestCase
 {
     /**
      * @var StringHashSha256|MockObject

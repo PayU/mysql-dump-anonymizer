@@ -12,23 +12,14 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class FreeTextTest extends AbstractValueAnonymizerMocks
 {
-    /**
-     * @var FreeText
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new FreeText();
-    }
 
     public function testAnonymize(): void
     {
         /** @var ConfigInterface|MockObject $configMock */
         $configMock = $this->anonymizerConfigMock(['Vkr.Hgcscgw Swgokwkgs,ks3-8,Gsgosowg Kwkovkr Hgcsc-Gwswg ok Wkgs,Ksgs6']);
+        $sut = new FreeText($configMock);
 
-        $actual = $this->sut->anonymize(
+        $actual = $sut->anonymize(
             new Value('\'Sos.Nicolae Titulescu,nr4-8,Cladirea America House-Aripa de Vest,Etaj5\'', 'Sos.Nicolae Titulescu,nr4-8,Cladirea America House-Aripa de Vest,Etaj5', false), []
         );
 

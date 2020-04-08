@@ -14,16 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class UrlTest extends TestCase
 {
-    /**
-     * @var Url
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new Url();
-    }
 
     public function testAnonymizeUrlWithScheme(): void
     {
@@ -37,7 +27,7 @@ class UrlTest extends TestCase
         $configMock->method('getHashStringHelper')
             ->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(
+        $actual = (new Url($configMock))->anonymize(
             new Value('\'http://www.fashiondays.hu/generatetoken\'', 'http://www.fashiondays.hu/generatetoken', false), []
         );
 
@@ -56,7 +46,7 @@ class UrlTest extends TestCase
         $configMock->method('getHashStringHelper')
             ->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(
+        $actual = (new Url($configMock))->anonymize(
             new Value('\'www.alphabank.ro\'', 'www.alphabank.ro', false), []
         );
 

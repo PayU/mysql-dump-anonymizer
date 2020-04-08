@@ -9,29 +9,24 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizer\BankData;
 
 class BankDataTest extends AbstractValueAnonymizerMocks
 {
-    /**
-     * @var BankData
-     */
-    private $sut;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new BankData();
-    }
 
     public function testAnonymize(): void
     {
         $configMock = $this->anonymizerConfigMock(['84fc']);
+        $sut = new BankData($configMock);
 
-        $actual = $this->sut->anonymize(new Value('\'BCRL\'', 'BCRL', false), []);
+        $actual = $sut->anonymize(new Value('\'BCRL\'', 'BCRL', false), []);
 
         $this->assertSame('\'84fc\'', $actual->getRawValue());
     }
 
     public function testAnonymizeReturnSameValueIfExpression(): void
     {
-        $actual = $this->sut->anonymize(new Value('\'expression\'', 'expression', true), []);
+        $configMock = $this->anonymizerConfigMock(null);
+        $sut = new BankData($configMock);
+
+        $actual = $sut->anonymize(new Value('\'expression\'', 'expression', true), []);
 
         $this->assertSame('\'expression\'', $actual->getRawValue());
     }

@@ -13,18 +13,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 final class JsonTest extends AbstractValueAnonymizerMocks
 {
-    /**
-     * @var Json
-     */
-    private $sut;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-
-        $this->sut = new Json();
-    }
 
     public function testAnonymize(): void
     {
@@ -54,7 +42,9 @@ final class JsonTest extends AbstractValueAnonymizerMocks
             (string)$expectedJson[0]['float']
         ]);
 
-        $actual = $this->sut->anonymize($av, []);
+        $sut = new Json($configMock);
+
+        $actual = $sut->anonymize($av, []);
 
         $this->assertEquals($expected, $actual);
         $this->assertSame($expected->getRawValue(), $actual->getRawValue());

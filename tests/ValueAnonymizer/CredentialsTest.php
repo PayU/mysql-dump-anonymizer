@@ -18,11 +18,6 @@ class CredentialsTest extends TestCase
      */
     private $sut;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new Credentials();
-    }
 
     public function testAnonymize(): void
     {
@@ -33,7 +28,9 @@ class CredentialsTest extends TestCase
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
-        $actual = $this->sut->anonymize(
+        $sut = new Credentials($configMock);
+
+        $actual = $sut->anonymize(
             new Value('\'afdg$%^&@w\'', 'afdg$%^&@w', false), []
         );
 
