@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers;
 
-final class AnonymizedValue
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\AnonymizedValueInterface;
+
+final class AnonymizedValue implements AnonymizedValueInterface
 {
     /** @var string raw value in insert statement */
     private $rawValue;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers;
 
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\AnonymizedValue;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\ValueAnonymizerFactory;
+
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\ReadDump\Value;
 
 final class Eav implements ValueAnonymizerInterface

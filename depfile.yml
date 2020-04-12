@@ -1,0 +1,38 @@
+paths:
+  - lib
+layers:
+  - name: Anonymizer
+    collectors:
+      - type: directory
+        regex: lib\\[0-9a-zA-Z.]+php
+  - name: AnonymizationProvider
+    collectors:
+      - type: directory
+        regex: lib\\AnonymizationProvider\\[0-9a-zA-Z.]+php
+  - name: ConfigReader
+    collectors:
+      - type: directory
+        regex: lib\\AnonymizationProvider\\ConfigReader\\[0-9a-zA-Z.]+php
+  - name: ValueAnonymizers
+    collectors:
+      - type: directory
+        regex: lib\\AnonymizationProvider\\ConfigReader\\ValueAnonymizers\\[0-9a-zA-Z.]+php
+  - name: ReadDump
+    collectors:
+      - type: directory
+        regex: lib\\ReadDump\\[0-9a-zA-Z.]+php
+  - name: WriteDump
+    collectors:
+      - type: directory
+        regex: lib\\WriteDump\\[0-9a-zA-Z.]+php
+ruleset:
+  Anonymizer:
+    - AnonymizationProvider
+    - ReadDump
+    - WriteDump
+  AnonymizationProvider:
+    - ConfigReader
+  ConfigReader:
+    - ValueAnonymizers
+  ValueAnonymizers: ~
+

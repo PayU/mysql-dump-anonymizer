@@ -6,8 +6,6 @@ namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader;
 
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProvider;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\AnonymizationAction;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\InterfaceProviderBuilder;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use Symfony\Component\Yaml\Exception\ParseException;

@@ -3,9 +3,7 @@
 declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider;
-
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface;
 
 final class AnonymizationProvider implements AnonymizationProviderInterface
 {
@@ -20,7 +18,7 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
     private $tableNotFoundAction;
 
     /**
-     * @var ValueAnonymizerInterface
+     * @var \PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface
      */
     private $tableColumnNotFoundAnonymizer;
 

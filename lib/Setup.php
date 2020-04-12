@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
+use PayU\MysqlDumpAnonymizer\CommandLineParameters;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
 use PayU\MysqlDumpAnonymizer\WriteDump\MysqlLineDumpInterface;

@@ -16,7 +16,7 @@ use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\FreeText;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\Id;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\NoAnonymization;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\Ip;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\IpInt;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\Json;
@@ -54,7 +54,7 @@ final class ValueAnonymizerFactory
 
     public const NO_ANONYMIZATION = 'NoAnonymization';
 
-    /** @var ValueAnonymizerInterface[]  */
+    /** @var \PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface[]  */
     private $instances = [];
 
     /**
@@ -70,9 +70,9 @@ final class ValueAnonymizerFactory
     /**
      * @param string $string
      * @param array|null $constructArguments
-     * @return ValueAnonymizerInterface
+     * @return \PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface
      */
-    public function getValueAnonymizerClass(string $string, array $constructArguments) : ValueAnonymizerInterface
+    public function getValueAnonymizerClass(string $string, array $constructArguments) : \PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface
     {
         if (!empty($constructArguments)) {
             return new self::$valueAnonymizers[$string](...$constructArguments);

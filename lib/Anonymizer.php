@@ -11,7 +11,7 @@ use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers
 use PayU\MysqlDumpAnonymizer\ReadDump\Value;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserInterface;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\NoAnonymization;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface;
 
 class Anonymizer
 {
@@ -130,7 +130,7 @@ class Anonymizer
     }
 
     /**
-     * @param ValueAnonymizerInterface $valueAnonymizer
+     * @param \PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface $valueAnonymizer
      * @param \PayU\MysqlDumpAnonymizer\ReadDump\Value $value
      * @param \PayU\MysqlDumpAnonymizer\ReadDump\Value[] $row Associative array columnName => Value Object
      * @return \PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\AnonymizedValue

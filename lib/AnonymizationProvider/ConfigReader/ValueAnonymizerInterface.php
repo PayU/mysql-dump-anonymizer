@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers;
+namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader;
+
 
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\ReadDump\Value;
@@ -16,5 +17,5 @@ interface ValueAnonymizerInterface
      * @param array $row
      * @return AnonymizedValue
      */
-    public function anonymize(Value $value, array $row): AnonymizedValue;
+    public function anonymize(Value $value, array $row): AnonymizedValueInterface;
 }

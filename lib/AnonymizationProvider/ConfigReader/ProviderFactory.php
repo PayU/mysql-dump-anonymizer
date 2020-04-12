@@ -6,8 +6,6 @@ namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader;
 
 use PayU\MysqlDumpAnonymizer\CommandLineParameters;
 use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\InterfaceProviderBuilder;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\YamlProviderBuilder;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\ValueAnonymizerFactory;
 use RuntimeException;
 use Symfony\Component\Yaml\Parser;
@@ -20,7 +18,7 @@ final class ProviderFactory implements ProviderFactoryInterface
     public const YAML_CONFIG = 'yaml';
 
     /**
-     * @var CommandLineParameters
+     * @var \PayU\MysqlDumpAnonymizer\AnonymizationProvider\CommandLineParameters
      */
     private $commandLineParameters;
 
