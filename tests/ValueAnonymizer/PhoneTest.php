@@ -6,9 +6,9 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\StringHash;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Phone;
+use PayU\MysqlDumpAnonymizer\ReadDump\Value;
+use PayU\MysqlDumpAnonymizer\Helper\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\Phone;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +21,7 @@ class PhoneTest extends TestCase
      */
     public function testAnonymize($hash, $expectedFinalHash): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn($hash);
 
         /** @var ConfigInterface|MockObject $configMock */

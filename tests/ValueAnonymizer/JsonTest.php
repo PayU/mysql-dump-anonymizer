@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Json;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\Json;
+use PayU\MysqlDumpAnonymizer\ReadDump\Value;
 use PHPUnit\Framework\MockObject\MockObject;
 
 final class JsonTest extends AbstractValueAnonymizerMocks

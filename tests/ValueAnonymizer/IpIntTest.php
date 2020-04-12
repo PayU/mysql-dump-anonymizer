@@ -6,9 +6,9 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\StringHash;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\IpInt;
+use PayU\MysqlDumpAnonymizer\ReadDump\Value;
+use PayU\MysqlDumpAnonymizer\Helper\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\IpInt;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class IpIntTest extends AbstractValueAnonymizerMocks
@@ -20,7 +20,7 @@ class IpIntTest extends AbstractValueAnonymizerMocks
      */
     public function testAnonymize($hash, $expectedIp): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
         $hashStringMock->method('sha256')->willReturn($hash);
 
         /** @var ConfigInterface|MockObject $configMock */

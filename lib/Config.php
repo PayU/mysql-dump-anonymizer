@@ -5,23 +5,23 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Helper\StringHash;
-use PayU\MysqlDumpAnonymizer\Helper\StringHashSha256;
+use PayU\MysqlDumpAnonymizer\Helper\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\Helper\StringHashInterfaceSha256;
 
 final class Config implements ConfigInterface
 {
 
     /**
-     * @var StringHash
+     * @var StringHashInterface
      */
     private $hashStringHelper;
 
     public function __construct()
     {
-        $this->hashStringHelper = new StringHashSha256(hash('sha256', (string)microtime(true)));
+        $this->hashStringHelper = new StringHashInterfaceSha256(hash('sha256', (string)microtime(true)));
     }
 
-    public function getHashStringHelper() : StringHash
+    public function getHashStringHelper() : StringHashInterface
     {
         return $this->hashStringHelper;
     }

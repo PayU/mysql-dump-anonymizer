@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\FreeText;
+use PayU\MysqlDumpAnonymizer\ReadDump\Value;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\FreeText;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class FreeTextTest extends AbstractValueAnonymizerMocks

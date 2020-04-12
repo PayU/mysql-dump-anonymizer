@@ -6,9 +6,9 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\StringHash;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\CardData;
+use PayU\MysqlDumpAnonymizer\ReadDump\Value;
+use PayU\MysqlDumpAnonymizer\Helper\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\CardData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +17,7 @@ class CardDataTest extends TestCase
 
     public function testAnonymize(): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHash::class)->getMock();
+        $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
         $hashStringMock->method('hashMe')->willReturn('0760');
 
         /** @var ConfigInterface|MockObject $configMock */

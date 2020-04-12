@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
-use PayU\MysqlDumpAnonymizer\Services\ValueAnonymizerFactory;
-use PayU\MysqlDumpAnonymizer\Services\ProviderFactory;
-use PayU\MysqlDumpAnonymizer\Services\LineParserFactory;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\AnonymizationAction;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\ValueAnonymizerFactory;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ProviderFactory;
+use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;
 use InvalidArgumentException;
 
 final class CommandLineParameters

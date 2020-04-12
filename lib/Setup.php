@@ -6,12 +6,12 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
-use PayU\MysqlDumpAnonymizer\LineDump\LineDump;
-use PayU\MysqlDumpAnonymizer\LineDump\MysqlLineDump;
-use PayU\MysqlDumpAnonymizer\Provider\AnonymizationProviderInterface;
-use PayU\MysqlDumpAnonymizer\Services\ProviderFactory;
-use PayU\MysqlDumpAnonymizer\Services\LineParser\LineParserInterface;
-use PayU\MysqlDumpAnonymizer\Services\LineParserFactory;
+use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
+use PayU\MysqlDumpAnonymizer\WriteDump\MysqlLineDumpInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ProviderFactory;
+use PayU\MysqlDumpAnonymizer\ReadDump\LineParserInterface;
+use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;
 
 class Setup
 {
@@ -59,9 +59,9 @@ class Setup
         return $providerBuilder->buildProvider();
     }
 
-    public function getLineDump(): LineDump
+    public function getLineDump(): LineDumpInterface
     {
-        return new MysqlLineDump();
+        return new MysqlLineDumpInterface();
     }
 
 }

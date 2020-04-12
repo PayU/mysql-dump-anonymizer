@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\Services;
 
-use PayU\MysqlDumpAnonymizer\Services\LineParserFactory;
+use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

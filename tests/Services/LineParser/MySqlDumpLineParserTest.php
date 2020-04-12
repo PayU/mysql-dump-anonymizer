@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\Services\LineParser;
 
-use PayU\MysqlDumpAnonymizer\Entity\LineInfo;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Services\LineParser\MySqlDumpLineParser;
+use PayU\MysqlDumpAnonymizer\ReadDump\LineInfo;
+use PayU\MysqlDumpAnonymizer\ReadDump\Value;
+use PayU\MysqlDumpAnonymizer\ReadDump\MySqlDumpLineParser;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +15,7 @@ final class MySqlDumpLineParserTest extends TestCase
 
 
     /**
-     * @var MySqlDumpLineParser|MockObject
+     * @var \PayU\MysqlDumpAnonymizer\ReadDump\MySqlDumpLineParser|MockObject
      */
     private $sut;
 
@@ -23,7 +23,7 @@ final class MySqlDumpLineParserTest extends TestCase
     {
         parent::setUp();
 
-        $this->sut = new MySqlDumpLineParser();
+        $this->sut = new \PayU\MysqlDumpAnonymizer\ReadDump\MySqlDumpLineParser();
     }
 
     public function testActionIndexSuccess(): void
@@ -105,7 +105,7 @@ EOD;
 
 
         $cnt1 = 0;
-        /** @var LineInfo $lineInfo */
+        /** @var \PayU\MysqlDumpAnonymizer\ReadDump\LineInfo $lineInfo */
         $lineInfo = $this->sut->lineInfo($query);
 
         foreach ($lineInfo->getValuesParser() as $row) {

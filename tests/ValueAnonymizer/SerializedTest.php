@@ -6,10 +6,10 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\AnonymizedValue;
+use PayU\MysqlDumpAnonymizer\ReadDump\Value;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\Serialized;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\Serialized;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class SerializedTest extends AbstractValueAnonymizerMocks
