@@ -3,25 +3,20 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\AnonymizationAction;
+use PayU\MysqlDumpAnonymizer\ConfigReader\AnonymizationAction;
 use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\ValueAnonymizerFactory;
+use PayU\MysqlDumpAnonymizer\ConfigReader\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\AnonymizedValue;
-use PayU\MysqlDumpAnonymizer\ReadDump\Value;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
+use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserInterface;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\NoAnonymization;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ValueAnonymizerInterface;
 
 class Anonymizer
 {
     /** @var Observer */
     private $observer;
-
-    /**
-     * @var Config
-     */
-    private $config;
 
     /** @var \PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface */
     private $anonymizationProvider;
@@ -38,14 +33,12 @@ class Anonymizer
         AnonymizationProviderInterface $anonymizationProvider,
         LineParserInterface $lineParser,
         LineDumpInterface $lineDump,
-        Observer $observer,
-        ConfigInterface $config
+        Observer $observer
     ) {
         $this->anonymizationProvider = $anonymizationProvider;
         $this->lineParser = $lineParser;
         $this->lineDump = $lineDump;
         $this->observer = $observer;
-        $this->config = $config;
     }
 
 
@@ -130,10 +123,10 @@ class Anonymizer
     }
 
     /**
-     * @param \PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizerInterface $valueAnonymizer
-     * @param \PayU\MysqlDumpAnonymizer\ReadDump\Value $value
-     * @param \PayU\MysqlDumpAnonymizer\ReadDump\Value[] $row Associative array columnName => Value Object
-     * @return \PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\AnonymizedValue
+     * @param \PayU\MysqlDumpAnonymizer\ValueAnonymizers\ValueAnonymizerInterface $valueAnonymizer
+     * @param \PayU\MysqlDumpAnonymizer\Entity\Value $value
+     * @param \PayU\MysqlDumpAnonymizer\Entity\Value[] $row Associative array columnName => Value Object
+     * @return \PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue
      */
     private function anonymizeValue(ValueAnonymizerInterface $valueAnonymizer, Value $value, $row): AnonymizedValue
     {

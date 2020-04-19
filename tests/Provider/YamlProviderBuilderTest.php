@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\Tests\Provider;
 
 
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\YamlProviderBuilder;
+use PayU\MysqlDumpAnonymizer\ConfigReader\YamlProviderBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

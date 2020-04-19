@@ -5,9 +5,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\AnonymizationAction;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\ValueAnonymizerFactory;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ProviderFactory;
+use PayU\MysqlDumpAnonymizer\ConfigReader\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;
 use InvalidArgumentException;
 
@@ -18,8 +16,6 @@ final class CommandLineParameters
     private const PARAM_CONFIG_TYPE = 'config-type';
     private const PARAM_ESTIMATED_DUMP_SIZE = 'dump-size';
     private const PARAM_SHOW_PROGRESS = 'show-progress';
-    private const PARAM_ON_NOT_CONFIGURED_TABLE = 'on-no-config-table';
-    private const PARAM_ON_NOT_CONFIGURED_COLUMN = 'on-not-config-column';
 
 
     private $configFile;
@@ -27,9 +23,6 @@ final class CommandLineParameters
     private $configType = ProviderFactory::DEFAULT_CONFIG_TYPE;
     private $estimatedDumpSize = 1370000000;
     private $showProgress = 1;
-
-    private $onNotConfiguredTable = AnonymizationAction::ANONYMIZE;
-    private $onNotConfiguredColumn = ValueAnonymizerFactory::NO_ANONYMIZATION;
 
 
     public function setCommandLineArguments($args): void
@@ -47,10 +40,6 @@ final class CommandLineParameters
                 $this->estimatedDumpSize = (int)$value;
             } elseif (strpos($arg, '--' . self::PARAM_SHOW_PROGRESS) === 0) {
                 $this->showProgress = (bool)$value;
-            } elseif (strpos($arg, '--' . self::PARAM_ON_NOT_CONFIGURED_COLUMN) === 0) {
-                $this->onNotConfiguredColumn = $value;
-            } elseif (strpos($arg, '--' . self::PARAM_ON_NOT_CONFIGURED_TABLE) === 0) {
-                $this->onNotConfiguredTable = AnonymizationAction::toArray()[$value];
             }
         }
     }
@@ -64,18 +53,12 @@ final class CommandLineParameters
         }
 
         if (ftell(STDIN) === false) {
-                throw new InvalidArgumentException('No STDIN detected.');
+            throw new InvalidArgumentException('No STDIN detected.');
         }
     }
 
     public static function help(): string
     {
-
-        $valueAnonymizers = ValueAnonymizerFactory::getValueAnonymizers();
-        $valueAnonymizersCount = count($valueAnonymizers);
-        $showTheFirst = 6;
-        $valueAnonymizersShow = implode(',', array_slice($valueAnonymizers, 0, 6));
-        $more = ' '.$valueAnonymizersCount-$showTheFirst.' more';
 
         return '
 Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .self::PARAM_CONFIG_FILES. '=FILENAME [OPTIONS]'
@@ -91,21 +74,20 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .s
             .'   ' .self::pad('').' This will be used to show progress data at runtime. '.PHP_EOL.PHP_EOL
             .' --' .self::pad(self::PARAM_SHOW_PROGRESS).' Default value: 1'.PHP_EOL
             .'   ' .self::pad('').' Set to 0 to not show progress data. '.PHP_EOL.PHP_EOL
-            .' --' .self::pad(self::PARAM_ON_NOT_CONFIGURED_TABLE).' Default value: '
-                . array_search(AnonymizationAction::ANONYMIZE, AnonymizationAction::toArray(), true)
-                .PHP_EOL
-            .'   ' .self::pad('').' Action to be taken when script reads a table that is not present in the config.'.PHP_EOL
-            .'   ' .self::pad('').' Possible values: '.implode(', ', AnonymizationAction::keys())
-            .'. '.PHP_EOL.PHP_EOL
-            .' --' .self::pad(self::PARAM_ON_NOT_CONFIGURED_COLUMN).' Default value: '.ValueAnonymizerFactory::NO_ANONYMIZATION.PHP_EOL
-            .'   ' .self::pad('').' Anonymization type for columns not present in the config.'.PHP_EOL
-            .'   ' .self::pad('').' Possible values: '.$valueAnonymizersShow.' ('.$more.')'.PHP_EOL.PHP_EOL
             .'';
     }
 
     private static function pad($string) : string
     {
         return str_pad($string, 24, ' ', STR_PAD_RIGHT);
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfigType(): string
+    {
+        return $this->configType;
     }
 
     /**
@@ -125,14 +107,6 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .s
     }
 
     /**
-     * @return string
-     */
-    public function getConfigType(): string
-    {
-        return $this->configType;
-    }
-
-    /**
      * @return int
      */
     public function getEstimatedDumpSize(): int
@@ -148,19 +122,4 @@ Usage: cat mysqldump.sql | php ' .basename($_SERVER['SCRIPT_FILENAME']).' --' .s
         return (bool)$this->showProgress;
     }
 
-    /**
-     * @return int
-     */
-    public function getOnNotConfiguredTable(): int
-    {
-        return $this->onNotConfiguredTable;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOnNotConfiguredColumn(): string
-    {
-        return $this->onNotConfiguredColumn;
-    }
 }

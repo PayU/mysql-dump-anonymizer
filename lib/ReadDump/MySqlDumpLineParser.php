@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ReadDump;
 
-use PayU\MysqlDumpAnonymizer\ReadDump\LineInfo;
-use PayU\MysqlDumpAnonymizer\ReadDump\Value;
-use PayU\MysqlDumpAnonymizer\ReadDump\LineParserInterface;
+use PayU\MysqlDumpAnonymizer\Entity\Value;
 use RuntimeException;
 
-//TODO all-in-one
 class MySqlDumpLineParser implements LineParserInterface
 {
 
@@ -59,7 +56,7 @@ class MySqlDumpLineParser implements LineParserInterface
 
     /**
      * @param string $insertLineString
-     * @return Value[][]
+     * @return Value[]
      */
     private function parseValuesList(string $insertLineString): iterable
     {
@@ -143,6 +140,8 @@ class MySqlDumpLineParser implements LineParserInterface
 
     private function isExpression($rawValue) : bool
     {
+        //INSERT INTO  () VALUES ('NULL', NULL, 0x123123, '0x123123', 'normal', 123);
+
         return (false === (strpos($rawValue, '\'') === 0 && substr($rawValue, -1) === '\''));
     }
 

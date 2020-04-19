@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\ReadDump\Value;
-use PayU\MysqlDumpAnonymizer\Helper\StringHashInterface;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\Username;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
+use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Username;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

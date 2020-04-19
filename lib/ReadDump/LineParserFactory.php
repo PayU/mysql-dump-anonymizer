@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ReadDump;
 
-use PayU\MysqlDumpAnonymizer\ReadDump\LineParserInterface;
-use PayU\MysqlDumpAnonymizer\ReadDump\MySqlDumpLineParser;
 use RuntimeException;
 
 final class LineParserFactory

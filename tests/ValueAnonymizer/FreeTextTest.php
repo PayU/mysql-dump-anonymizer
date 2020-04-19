@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\ReadDump\Value;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\FreeText;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
+use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\FreeText;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class FreeTextTest extends AbstractValueAnonymizerMocks
@@ -15,7 +15,7 @@ class FreeTextTest extends AbstractValueAnonymizerMocks
 
     public function testAnonymize(): void
     {
-        /** @var ConfigInterface|MockObject $configMock */
+        /** @var \PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface|MockObject $configMock */
         $configMock = $this->anonymizerConfigMock(['Vkr.Hgcscgw Swgokwkgs,ks3-8,Gsgosowg Kwkovkr Hgcsc-Gwswg ok Wkgs,Ksgs6']);
         $sut = new FreeText($configMock);
 

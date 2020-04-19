@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\Helper;
 
-use PayU\MysqlDumpAnonymizer\Helper\StringHashInterfaceSha256;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterfaceSha256;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

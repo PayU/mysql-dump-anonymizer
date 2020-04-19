@@ -5,12 +5,11 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\CommandLineParameters;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
 use PayU\MysqlDumpAnonymizer\WriteDump\MysqlLineDumpInterface;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ProviderFactory;
+use PayU\MysqlDumpAnonymizer\ConfigReader\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserInterface;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;
 
@@ -22,16 +21,10 @@ class Setup
     /** @var Observer */
     private $observer;
 
-    /**
-     * @var ConfigInterface
-     */
-    private $config;
-
-    public function __construct(CommandLineParameters $commandLineParameters, Observer $observer, ConfigInterface $config)
+    public function __construct(CommandLineParameters $commandLineParameters, Observer $observer)
     {
         $this->commandLineParameters = $commandLineParameters;
         $this->observer = $observer;
-        $this->config = $config;
     }
 
     public function setup(): void
@@ -55,7 +48,10 @@ class Setup
      */
     public function getAnonymizationProvider(): AnonymizationProviderInterface
     {
-        $providerBuilder = (new ProviderFactory($this->commandLineParameters, $this->config))->make();
+        $providerBuilder = (new ProviderFactory())->make(
+            $this->commandLineParameters->getConfigType(),
+            $this->commandLineParameters->getConfigFile()
+        );
         $providerBuilder->validate();
         return $providerBuilder->buildProvider();
     }

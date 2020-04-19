@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ConfigInterface;
-use PayU\MysqlDumpAnonymizer\ReadDump\Value;
-use PayU\MysqlDumpAnonymizer\Helper\StringHashInterface;
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\Ip;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
+use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Ip;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ class IpTest extends TestCase
         $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
         $hashStringMock->method('sha256')->willReturn($hash);
 
-        /** @var ConfigInterface|MockObject $configMock */
+        /** @var \PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface|MockObject $configMock */
         $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
         $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
 
