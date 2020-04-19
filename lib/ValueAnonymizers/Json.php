@@ -7,16 +7,15 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 
 use JsonException;
 
+use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class Json implements ValueAnonymizerInterface
 {
-    /**
-     * @var StringHashInterface
-     */
-    private $stringHash;
+
+    private StringHashInterface $stringHash;
 
     public function __construct(StringHashInterface $stringHash)
     {

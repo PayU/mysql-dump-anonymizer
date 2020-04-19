@@ -3,16 +3,13 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
+namespace PayU\MysqlDumpAnonymizer\Entity;
 
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
-use PayU\MysqlDumpAnonymizer\Entity\Value;
-
-
+//TODO find a better place
 interface ValueAnonymizerInterface
 {
     /**
-     * @param \PayU\MysqlDumpAnonymizer\Entity\Value $value
+     * @param Value $value
      * @param array $row
      * @return AnonymizedValue
      */

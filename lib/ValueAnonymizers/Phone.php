@@ -5,16 +5,15 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 
+use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class Phone implements ValueAnonymizerInterface
 {
-    /**
-     * @var StringHashInterface
-     */
-    private $stringHash;
+
+    private StringHashInterface $stringHash;
 
     public function __construct(StringHashInterface $stringHash)
     {
@@ -26,13 +25,6 @@ final class Phone implements ValueAnonymizerInterface
         if ($value->isExpression()) {
             return new AnonymizedValue($value->getRawValue());
         }
-
-        //  QWE123
-        //  AFE381
-
-        // '123123123' --  123123123
-        //
-
 
         $anonymizedEscapedValue = $this->stringHash->hashMe($value->getUnEscapedValue());
 

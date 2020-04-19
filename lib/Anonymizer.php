@@ -3,29 +3,27 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ConfigReader\AnonymizationAction;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
 use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
-use PayU\MysqlDumpAnonymizer\ConfigReader\ValueAnonymizerFactory;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserInterface;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 
 class Anonymizer
 {
     /** @var Observer */
     private $observer;
 
-    /** @var \PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface */
+    /** @var AnonymizationProviderInterface */
     private $anonymizationProvider;
 
     /** @var LineParserInterface */
     private $lineParser;
 
     /**
-     * @var \PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface
+     * @var LineDumpInterface
      */
     private $lineDump;
 
@@ -89,7 +87,7 @@ class Anonymizer
         $insertRequiresAnonymization = false;
         foreach ($lineColumns as $column) {
             $valueAnonymizer = $this->anonymizationProvider->getAnonymizationFor($table, $column);
-            if (get_class($valueAnonymizer) !== ValueAnonymizerFactory::getValueAnonymizers()[ValueAnonymizerFactory::NO_ANONYMIZATION]) {
+            if ($this->anonymizationProvider->isNoAnonymization($valueAnonymizer)) {
                 $insertRequiresAnonymization = true;
                 break;
             }
@@ -123,10 +121,10 @@ class Anonymizer
     }
 
     /**
-     * @param \PayU\MysqlDumpAnonymizer\ValueAnonymizers\ValueAnonymizerInterface $valueAnonymizer
-     * @param \PayU\MysqlDumpAnonymizer\Entity\Value $value
-     * @param \PayU\MysqlDumpAnonymizer\Entity\Value[] $row Associative array columnName => Value Object
-     * @return \PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue
+     * @param ValueAnonymizerInterface $valueAnonymizer
+     * @param Value $value
+     * @param Value[] $row Associative array columnName => Value Object
+     * @return AnonymizedValue
      */
     private function anonymizeValue(ValueAnonymizerInterface $valueAnonymizer, Value $value, $row): AnonymizedValue
     {
@@ -135,7 +133,7 @@ class Anonymizer
             return new AnonymizedValue('NULL');
         }
 
-        if ($valueAnonymizer instanceof NoAnonymization) {
+        if ($this->anonymizationProvider->isNoAnonymization($valueAnonymizer)) {
             $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION, null);
         }
 

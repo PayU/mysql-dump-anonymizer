@@ -6,15 +6,13 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class BankData implements ValueAnonymizerInterface
 {
 
-    /**
-     * @var StringHashInterface
-     */
-    private $stringHash;
+    private StringHashInterface $stringHash;
 
     public function __construct(StringHashInterface $stringHash)
     {
@@ -24,7 +22,7 @@ final class BankData implements ValueAnonymizerInterface
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ($value->isExpression()) {
-            return new AnonymizedValue($value->getRawValue());  //123  ; '123' // NULL 'NULL'
+            return new AnonymizedValue($value->getRawValue());
         }
 
         $anonymizedEscapedValue = $this->stringHash->hashMe($value->getUnEscapedValue());

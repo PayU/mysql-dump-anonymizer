@@ -8,7 +8,7 @@ layers:
   - name: Anonymizer
     collectors:
       - type: directory
-        regex: lib\\[0-9a-zA-Z.]+php
+        regex: lib\\Anonymizer.php
   - name: AnonymizationProvider
     collectors:
       - type: className

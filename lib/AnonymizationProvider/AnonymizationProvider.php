@@ -5,24 +5,25 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider;
 
 
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 
 final class AnonymizationProvider implements AnonymizationProviderInterface
 {
+    public const NO_ANONYMIZATION = 'NoAnonymization';
 
     /** @var array  */
-    private $tablesAction;
+    private array $tablesAction;
 
     /** @var ValueAnonymizerInterface[] */
-    private $tableColumnsAnonymizationProvider;
+    private array $tableColumnsAnonymizationProvider;
 
     /** @var int */
-    private $tableNotFoundAction;
+    private int $tableNotFoundAction;
 
     /**
      * @var ValueAnonymizerInterface
      */
-    private $tableColumnNotFoundAnonymizer;
+    private ValueAnonymizerInterface $tableColumnNotFoundAnonymizer;
 
     /**
      * AnonymizationProvider constructor.
@@ -61,4 +62,11 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
 
         return $this->tableColumnNotFoundAnonymizer;
     }
+
+    public function isNoAnonymization(ValueAnonymizerInterface $valueAnonymizer): bool
+    {
+        return substr(strrchr(get_class($valueAnonymizer), "\\"), 1) === self::NO_ANONYMIZATION;
+    }
+
+
 }

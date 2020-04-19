@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 
+use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
@@ -12,10 +13,7 @@ final class Ip implements ValueAnonymizerInterface
     public const BASE_16 = 16;
     public const BASE_10 = 10;
 
-    /**
-     * @var StringHashInterface
-     */
-    private $stringHash;
+    private StringHashInterface $stringHash;
 
     public function __construct(StringHashInterface $stringHash)
     {
@@ -38,7 +36,7 @@ final class Ip implements ValueAnonymizerInterface
      * The 2 characters from reversed-hash starting at position (8) are "55" => in decimal 85
      * => Ip is 170.239.85.102
      *
-     * @param \PayU\MysqlDumpAnonymizer\Entity\Value $value
+     * @param Value $value
      * @param array $row
      * @return AnonymizedValue
      */

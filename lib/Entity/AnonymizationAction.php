@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PayU\MysqlDumpAnonymizer\ConfigReader;
+namespace PayU\MysqlDumpAnonymizer\Entity;
 
 use MyCLabs\Enum\Enum;
 

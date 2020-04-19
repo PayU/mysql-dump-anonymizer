@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 
 
+use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
@@ -13,10 +14,7 @@ use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 final class FileName implements ValueAnonymizerInterface
 {
 
-    /**
-     * @var StringHashInterface
-     */
-    private $stringHash;
+    private StringHashInterface $stringHash;
 
     public function __construct(StringHashInterface $stringHash)
     {

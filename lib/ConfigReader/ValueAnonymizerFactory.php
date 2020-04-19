@@ -24,13 +24,12 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizers\SensitiveFreeText;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Serialized;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Url;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Username;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 
 final class ValueAnonymizerFactory
 {
 
-    /** @var array  */
-    private static $valueAnonymizers = [
+    private static array $valueAnonymizers = [
         'FreeText' => FreeText::class,
         'BankData' => BankData::class,
         'BinaryData' => BinaryData::class,
@@ -52,14 +51,12 @@ final class ValueAnonymizerFactory
         'NoAnonymization' => NoAnonymization::class
     ];
 
-    public const NO_ANONYMIZATION = 'NoAnonymization';
-
     /** @var ValueAnonymizerInterface[]  */
-    private $instances = [];
+    private array $instances = [];
 
     /**
      * @param string $string
-     * @param array|null $constructArguments
+     * @param array $constructArguments
      * @return ValueAnonymizerInterface
      */
     public function getValueAnonymizerClass(string $string, array $constructArguments) : ValueAnonymizerInterface
@@ -80,10 +77,4 @@ final class ValueAnonymizerFactory
         return array_key_exists($string, self::$valueAnonymizers);
     }
 
-    public static function getValueAnonymizers() : array
-    {
-        return array_map(static function ($value) {
-            return substr(strrchr($value, '\\'), 1);
-        }, self::$valueAnonymizers);
-    }
 }

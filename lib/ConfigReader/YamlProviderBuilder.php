@@ -6,6 +6,7 @@ namespace PayU\MysqlDumpAnonymizer\ConfigReader;
 
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProvider;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -29,17 +30,13 @@ final class YamlProviderBuilder implements InterfaceProviderBuilder
     private const WHERE_KEY = 'Where';
 
     /** @var string */
-    private $anonymizationFile;
+    private string $anonymizationFile;
 
-    /**
-     * @var Parser
-     */
-    private $parser;
+    /** @var Parser */
+    private Parser $parser;
 
-    /**
-     * @var ValueAnonymizerFactory
-     */
-    private $valueAnonymizerFactory;
+    /** @var ValueAnonymizerFactory */
+    private ValueAnonymizerFactory $valueAnonymizerFactory;
 
     public function __construct(
         $anonymizationFile,
@@ -172,21 +169,17 @@ final class YamlProviderBuilder implements InterfaceProviderBuilder
                     );
                 } else {
                     [$attribute, $value] = explode('=', $columnData[self::WHERE_KEY], 2);
-                    $eavColumns[$columnData[self::COLUMN_NAME_KEY]][$attribute][$value] = $columnData[self::DATA_TYPE_KEY];
+                    $eavColumns[$columnData[self::COLUMN_NAME_KEY]][$attribute][$value] = $this->valueAnonymizerFactory->getValueAnonymizerClass($columnData[self::DATA_TYPE_KEY], []);
+
                 }
             }
 
             foreach ($eavColumns as $columnName => $eavInfos) {
-                //TODO replace below with array_key_first on php7.3
-                $attribute = null;
-                /** @noinspection LoopWhichDoesNotLoopInspection  */
-                foreach ($eavInfos as $key => $value) {
-                    $attribute = $key;
-                    break;
-                }
+                $attribute = array_key_first($eavInfos);
+
                 $tableColumnsData[$table][$columnName] = $this->valueAnonymizerFactory->getValueAnonymizerClass(
                     'Eav',
-                    [$attribute, $eavInfos[$attribute], $this->valueAnonymizerFactory]
+                    [$attribute, $eavInfos[$attribute]]
                 );
             }
         }

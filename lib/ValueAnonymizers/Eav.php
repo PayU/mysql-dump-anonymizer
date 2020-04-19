@@ -1,51 +1,44 @@
 <?php
 declare(strict_types=1);
 
-
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 
-
-use PayU\MysqlDumpAnonymizer\ConfigReader\ValueAnonymizerFactory;
+use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
 final class Eav implements ValueAnonymizerInterface
 {
-    private $attributeColumnName;
-    private $attributeValues;
-    /**
-     * @var ValueAnonymizerFactory
-     */
-    private $valueAnonymizerFactory;
+    private string $attributeColumnName;
+
+    /** @var ValueAnonymizerInterface[] */
+    private array $attributeValuesAnonymizers;
 
     /**
      * Eav constructor.
      * @param $attributeColumnName
-     * @param array $attributeValues
-     * @param ValueAnonymizerFactory $valueAnonymizerFactory
+     * @param ValueAnonymizerInterface[] $attributeValuesAnonymizers
      */
-    public function __construct($attributeColumnName, array $attributeValues, ValueAnonymizerFactory $valueAnonymizerFactory)
+    public function __construct(string $attributeColumnName, array $attributeValuesAnonymizers)
     {
         $this->attributeColumnName = $attributeColumnName;
-        $this->attributeValues = $attributeValues;
-        $this->valueAnonymizerFactory = $valueAnonymizerFactory;
-
+        $this->attributeValuesAnonymizers = $attributeValuesAnonymizers;
     }
 
-
     /**
-     * @param \PayU\MysqlDumpAnonymizer\Entity\Value $value
-     * @param \PayU\MysqlDumpAnonymizer\Entity\Value[] $row
+     * @param Value $value
+     * @param Value[] $row
      * @return AnonymizedValue
      */
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
-        foreach ($this->attributeValues as $onValue => $anonymizeLikeThis) {
+
+        foreach ($this->attributeValuesAnonymizers as $onValue => $anonymizeLikeThis) {
             if ($row[$this->attributeColumnName]->getUnEscapedValue() === $onValue) {
-                return $this->valueAnonymizerFactory->getValueAnonymizerClass($anonymizeLikeThis, [])->anonymize($value, $row);
+                return $anonymizeLikeThis->anonymize($value, $row);
             }
         }
 
-        return $this->valueAnonymizerFactory->getValueAnonymizerClass('FreeText', [])->anonymize($value, $row);
+        return (new FreeText(new StringHashInterfaceSha256()))->anonymize($value, $row);
     }
 }
