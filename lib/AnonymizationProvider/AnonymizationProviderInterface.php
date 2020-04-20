@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider;
 
-use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 
 interface AnonymizationProviderInterface
 {

@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Application;
 
-use PayU\MysqlDumpAnonymizer\Observer\ProcessObserverInterface;
+use PayU\MysqlDumpAnonymizer\Application\Observer\ProcessObserverInterface;
 
 class Observer
 {

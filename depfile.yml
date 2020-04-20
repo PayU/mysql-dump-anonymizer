@@ -1,10 +1,6 @@
 paths:
   - lib
 layers:
-  - name: RunScript
-    collectors:
-      - type: directory
-        regex: bin\\.*
   - name: Anonymizer
     collectors:
       - type: directory
@@ -30,8 +26,6 @@ layers:
       - type: className
         regex: PayU\\MysqlDumpAnonymizer\\WriteDump\\.*
 ruleset:
-  RunScript:
-    - Anonymizer
   Anonymizer:
     - AnonymizationProvider
     - ReadDump
@@ -39,14 +33,8 @@ ruleset:
   ConfigReader:
     - ValueAnonymizers
     - AnonymizationProvider
-  ValueAnonymizers: ~
-# skip_violations:
-#   PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\BankData:
-#     - PayU\MysqlDumpAnonymizer\Entity\Value
-#   PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\BinaryData:
-#     - PayU\MysqlDumpAnonymizer\Entity\Value
-#   PayU\MysqlDumpAnonymizer\AnonymizationProvider\ConfigReader\ValueAnonymizers\FreeText:
-#     - PayU\MysqlDumpAnonymizer\Entity\Value
+  ValueAnonymizers: # ValueAnonymizerInterface in AnonymizationProvider namespace
+    - AnonymizationProvider
 
 
 

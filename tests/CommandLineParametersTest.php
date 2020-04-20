@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests;
 
-use PayU\MysqlDumpAnonymizer\CommandLineParameters;
+use PayU\MysqlDumpAnonymizer\Application\CommandLineParameters;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class CommandLineParametersTest extends TestCase
 {
     /**
-     * @var CommandLineParameters|MockObject
+     * @var \PayU\MysqlDumpAnonymizer\Application\\PayU\MysqlDumpAnonymizer\Application\CommandLineParameters|MockObject
      */
     private $sut;
 

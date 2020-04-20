@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Application;
 
 use PayU\MysqlDumpAnonymizer\ConfigReader\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;

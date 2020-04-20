@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\Observer;
 
-use PayU\MysqlDumpAnonymizer\Observer\Progress;
+use PayU\MysqlDumpAnonymizer\Application\Observer\Progress;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

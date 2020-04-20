@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PayU\MysqlDumpAnonymizer\Observer;
+namespace PayU\MysqlDumpAnonymizer\Application\Observer;
 
 interface ProcessObserverInterface
 {

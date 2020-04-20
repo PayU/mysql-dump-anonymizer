@@ -3,9 +3,10 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Application;
 
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
+use PayU\MysqlDumpAnonymizer\Application\Observer\Progress;
 use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
 use PayU\MysqlDumpAnonymizer\WriteDump\MysqlLineDumpInterface;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
@@ -33,7 +34,7 @@ class Setup
         $this->commandLineParameters->validate();
 
         if ($this->commandLineParameters->isShowProgress()) {
-            $this->observer->registerObserver(new Observer\Progress());
+            $this->observer->registerObserver(new Progress());
         }
     }
 

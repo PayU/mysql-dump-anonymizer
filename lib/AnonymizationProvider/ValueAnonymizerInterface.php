@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\Entity;
+namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider;
 
-//TODO find a better place
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
+use PayU\MysqlDumpAnonymizer\Entity\Value;
+
 interface ValueAnonymizerInterface
 {
     /**

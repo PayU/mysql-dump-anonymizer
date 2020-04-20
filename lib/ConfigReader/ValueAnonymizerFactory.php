@@ -24,7 +24,7 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizers\SensitiveFreeText;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Serialized;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Url;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Username;
-use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 
 final class ValueAnonymizerFactory
 {
@@ -57,7 +57,7 @@ final class ValueAnonymizerFactory
     /**
      * @param string $string
      * @param array $constructArguments
-     * @return ValueAnonymizerInterface
+     * @return \PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface
      */
     public function getValueAnonymizerClass(string $string, array $constructArguments) : ValueAnonymizerInterface
     {

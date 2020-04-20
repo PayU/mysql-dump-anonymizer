@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider;
 
 
-use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
-
 final class AnonymizationProvider implements AnonymizationProviderInterface
 {
     public const NO_ANONYMIZATION = 'NoAnonymization';
