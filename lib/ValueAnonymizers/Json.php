@@ -10,7 +10,6 @@ use JsonException;
 use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class Json implements ValueAnonymizerInterface
 {
@@ -26,26 +25,24 @@ final class Json implements ValueAnonymizerInterface
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ($value->isExpression()) {
-            return new AnonymizedValue($value->getRawValue());
+            return AnonymizedValue::fromOriginalValue($value);
         }
 
         $jsonString = str_replace(["\r", "\n"], ["\\r", "\\n"], $value->getUnEscapedValue());
 
         try {
-            $array = json_decode($jsonString, true, 512);
+            $array = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
 
             if (is_array($array)) {
-                return new AnonymizedValue(EscapeString::escape(
-                    json_encode($this->anonymizeArray($array))
-                ));
+                return AnonymizedValue::fromUnescapedValue(json_encode($this->anonymizeArray($array), JSON_THROW_ON_ERROR, 512));
             }
 
-            return (new FreeText($this->stringHash))->anonymize($value, $row);
+        } catch (JsonException $e) {
 
-        } /** @noinspection PhpRedundantCatchClauseInspection */ catch (JsonException $e) {
-
-            return (new FreeText($this->stringHash))->anonymize($value, $row);
         }
+
+        return (new FreeText($this->stringHash))->anonymize($value, $row);
+
     }
 
     private function anonymizeArray(array $array): array

@@ -7,7 +7,7 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
+
 
 final class Serialized implements ValueAnonymizerInterface
 {
@@ -25,7 +25,7 @@ final class Serialized implements ValueAnonymizerInterface
         $array = unserialize($serializedString, ['allowed_classes' => false]);
         if (is_array($array)) {
             $anonymizedArray = $this->anonymizeArray($array);
-            return new AnonymizedValue(EscapeString::escape(serialize($anonymizedArray)));
+            return AnonymizedValue::fromUnescapedValue(serialize($anonymizedArray));
         }
 
         return (new FreeText($this->stringHash))->anonymize($value, $row);

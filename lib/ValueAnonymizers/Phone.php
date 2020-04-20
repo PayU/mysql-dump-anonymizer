@@ -8,7 +8,6 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class Phone implements ValueAnonymizerInterface
 {
@@ -23,11 +22,11 @@ final class Phone implements ValueAnonymizerInterface
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ($value->isExpression()) {
-            return new AnonymizedValue($value->getRawValue());
+            return AnonymizedValue::fromOriginalValue($value);
         }
 
         $anonymizedEscapedValue = $this->stringHash->hashMe($value->getUnEscapedValue());
+        return AnonymizedValue::fromUnescapedValue($anonymizedEscapedValue);
 
-        return new AnonymizedValue(EscapeString::escape($anonymizedEscapedValue));
     }
 }

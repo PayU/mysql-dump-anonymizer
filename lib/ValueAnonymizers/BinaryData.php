@@ -20,7 +20,7 @@ final class BinaryData implements ValueAnonymizerInterface
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ((empty($value->getUnEscapedValue())) || ($value->isExpression() === false)) {
-            return new AnonymizedValue('\'\'');
+            return AnonymizedValue::fromRawValue('\'\'');
         }
 
         $hexExpression = substr($value->getUnEscapedValue(), 2);
@@ -37,6 +37,6 @@ final class BinaryData implements ValueAnonymizerInterface
             }
         } while ($i < strlen($hexExpression));
 
-        return new AnonymizedValue('0x'.$anonymizedHexExpression);
+        return AnonymizedValue::fromRawValue('0x'.$anonymizedHexExpression);
     }
 }

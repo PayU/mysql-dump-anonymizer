@@ -7,19 +7,33 @@ namespace PayU\MysqlDumpAnonymizer\Entity;
 final class AnonymizedValue
 {
     /** @var string raw value in insert statement */
-    private $rawValue;
+    private string $rawValue;
 
-    /**
-     * AnonymizedValue constructor.
-     * @param string $rawValue
-     */
-    public function __construct(string $rawValue)
+    private function __construct()
     {
-        $this->rawValue = $rawValue; //  'text'
     }
 
     public function getRawValue(): string
     {
         return $this->rawValue;
     }
+
+    public static function fromOriginalValue(Value $value): AnonymizedValue
+    {
+        return self::fromRawValue($value->getRawValue());
+    }
+
+    public static function fromRawValue(string $value): AnonymizedValue
+    {
+        $anonymizedValue = new self();
+        $anonymizedValue->rawValue = $value;
+        return $anonymizedValue;
+    }
+    public static function fromUnescapedValue(string $value): AnonymizedValue
+    {
+        $anonymizedValue = new self();
+        $anonymizedValue->rawValue = '\'' . addcslashes($value, "'\\\n") . '\'';
+        return $anonymizedValue;
+    }
+
 }

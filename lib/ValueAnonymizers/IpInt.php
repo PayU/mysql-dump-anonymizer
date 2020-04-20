@@ -21,6 +21,6 @@ final class IpInt implements ValueAnonymizerInterface
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         $ip = (new Ip($this->stringHash))->anonymize($value, $row)->getRawValue();
-        return new AnonymizedValue((string)ip2long(substr($ip, 1, -1)));
+        return AnonymizedValue::fromRawValue((string)ip2long(substr($ip, 1, -1)));
     }
 }

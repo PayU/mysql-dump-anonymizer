@@ -14,6 +14,6 @@ final class NoAnonymization implements ValueAnonymizerInterface
 
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
-        return new AnonymizedValue($value->getRawValue());
+        return AnonymizedValue::fromOriginalValue($value);
     }
 }

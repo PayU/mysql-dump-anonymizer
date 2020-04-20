@@ -130,7 +130,7 @@ class Anonymizer
     {
         if ($value->isExpression() && $value->getRawValue() === 'NULL') {
             $this->observer->notify(Observer::EVENT_NULL_VALUE, get_class($valueAnonymizer));
-            return new AnonymizedValue('NULL');
+            return AnonymizedValue::fromRawValue('NULL');
         }
 
         if ($this->anonymizationProvider->isNoAnonymization($valueAnonymizer)) {

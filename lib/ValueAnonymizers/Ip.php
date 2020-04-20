@@ -49,7 +49,7 @@ final class Ip implements ValueAnonymizerInterface
         $hashUniqueNumbers = str_repeat($hashUniqueNumbers, 4);
         $hashUniqueNumbersLength = strlen($hashUniqueNumbers);
 
-        return new AnonymizedValue('\''
+        return AnonymizedValue::fromRawValue('\''
             .base_convert(substr($hash, (int)$hashUniqueNumbers[0], 2), self::BASE_16, self::BASE_10)
             .'.'.base_convert(substr($hash, (int)$hashUniqueNumbers[2], 2), self::BASE_16, self::BASE_10)
             .'.'.base_convert(substr(strrev($hash), (int)$hashUniqueNumbers[$hashUniqueNumbersLength - 4], 2), self::BASE_16, self::BASE_10)

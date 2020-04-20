@@ -8,7 +8,6 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\Entity\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 
 final class Url implements ValueAnonymizerInterface
 {
@@ -24,7 +23,7 @@ final class Url implements ValueAnonymizerInterface
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ($value->isExpression()) {
-            return new AnonymizedValue($value->getRawValue());
+            return AnonymizedValue::fromOriginalValue($value);
         }
 
         $unescapedURL = $value->getUnEscapedValue();
@@ -39,6 +38,6 @@ final class Url implements ValueAnonymizerInterface
             $anonymizedUrl = $this->stringHash->hashMe($unescapedURL);
         }
 
-        return new AnonymizedValue(EscapeString::escape($anonymizedUrl));
+        return AnonymizedValue::fromUnescapedValue($anonymizedUrl);
     }
 }
