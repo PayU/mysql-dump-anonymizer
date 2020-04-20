@@ -17,10 +17,10 @@ use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;
 class Setup
 {
     /** @var CommandLineParameters */
-    private $commandLineParameters;
+    private CommandLineParameters $commandLineParameters;
 
     /** @var Observer */
-    private $observer;
+    private Observer $observer;
 
     public function __construct(CommandLineParameters $commandLineParameters, Observer $observer)
     {
@@ -30,7 +30,7 @@ class Setup
 
     public function setup(): void
     {
-        $this->commandLineParameters->setCommandLineArguments($_SERVER['argv']);
+        $this->commandLineParameters->setCommandLineArguments();
         $this->commandLineParameters->validate();
 
         if ($this->commandLineParameters->isShowProgress()) {

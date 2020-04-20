@@ -51,7 +51,7 @@ final class YamlProviderBuilder implements InterfaceProviderBuilder
     public function validate(): void
     {
         if (!file_exists($this->anonymizationFile)) {
-            throw new ConfigValidationException('Cannot find config file 1 ' . $this->anonymizationFile);
+            throw new ConfigValidationException('Cannot find config file' . $this->anonymizationFile);
         }
 
         try {

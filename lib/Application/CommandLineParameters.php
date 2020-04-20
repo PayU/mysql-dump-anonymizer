@@ -18,32 +18,34 @@ final class CommandLineParameters
     private const PARAM_SHOW_PROGRESS = 'show-progress';
 
 
-    private $configFile;
-    private $lineParser = LineParserFactory::LINE_PARSER_MYSQL_DUMP;
-    private $configType = ProviderFactory::DEFAULT_CONFIG_TYPE;
-    private $estimatedDumpSize = 1370000000;
-    private $showProgress = 1;
+    private string $configFile;
+    private string $lineParser;
+    private string $configType;
+    private int $estimatedDumpSize;
+    private int $showProgress;
 
+    private array $arguments;
 
-    public function setCommandLineArguments($args): void
+    public function __construct()
     {
+        $this->arguments = getopt('', [
+            self::PARAM_CONFIG_FILES . '::',
+            self::PARAM_LINE_PARSER . '::',
+            self::PARAM_CONFIG_TYPE . '::',
+            self::PARAM_ESTIMATED_DUMP_SIZE . '::',
+            self::PARAM_SHOW_PROGRESS . '::'
+        ]);
 
-        foreach ($args as $arg) {
-            $value = substr($arg, strpos($arg, '=') + 1);
-            if (strpos($arg, '--' . self::PARAM_CONFIG_FILES) === 0) {
-                $this->configFile = $value;
-            } elseif (strpos($arg, '--' . self::PARAM_LINE_PARSER) === 0) {
-                $this->lineParser = $value;
-            } elseif (strpos($arg, '--' . self::PARAM_CONFIG_TYPE) === 0) {
-                $this->configType = $value;
-            } elseif (strpos($arg, '--' . self::PARAM_ESTIMATED_DUMP_SIZE) === 0) {
-                $this->estimatedDumpSize = (int)$value;
-            } elseif (strpos($arg, '--' . self::PARAM_SHOW_PROGRESS) === 0) {
-                $this->showProgress = (bool)$value;
-            }
-        }
     }
 
+    public function setCommandLineArguments(): void
+    {
+        $this->configFile = $this->arguments[self::PARAM_CONFIG_FILES] ?? '';
+        $this->lineParser = $this->arguments[self::PARAM_LINE_PARSER] ?? LineParserFactory::LINE_PARSER_MYSQL_DUMP;
+        $this->configType = $this->arguments[self::PARAM_CONFIG_TYPE] ?? ProviderFactory::DEFAULT_CONFIG_TYPE;
+        $this->estimatedDumpSize = (int)($this->arguments[self::PARAM_ESTIMATED_DUMP_SIZE] ?? 1000000000);
+        $this->showProgress = (int)($this->arguments[self::PARAM_SHOW_PROGRESS] ?? 1);
+    }
 
     public function validate(): void
     {
