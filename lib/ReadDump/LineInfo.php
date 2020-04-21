@@ -8,14 +8,11 @@ namespace PayU\MysqlDumpAnonymizer\ReadDump;
 final class LineInfo
 {
 
-    private $isInsert;
-    private $table;
-    private $columns;
+    private bool $isInsert;
+    private ?string $table;
+    private ?array $columns;
 
-    /**
-     * @var iterable
-     */
-    private $valuesParser;
+    private iterable $valuesParser;
 
     public function __construct(bool $isInsert, ?string $table, ?array $columns, iterable $valuesParser)
     {

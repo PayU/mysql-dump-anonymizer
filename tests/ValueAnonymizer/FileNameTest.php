@@ -5,29 +5,44 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\FileName;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class FileNameTest extends AbstractValueAnonymizerMocks
+class FileNameTest extends TestCase
 {
+    /** @var StringHashInterface|MockObject */
+    private $stringHashMock;
+
+    private FileName $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringHashMock = $this->createMock(StringHashInterface::class);
+        $this->sut = new FileName($this->stringHashMock);
+    }
 
     public function testAnonymize(): void
     {
+
+        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn('/odfeb/ymt_wecgccw');
+
         $input = '/admin/log_monitor.php';
-
-        /** @var ConfigInterface|MockObject $configMock */
-        $configMock = $this->anonymizerConfigMock([
-            '/odfeb/ymt_wecgccw'
-        ]);
-
-        $sut = new FileName($configMock);
-
         $val = new Value('\''.$input.'\'', $input, false );
-
-        $actual = $sut->anonymize($val, []);
+        $actual = $this->sut->anonymize($val, []);
 
         $this->assertSame('\'/odfeb/ymt_wecgccw.php\'', $actual->getRawValue());
     }
+
+    public function testAnonymizeReturnSameValueIfUnquoted(): void
+    {
+        $this->stringHashMock->expects($this->never())->method('hashMe');
+        $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
+        $this->assertSame('NULL', $actual->getRawValue());
+    }
+
 }

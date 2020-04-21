@@ -7,7 +7,7 @@ namespace PayU\MysqlDumpAnonymizer\Application;
 
 use PayU\MysqlDumpAnonymizer\Application\Observer\ProcessObserverInterface;
 
-class Observer
+class Observer implements ObserverInterface
 {
     public const EVENT_START_READ = 1;
     public const EVENT_END_READ = 2;
@@ -23,7 +23,7 @@ class Observer
     public const EVENT_END = 12;
 
     /** @var ProcessObserverInterface[] */
-    private $observers = [];
+    private array $observers = [];
 
     public function __construct()
     {

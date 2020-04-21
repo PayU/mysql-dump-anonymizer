@@ -12,6 +12,6 @@ interface AnonymizationProviderInterface
 
     public function getAnonymizationFor($table, $column) : ValueAnonymizerInterface;
 
-    public function isNoAnonymization(ValueAnonymizerInterface $valueAnonymizer) : bool;
+    public function isAnonymization(ValueAnonymizerInterface $valueAnonymizer) : bool;
 
 }

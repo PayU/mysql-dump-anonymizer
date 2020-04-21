@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Phone;
@@ -15,20 +14,29 @@ use PHPUnit\Framework\TestCase;
 class PhoneTest extends TestCase
 {
 
+
+    /** @var StringHashInterface|MockObject */
+    private $stringHashMock;
+
+    private Phone $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringHashMock = $this->createMock(StringHashInterface::class);
+        $this->sut = new Phone($this->stringHashMock);
+    }
+
     /** @dataProvider hashes
      * @param string $hash
      * @param string $expectedFinalHash
      */
     public function testAnonymize($hash, $expectedFinalHash): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
-        $hashStringMock->method('hashMe')->willReturn($hash);
+        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn($hash);
 
-        /** @var \PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface|MockObject $configMock */
-        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
-        $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
-
-        $actual = (new Phone($configMock))->anonymize(new Value('\'031 425 73 00\'', '031 425 73 00', false), []);
+        $actual = $this->sut->anonymize(new Value('\'031 425 73 00\'', '031 425 73 00', false), []);
 
         $this->assertSame($expectedFinalHash, $actual->getRawValue());
     }

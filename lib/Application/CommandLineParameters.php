@@ -9,7 +9,7 @@ use PayU\MysqlDumpAnonymizer\ConfigReader\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;
 use InvalidArgumentException;
 
-final class CommandLineParameters
+final class CommandLineParameters implements CommandLineParametersInterface
 {
     private const PARAM_CONFIG_FILES = 'config';
     private const PARAM_LINE_PARSER = 'line-parser';
@@ -47,36 +47,35 @@ final class CommandLineParameters
         $this->showProgress = (int)($this->arguments[self::PARAM_SHOW_PROGRESS] ?? 1);
     }
 
+
     public function validate(): void
     {
-
-        if ($this->configFile === null) {
+        if (empty($this->configFile)) {
             throw new InvalidArgumentException('Please specify config file.');
         }
-
     }
 
-    public static function help(): string
+    public function help(): string
     {
 
         return '
 Usage: cat mysqldump.sql | php ' . basename($_SERVER['SCRIPT_FILENAME']) . ' --' . self::PARAM_CONFIG_FILES . '=FILENAME [OPTIONS]'
             . PHP_EOL . PHP_EOL
             . 'Options:' . PHP_EOL
-            . ' --' . self::pad(self::PARAM_CONFIG_TYPE) . ' Default Value: ' . ProviderFactory::DEFAULT_CONFIG_TYPE . PHP_EOL
-            . '   ' . self::pad('') . ' Specifies the type of the config used.' . PHP_EOL . PHP_EOL
-            . ' --' . self::pad(self::PARAM_LINE_PARSER) . ' Default Value: ' . LineParserFactory::LINE_PARSER_MYSQL_DUMP . PHP_EOL
-            . '   ' . self::pad('') . ' Specifies the type of the line parser used.' . PHP_EOL . PHP_EOL
-            . ' --' . self::pad(self::PARAM_ESTIMATED_DUMP_SIZE)
+            . ' --' . $this->pad(self::PARAM_CONFIG_TYPE) . ' Default Value: ' . ProviderFactory::DEFAULT_CONFIG_TYPE . PHP_EOL
+            . '   ' . $this->pad('') . ' Specifies the type of the config used.' . PHP_EOL . PHP_EOL
+            . ' --' . $this->pad(self::PARAM_LINE_PARSER) . ' Default Value: ' . LineParserFactory::LINE_PARSER_MYSQL_DUMP . PHP_EOL
+            . '   ' . $this->pad('') . ' Specifies the type of the line parser used.' . PHP_EOL . PHP_EOL
+            . ' --' . $this->pad(self::PARAM_ESTIMATED_DUMP_SIZE)
             . ' When available, specify the length of the data being anonymized.'
             . PHP_EOL
-            . '   ' . self::pad('') . ' This will be used to show progress data at runtime. ' . PHP_EOL . PHP_EOL
-            . ' --' . self::pad(self::PARAM_SHOW_PROGRESS) . ' Default value: 1' . PHP_EOL
-            . '   ' . self::pad('') . ' Set to 0 to not show progress data. ' . PHP_EOL . PHP_EOL
+            . '   ' . $this->pad('') . ' This will be used to show progress data at runtime. ' . PHP_EOL . PHP_EOL
+            . ' --' . $this->pad(self::PARAM_SHOW_PROGRESS) . ' Default value: 1' . PHP_EOL
+            . '   ' . $this->pad('') . ' Set to 0 to not show progress data. ' . PHP_EOL . PHP_EOL
             . '';
     }
 
-    private static function pad($string): string
+    private function pad($string): string
     {
         return str_pad($string, 24, ' ', STR_PAD_RIGHT);
     }

@@ -7,9 +7,26 @@ namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Id;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class IdTest extends AbstractValueAnonymizerMocks
+class IdTest extends TestCase
 {
+
+    /** @var StringHashInterface|MockObject */
+    private $stringHashMock;
+
+    private Id $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringHashMock = $this->createMock(StringHashInterface::class);
+        $this->sut = new Id($this->stringHashMock);
+    }
+
 
     /** @dataProvider hashes
      * @param string $hash
@@ -17,10 +34,9 @@ class IdTest extends AbstractValueAnonymizerMocks
      */
     public function testAnonymize($hash, $expectedIdHash): void
     {
-        $configMock = $this->anonymizerConfigMock([$hash]);
-        $sut = new Id($configMock);
+        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn($hash);
 
-        $actual = $sut->anonymize(new Value('\'2836143\'', '2836143', false), []);
+        $actual = $this->sut->anonymize(new Value('\'2836143\'', '2836143', false), []);
 
         $this->assertSame($expectedIdHash, $actual->getRawValue());
     }
@@ -31,6 +47,15 @@ class IdTest extends AbstractValueAnonymizerMocks
             ['4282788', '\'4282788\''],
             ['5062063', '\'5062063\''],
             ['9617078', '\'9617078\''],
+            ['00', '\'00\'']
         ];
     }
+
+    public function testAnonymizeReturnSameValueIfUnquoted(): void
+    {
+        $this->stringHashMock->expects($this->never())->method('hashMe');
+        $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
+        $this->assertSame('NULL', $actual->getRawValue());
+    }
+
 }

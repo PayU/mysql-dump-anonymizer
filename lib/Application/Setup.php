@@ -8,21 +8,19 @@ namespace PayU\MysqlDumpAnonymizer\Application;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use PayU\MysqlDumpAnonymizer\Application\Observer\Progress;
 use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
-use PayU\MysqlDumpAnonymizer\WriteDump\MysqlLineDumpInterface;
+use PayU\MysqlDumpAnonymizer\WriteDump\MysqlLineDump;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
 use PayU\MysqlDumpAnonymizer\ConfigReader\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserInterface;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;
 
-class Setup
+class Setup implements SetupInterface
 {
-    /** @var CommandLineParameters */
-    private CommandLineParameters $commandLineParameters;
+    private CommandLineParametersInterface $commandLineParameters;
 
-    /** @var Observer */
-    private Observer $observer;
+    private ObserverInterface $observer;
 
-    public function __construct(CommandLineParameters $commandLineParameters, Observer $observer)
+    public function __construct(CommandLineParametersInterface $commandLineParameters, ObserverInterface $observer)
     {
         $this->commandLineParameters = $commandLineParameters;
         $this->observer = $observer;
@@ -59,7 +57,7 @@ class Setup
 
     public function getLineDump(): LineDumpInterface
     {
-        return new MysqlLineDumpInterface();
+        return new MysqlLineDump();
     }
 
 }

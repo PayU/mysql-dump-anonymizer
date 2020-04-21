@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Ip;
@@ -15,22 +14,28 @@ use PHPUnit\Framework\TestCase;
 class IpTest extends TestCase
 {
 
+    /** @var StringHashInterface|MockObject */
+    private $stringHashMock;
+
+    private Ip $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringHashMock = $this->createMock(StringHashInterface::class);
+        $this->sut = new Ip($this->stringHashMock);
+    }
+
     /** @dataProvider hashes
      * @param string $hash
      * @param string $expectedIp
      */
     public function testAnonymize($hash, $expectedIp): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
-        $hashStringMock->method('sha256')->willReturn($hash);
+        $this->stringHashMock->expects($this->once())->method('sha256')->willReturn($hash);
 
-        /** @var \PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface|MockObject $configMock */
-        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
-        $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
-
-        $sut = new Ip($configMock);
-
-        $actual = $sut->anonymize(new Value('\'test\'', 'test', false), []);
+        $actual = $this->sut->anonymize(new Value('\'test\'', 'test', false), []);
 
         $this->assertSame('\''.$expectedIp.'\'', $actual->getRawValue());
     }

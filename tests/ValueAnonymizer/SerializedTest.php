@@ -5,15 +5,27 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Serialized;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class SerializedTest extends AbstractValueAnonymizerMocks
+class SerializedTest extends TestCase
 {
+    /** @var StringHashInterface|MockObject */
+    private $stringHashMock;
+
+    private Serialized $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringHashMock = $this->createMock(StringHashInterface::class);
+        $this->sut = new Serialized($this->stringHashMock);
+    }
 
     public function testAnonymize(): void
     {
@@ -26,19 +38,15 @@ class SerializedTest extends AbstractValueAnonymizerMocks
 
         $value = new Value('raw', $serializedString, false);
 
-        /** @var ConfigInterface|MockObject $configMock */
-        $configMock = $this->anonymizerConfigMock([
-            'a',
-            'b',
-        ]);
+        $this->stringHashMock->expects($this->exactly(2))->method('hashMe')->willReturn( 'a','b',);
 
-        $expected = new AnonymizedValue(EscapeString::escape(serialize([
+
+        $expected = AnonymizedValue::fromUnescapedValue(serialize([
             'a'=>'a',
             'b'=>['b']
-        ])));
+        ]));
 
-
-        $actual = (new Serialized($configMock))->anonymize($value, []);
+        $actual = $this->sut->anonymize($value, []);
 
         $this->assertEquals($expected, $actual);
     }

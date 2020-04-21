@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PayU\MysqlDumpAnonymizer\Tests\Helper;
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterfaceSha256;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use ReflectionObject;
 
 final class StringHashSha256Test extends TestCase
 {
@@ -19,7 +20,13 @@ final class StringHashSha256Test extends TestCase
     {
         parent::setUp();
 
-        $this->sut = new StringHashInterfaceSha256('test-salt');
+        $obj         = new StringHashInterfaceSha256();
+        $refObject   = new ReflectionObject( $obj );
+        $refProperty = $refObject->getProperty( 'salt' );
+        $refProperty->setAccessible( true );
+        $refProperty->setValue($obj, 'test-salt');
+
+        $this->sut = $obj;
     }
 
     /**

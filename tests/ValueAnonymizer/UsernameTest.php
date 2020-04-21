@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Username;
@@ -15,37 +14,48 @@ use PHPUnit\Framework\TestCase;
 class UsernameTest extends TestCase
 {
 
+    /** @var StringHashInterface|MockObject */
+    private $stringHashMock;
+
+    private Username $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringHashMock = $this->createMock(StringHashInterface::class);
+        $this->sut = new Username($this->stringHashMock);
+    }
+
 
     public function testAnonymizeUsernameWithLengthBiggerThan12(): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
-        $hashStringMock->method('hashMe')->willReturn('cgodertgy.dndem');
 
-        /** @var ConfigInterface|MockObject $configMock */
-        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
-        $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
+        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn('cgod.dnde.jfuwlfntol');
+        $this->stringHashMock->expects($this->never())->method('sha256');
 
-        $actual = (new Username($configMock))->anonymize(
-            new Value('\'anastasia.matei\'', 'anastasia.matei', false), []
+        $actual = $this->sut->anonymize(
+            new Value('\'some.name.longthan12\'', 'some.name.longthan12', false), []
         );
 
-        $this->assertSame('\'cgodertgy.dndem\'', $actual->getRawValue());
+        $this->assertSame('\'cgod.dnde.jfuwlfntol\'', $actual->getRawValue());
     }
 
     public function testAnonymizeUsernameWithLengthSmallerThan12(): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
-        $hashStringMock->method('sha256')->willReturn('eee.fgdjf');
-        $hashStringMock->method('hashMe')->with('eee.fgdjf')->willReturn('cgo.dndem');
-
-        /** @var ConfigInterface|MockObject $configMock */
-        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
-        $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
-
-        $actual = (new Username($configMock))->anonymize(
-            new Value('\'ana.matei\'', 'ana.matei', false), []
+        $this->stringHashMock->expects($this->once())->method('sha256')->with('small.name')->willReturn(
+            '1234567890abcdefghij1234567890abcdefghij1234567890abcdefghijffff'
         );
 
-        $this->assertSame('\'cgo.dndem\'', $actual->getRawValue());
+        $this->stringHashMock->expects($this->once())
+            ->method('hashMe')
+            ->with('1234567890ab')
+            ->willReturn('cgodd.dnde');
+
+        $actual = $this->sut->anonymize(
+            new Value('\'small.name\'', 'small.name', false), []
+        );
+
+        $this->assertSame('\'cgodd.dnde\'', $actual->getRawValue());
     }
 }

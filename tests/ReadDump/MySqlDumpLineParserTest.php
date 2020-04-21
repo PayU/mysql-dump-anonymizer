@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace PayU\MysqlDumpAnonymizer\Tests\Services\LineParser;
+namespace PayU\MysqlDumpAnonymizer\Tests\ReadDump;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ReadDump\LineInfo;
 use PayU\MysqlDumpAnonymizer\ReadDump\MySqlDumpLineParser;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class MySqlDumpLineParserTest extends TestCase
 {
-
 
     /**
      * @var MySqlDumpLineParser|MockObject
@@ -104,11 +104,11 @@ EOD;
 
 
         $cnt1 = 0;
-        /** @var \PayU\MysqlDumpAnonymizer\ReadDump\LineInfo $lineInfo */
+        /** @var LineInfo $lineInfo */
         $lineInfo = $this->sut->lineInfo($query);
 
         foreach ($lineInfo->getValuesParser() as $row) {
-            /** @var \PayU\MysqlDumpAnonymizer\Entity\Value[] $row */
+            /** @var Value[] $row */
             $cnt2 = 0;
             $this->assertIsArray($row, 'Invalid row at '.$cnt1.'-'.$cnt2);
             foreach ($row as $value) {

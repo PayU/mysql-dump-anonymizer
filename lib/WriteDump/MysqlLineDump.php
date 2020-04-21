@@ -1,13 +1,18 @@
 <?php
+
+declare(strict_types=1);
+
 namespace PayU\MysqlDumpAnonymizer\WriteDump;
 
 
-final class MysqlLineDumpInterface implements LineDumpInterface
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
+
+final class MysqlLineDump implements LineDumpInterface
 {
     /**
      * @param string $table
      * @param array $columns
-     * @param array $rows
+     * @param AnonymizedValue[][] $rows
      * @return string
      */
     public function rebuildInsertLine(string $table, array $columns, array $rows): string
@@ -22,6 +27,6 @@ final class MysqlLineDumpInterface implements LineDumpInterface
             }
             $dumpQuery = substr($dumpQuery, 0, -2) . '), (';
         }
-        return substr($dumpQuery, 0, -3) . ';'.PHP_EOL;
+        return substr($dumpQuery, 0, -3) . ';' . PHP_EOL;
     }
 }

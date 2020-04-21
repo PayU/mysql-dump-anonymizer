@@ -61,9 +61,9 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
         return $this->tableColumnNotFoundAnonymizer;
     }
 
-    public function isNoAnonymization(ValueAnonymizerInterface $valueAnonymizer): bool
+    public function isAnonymization(ValueAnonymizerInterface $valueAnonymizer): bool
     {
-        return substr(strrchr(get_class($valueAnonymizer), "\\"), 1) === self::NO_ANONYMIZATION;
+        return substr(strrchr(get_class($valueAnonymizer), "\\"), 1) !== self::NO_ANONYMIZATION;
     }
 
 

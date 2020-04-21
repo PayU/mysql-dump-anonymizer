@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Credentials;
@@ -13,27 +12,36 @@ use PHPUnit\Framework\TestCase;
 
 class CredentialsTest extends TestCase
 {
-    /**
-     * @var Credentials
-     */
-    private $sut;
+    /** @var StringHashInterface|MockObject */
+    private $stringHashMock;
 
+    private Credentials $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringHashMock = $this->createMock(StringHashInterface::class);
+        $this->sut = new Credentials($this->stringHashMock);
+    }
 
     public function testAnonymize(): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
-        $hashStringMock->method('hashMe')->willReturn('pass~?i%%#e');
+        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn('pass~?i%%#e');
 
-        /** @var ConfigInterface|MockObject $configMock */
-        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
-        $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
-
-        $sut = new Credentials($configMock);
-
-        $actual = $sut->anonymize(
+        $actual = $this->sut->anonymize(
             new Value('\'afdg$%^&@w\'', 'afdg$%^&@w', false), []
         );
 
         $this->assertSame('\'pass~?i%%#e\'', $actual->getRawValue());
     }
+
+    public function testAnonymizeReturnSameValueIfExpression(): void
+    {
+        $this->stringHashMock->expects($this->never())->method('hashMe');
+        $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
+        $this->assertSame('NULL', $actual->getRawValue());
+    }
+
+
 }

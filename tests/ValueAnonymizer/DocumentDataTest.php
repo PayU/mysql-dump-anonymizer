@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\ConfigInterface;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\DocumentData;
@@ -15,19 +14,34 @@ use PHPUnit\Framework\TestCase;
 class DocumentDataTest extends TestCase
 {
 
+    /** @var StringHashInterface|MockObject */
+    private $stringHashMock;
+
+    private DocumentData $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringHashMock = $this->createMock(StringHashInterface::class);
+        $this->sut = new DocumentData($this->stringHashMock);
+    }
+
+
     public function testAnonymize(): void
     {
-        $hashStringMock = $this->getMockBuilder(StringHashInterface::class)->getMock();
-        $hashStringMock->method('hashMe')->willReturn('74eca695');
+        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn('74eca695');
 
-        /** @var ConfigInterface|MockObject $configMock */
-        $configMock = $this->getMockBuilder(ConfigInterface::class)->getMock();
-        $configMock->method('getHashStringHelper')->willReturn($hashStringMock);
-
-        $sut = new DocumentData($configMock);
-
-        $actual = $sut->anonymize(new Value('\'RO427320\'', 'RO427320', false), []);
+        $actual = $this->sut->anonymize(new Value('\'RO427320\'', 'RO427320', false), []);
 
         $this->assertSame('\'74eca695\'', $actual->getRawValue());
+    }
+
+
+    public function testAnonymizeReturnSameValueIfExpression(): void
+    {
+        $this->stringHashMock->expects($this->never())->method('hashMe');
+        $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
+        $this->assertSame('NULL', $actual->getRawValue());
     }
 }

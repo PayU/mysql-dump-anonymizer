@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Application;
 
@@ -9,8 +10,7 @@ use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 
 class Application
 {
-
-    public static function run()
+    public static function run(): void
     {
         $commandLineParameters = new CommandLineParameters();
         $observer = new Observer();
@@ -33,7 +33,7 @@ class Application
 
         } catch (InvalidArgumentException | ConfigValidationException $e) {
             fwrite(STDERR, 'ERROR: ' . $e->getMessage() . "\n");
-            fwrite(STDERR, CommandLineParameters::help());
+            fwrite(STDERR, $commandLineParameters->help());
             exit(1);
         }
 

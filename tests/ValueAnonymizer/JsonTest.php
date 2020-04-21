@@ -5,13 +5,28 @@ declare(strict_types=1);
 namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
-use PayU\MysqlDumpAnonymizer\Helper\EscapeString;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Json;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-final class JsonTest extends AbstractValueAnonymizerMocks
+final class JsonTest extends TestCase
 {
+
+    /** @var StringHashInterface|MockObject */
+    private $stringHashMock;
+
+    private Json $sut;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringHashMock = $this->createMock(StringHashInterface::class);
+        $this->sut = new Json($this->stringHashMock);
+    }
+
 
     public function testAnonymize(): void
     {
@@ -29,21 +44,16 @@ final class JsonTest extends AbstractValueAnonymizerMocks
             ]
         ];
 
-        $expected = new AnonymizedValue(
-            EscapeString::escape(json_encode($expectedJson))
-        );
+        $expected = AnonymizedValue::fromUnescapedValue(json_encode($expectedJson));
 
-        /** @var ConfigInterface|MockObject $configMock */
-        $configMock = $this->anonymizerConfigMock([
+        $this->stringHashMock->expects($this->exactly(4))->method('hashMe')->willReturn(
             $expectedJson['test1'],
             $expectedJson[0]['test2'],
             (string)$expectedJson[0]['integer'],
             (string)$expectedJson[0]['float']
-        ]);
+        );
 
-        $sut = new Json($configMock);
-
-        $actual = $sut->anonymize($av, []);
+        $actual = $this->sut->anonymize($av, []);
 
         $this->assertEquals($expected, $actual);
         $this->assertSame($expected->getRawValue(), $actual->getRawValue());
