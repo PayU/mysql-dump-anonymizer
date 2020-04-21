@@ -1,4 +1,4 @@
-
+[![Build Status](https://travis-ci.com/PayU/mysql-dump-anonymizer.svg?branch=master)](https://travis-ci.com/PayU/mysql-dump-anonymizer)
 
 Work In Progress
 
