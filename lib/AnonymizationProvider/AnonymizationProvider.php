@@ -63,7 +63,11 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
 
     public function isAnonymization(ValueAnonymizerInterface $valueAnonymizer): bool
     {
-        return substr(strrchr(get_class($valueAnonymizer), "\\"), 1) !== self::NO_ANONYMIZATION;
+        $className = get_class($valueAnonymizer);
+        if ($shortClassName = strrchr($className, "\\")) {
+            $className = substr($shortClassName,1);
+        }
+        return $className !== self::NO_ANONYMIZATION;
     }
 
 

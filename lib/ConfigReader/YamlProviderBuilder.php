@@ -35,13 +35,12 @@ final class YamlProviderBuilder implements InterfaceProviderBuilder
     /** @var Parser */
     private Parser $parser;
 
-    /** @var ValueAnonymizerFactory */
-    private ValueAnonymizerFactory $valueAnonymizerFactory;
+    private ValueAnonymizerFactoryInterface $valueAnonymizerFactory;
 
     public function __construct(
         $anonymizationFile,
         Parser $parser,
-        ValueAnonymizerFactory $valueAnonymizerFactory
+        ValueAnonymizerFactoryInterface $valueAnonymizerFactory
     ) {
         $this->anonymizationFile = $anonymizationFile;
         $this->parser = $parser;
@@ -50,10 +49,6 @@ final class YamlProviderBuilder implements InterfaceProviderBuilder
 
     public function validate(): void
     {
-        if (!file_exists($this->anonymizationFile)) {
-            throw new ConfigValidationException('Cannot find config file' . $this->anonymizationFile);
-        }
-
         try {
             $anonymizationData = $this->parser->parseFile($this->anonymizationFile);
         } catch (ParseException $e) {
@@ -112,9 +107,9 @@ final class YamlProviderBuilder implements InterfaceProviderBuilder
 
 
                     if (array_key_exists(self::WHERE_KEY, $columnData)) {
-                        if (array_key_exists($columnData[self::COLUMN_NAME_KEY], $normalColumns)) {
+                        if (in_array($columnData[self::COLUMN_NAME_KEY], $normalColumns, true)) {
                             throw new ConfigValidationException(
-                                'Invalid config - mixed eav/normal data type [' . $table . ' ' . $columnData[self::DATA_TYPE_KEY] . ']'
+                                'Invalid config - mixed eav/normal data type 1 [' . $table . ' ' . $columnData[self::DATA_TYPE_KEY] . ']'
                             );
                         }
                         if (strpos($columnData[self::WHERE_KEY], '=') === false) {
@@ -127,7 +122,7 @@ final class YamlProviderBuilder implements InterfaceProviderBuilder
                     } else {
                         if (array_key_exists($columnData[self::COLUMN_NAME_KEY], $eavColumns)) {
                             throw new ConfigValidationException(
-                                'Invalid config - mixed eav/normal data type [' . $table . ' ' . $columnData[self::DATA_TYPE_KEY] . ']'
+                                'Invalid config - mixed eav/normal data type 2 [' . $table . ' ' . $columnData[self::DATA_TYPE_KEY] . ']'
                             );
                         }
                         $normalColumns[] = $columnData[self::COLUMN_NAME_KEY];
