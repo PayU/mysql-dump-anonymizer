@@ -9,6 +9,7 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 
 final class FileName implements ValueAnonymizerInterface
 {
@@ -32,7 +33,7 @@ final class FileName implements ValueAnonymizerInterface
         $nameWithoutExtension = substr($unescapedValue, 0, (int)strrpos($unescapedValue, '.'));
         $extension = substr($unescapedValue, strrpos($unescapedValue, '.') + 1);
 
-        $anonymizedNameWithoutExtension = $this->stringHash->hashMe($nameWithoutExtension);
+        $anonymizedNameWithoutExtension = $this->stringHash->hashKeepFormat($nameWithoutExtension);
 
         return AnonymizedValue::fromUnescapedValue($anonymizedNameWithoutExtension . '.'.$extension);
     }

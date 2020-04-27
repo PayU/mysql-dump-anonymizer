@@ -6,10 +6,13 @@ namespace PayU\MysqlDumpAnonymizer\Tests\Application;
 
 use Exception;
 use InvalidArgumentException;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProvider;
 use PayU\MysqlDumpAnonymizer\Application\CommandLineParametersInterface;
 use PayU\MysqlDumpAnonymizer\Application\Observer\ProcessObserverInterface;
 use PayU\MysqlDumpAnonymizer\Application\ObserverInterface;
 use PayU\MysqlDumpAnonymizer\Application\Setup;
+use PayU\MysqlDumpAnonymizer\ReadDump\MySqlDumpLineParser;
+use PayU\MysqlDumpAnonymizer\WriteDump\MysqlLineDump;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -78,6 +81,34 @@ final class SetupTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->sut->setup();
+    }
+
+    public function testGetLineParser(): void
+    {
+        $this->commandLineParametersMock->expects($this->once())
+            ->method('getLineParser')
+            ->willReturn('mysqldump');
+
+        $actual = $this->sut->getLineParser();
+
+        $this->assertInstanceOf(MySqlDumpLineParser::class, $actual);
+    }
+
+    public function testGetAnonymizationProvider(): void
+    {
+        $this->commandLineParametersMock->method('getConfigType')
+            ->willReturn('yaml');
+        $this->commandLineParametersMock->method('getConfigFile')
+            ->willReturn(dirname(__DIR__, 2) .DIRECTORY_SEPARATOR.'sample'.DIRECTORY_SEPARATOR.'anon.yml');
+
+        $actual = $this->sut->getAnonymizationProvider();
+        $this->assertInstanceOf(AnonymizationProvider::class, $actual);
+    }
+
+    public function testGetLineDump(): void
+    {
+        $actual = $this->sut->getLineDump();
+        $this->assertInstanceOf(MysqlLineDump::class, $actual);
     }
 
 

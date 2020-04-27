@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Username;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +31,7 @@ class UsernameTest extends TestCase
     public function testAnonymizeUsernameWithLengthBiggerThan12(): void
     {
 
-        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn('cgod.dnde.jfuwlfntol');
+        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('cgod.dnde.jfuwlfntol');
         $this->stringHashMock->expects($this->never())->method('sha256');
 
         $actual = $this->sut->anonymize(
@@ -48,7 +48,7 @@ class UsernameTest extends TestCase
         );
 
         $this->stringHashMock->expects($this->once())
-            ->method('hashMe')
+            ->method('hashKeepFormat')
             ->with('1234567890ab')
             ->willReturn('cgodd.dnde');
 

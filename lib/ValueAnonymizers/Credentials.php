@@ -7,6 +7,7 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 
 final class Credentials implements ValueAnonymizerInterface
 {
@@ -23,7 +24,7 @@ final class Credentials implements ValueAnonymizerInterface
             return AnonymizedValue::fromOriginalValue($value);
         }
 
-        $anonymizedEscapedValue = $this->stringHash->hashMe($value->getUnEscapedValue());
+        $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($value->getUnEscapedValue());
 
         return AnonymizedValue::fromUnescapedValue($anonymizedEscapedValue);
 

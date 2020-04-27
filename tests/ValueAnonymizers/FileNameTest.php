@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\FileName;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -29,7 +29,7 @@ class FileNameTest extends TestCase
     public function testAnonymize(): void
     {
 
-        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn('/odfeb/ymt_wecgccw');
+        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('/odfeb/ymt_wecgccw');
 
         $input = '/admin/log_monitor.php';
         $val = new Value('\''.$input.'\'', $input, false );
@@ -40,7 +40,7 @@ class FileNameTest extends TestCase
 
     public function testAnonymizeReturnSameValueIfUnquoted(): void
     {
-        $this->stringHashMock->expects($this->never())->method('hashMe');
+        $this->stringHashMock->expects($this->never())->method('hashKeepFormat');
         $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
         $this->assertSame('NULL', $actual->getRawValue());
     }

@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Phone;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +34,7 @@ class PhoneTest extends TestCase
      */
     public function testAnonymize($hash, $expectedFinalHash): void
     {
-        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn($hash);
+        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn($hash);
 
         $actual = $this->sut->anonymize(new Value('\'031 425 73 00\'', '031 425 73 00', false), []);
 

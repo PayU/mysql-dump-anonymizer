@@ -8,6 +8,7 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 
 final class IpInt implements ValueAnonymizerInterface
 {

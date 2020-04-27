@@ -13,9 +13,10 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Eav;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Email;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\FileName;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\FreeText;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\HashAnonymizer;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Id;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterfaceSha256;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashSha256;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Ip;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\IpInt;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Json;
@@ -66,7 +67,7 @@ final class ValueAnonymizerFactory implements ValueAnonymizerFactoryInterface
         }
 
         if (!array_key_exists($string, $this->instances)) {
-            $this->instances[$string] = new self::$valueAnonymizers[$string](new StringHashInterfaceSha256());
+            $this->instances[$string] = new self::$valueAnonymizers[$string](new StringHashSha256(new HashAnonymizer()));
         }
 
         return $this->instances[$string];

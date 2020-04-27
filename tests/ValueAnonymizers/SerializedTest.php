@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Serialized;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -38,7 +38,7 @@ class SerializedTest extends TestCase
 
         $value = new Value('raw', $serializedString, false);
 
-        $this->stringHashMock->expects($this->exactly(2))->method('hashMe')->willReturn( 'a','b',);
+        $this->stringHashMock->expects($this->exactly(2))->method('hashKeepFormat')->willReturn( 'a','b',);
 
 
         $expected = AnonymizedValue::fromUnescapedValue(serialize([

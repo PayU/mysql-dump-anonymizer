@@ -2,43 +2,46 @@
 
 declare(strict_types=1);
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
+
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Credentials;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\CardData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class CredentialsTest extends TestCase
+class CardDataTest extends TestCase
 {
+
     /** @var StringHashInterface|MockObject */
     private $stringHashMock;
 
-    private Credentials $sut;
+    private CardData $sut;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->stringHashMock = $this->createMock(StringHashInterface::class);
-        $this->sut = new Credentials($this->stringHashMock);
+        $this->sut = new CardData($this->stringHashMock);
     }
+
 
     public function testAnonymize(): void
     {
-        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn('pass~?i%%#e');
+        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('0760');
 
         $actual = $this->sut->anonymize(
-            new Value('\'afdg$%^&@w\'', 'afdg$%^&@w', false), []
+            new Value('\'4893\'', '4893', false), []
         );
 
-        $this->assertSame('\'pass~?i%%#e\'', $actual->getRawValue());
+        $this->assertSame('\'0760\'', $actual->getRawValue());
     }
 
     public function testAnonymizeReturnSameValueIfExpression(): void
     {
-        $this->stringHashMock->expects($this->never())->method('hashMe');
+        $this->stringHashMock->expects($this->never())->method('hashKeepFormat');
         $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
         $this->assertSame('NULL', $actual->getRawValue());
     }

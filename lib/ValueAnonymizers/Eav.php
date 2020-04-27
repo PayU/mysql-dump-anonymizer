@@ -6,6 +6,8 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\HashAnonymizer;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashSha256;
 
 final class Eav implements ValueAnonymizerInterface
 {
@@ -39,6 +41,6 @@ final class Eav implements ValueAnonymizerInterface
             }
         }
 
-        return (new FreeText(new StringHashInterfaceSha256()))->anonymize($value, $row);
+        return (new FreeText(new StringHashSha256(new HashAnonymizer())))->anonymize($value, $row);
     }
 }

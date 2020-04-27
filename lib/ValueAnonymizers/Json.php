@@ -10,6 +10,7 @@ use JsonException;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 
 final class Json implements ValueAnonymizerInterface
 {
@@ -52,7 +53,7 @@ final class Json implements ValueAnonymizerInterface
             if (is_array($value)) {
                 $ret[$key] = $this->anonymizeArray($value);
             } else {
-                $ret[$key] = $this->stringHash->hashMe($value);
+                $ret[$key] = $this->stringHash->hashKeepFormat($value);
                 if (is_int($value)) {
                     $ret[$key] = (int)$ret[$key];
                 }

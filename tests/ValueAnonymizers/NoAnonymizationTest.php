@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;

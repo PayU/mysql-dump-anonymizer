@@ -13,9 +13,10 @@ use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Eav;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Email;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\HashAnonymizer;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Phone;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterfaceSha256;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashSha256;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -309,8 +310,8 @@ final class YamlProviderBuilderTest extends TestCase
 
     public function testBuildProviderOkEav(): void
     {
-        $emailObj = new Email(new StringHashInterfaceSha256());
-        $phoneObj = new Phone(new StringHashInterfaceSha256());
+        $emailObj = new Email(new StringHashSha256(new HashAnonymizer()));
+        $phoneObj = new Phone(new StringHashSha256(new HashAnonymizer()));
 
         $expected = new AnonymizationProvider(
             ['tableName' => AnonymizationAction::ANONYMIZE],
@@ -364,8 +365,8 @@ final class YamlProviderBuilderTest extends TestCase
 
     public function testBuildProviderOkNormal(): void
     {
-        $emailObj = new Email(new StringHashInterfaceSha256());
-        $phoneObj = new Phone(new StringHashInterfaceSha256());
+        $emailObj = new Email(new StringHashSha256(new HashAnonymizer()));
+        $phoneObj = new Phone(new StringHashSha256(new HashAnonymizer()));
 
         $expected = new AnonymizationProvider(
             ['truncateMe' => AnonymizationAction::TRUNCATE, 'tableName' => AnonymizationAction::ANONYMIZE],

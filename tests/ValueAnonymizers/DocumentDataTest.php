@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\DocumentData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -30,7 +30,7 @@ class DocumentDataTest extends TestCase
 
     public function testAnonymize(): void
     {
-        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn('74eca695');
+        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('74eca695');
 
         $actual = $this->sut->anonymize(new Value('\'RO427320\'', 'RO427320', false), []);
 
@@ -40,7 +40,7 @@ class DocumentDataTest extends TestCase
 
     public function testAnonymizeReturnSameValueIfExpression(): void
     {
-        $this->stringHashMock->expects($this->never())->method('hashMe');
+        $this->stringHashMock->expects($this->never())->method('hashKeepFormat');
         $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
         $this->assertSame('NULL', $actual->getRawValue());
     }

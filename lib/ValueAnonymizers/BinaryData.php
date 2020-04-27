@@ -7,6 +7,7 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 
 final class BinaryData implements ValueAnonymizerInterface
 {
@@ -19,8 +20,12 @@ final class BinaryData implements ValueAnonymizerInterface
 
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
-        if ((empty($value->getUnEscapedValue())) || ($value->isExpression() === false)) {
+        if (empty($value->getUnEscapedValue()) || $value->isExpression()) {
             return AnonymizedValue::fromRawValue('\'\'');
+        }
+
+        if ($value->isExpression() && $value->getRawValue() === 'NULL') {
+            return AnonymizedValue::fromRawValue('NULL');
         }
 
         $hexExpression = substr($value->getUnEscapedValue(), 2);

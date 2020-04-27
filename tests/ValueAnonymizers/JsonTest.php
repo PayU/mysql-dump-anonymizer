@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Json;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -46,7 +46,7 @@ final class JsonTest extends TestCase
 
         $expected = AnonymizedValue::fromUnescapedValue(json_encode($expectedJson));
 
-        $this->stringHashMock->expects($this->exactly(4))->method('hashMe')->willReturn(
+        $this->stringHashMock->expects($this->exactly(4))->method('hashKeepFormat')->willReturn(
             $expectedJson['test1'],
             $expectedJson[0]['test2'],
             (string)$expectedJson[0]['integer'],

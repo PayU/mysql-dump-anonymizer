@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizer;
+namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Url;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -30,7 +30,7 @@ class UrlTest extends TestCase
 
     public function testAnonymizeUrlWithScheme(): void
     {
-        $this->stringHashMock->expects($this->once())->method('hashMe')->willReturn('ubp.huhkosocgww.og/wwgwoockkokcg');
+        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('ubp.huhkosocgww.og/wwgwoockkokcg');
 
         $actual = $this->sut->anonymize(
             new Value('\'http://www.some.hu/path\'', 'http://www.some.hu/path', false), []
@@ -41,7 +41,7 @@ class UrlTest extends TestCase
 
     public function testAnonymizeUrlWithoutScheme(): void
     {
-        $this->stringHashMock->expects($this->once())->method('hashMe')->with('www.alphabank.ro')
+        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->with('www.alphabank.ro')
             ->willReturn('ubp.huhkosocg.og');
 
         $actual = $this->sut->anonymize(
