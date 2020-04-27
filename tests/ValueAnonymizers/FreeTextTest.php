@@ -51,4 +51,20 @@ class FreeTextTest extends TestCase
         $this->assertSame('NULL', $actual->getRawValue());
     }
 
+    public function testAnonymizeSmall(): void
+    {
+        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('Vkr.Hgcscgw');
+
+        $actual = $this->sut->anonymize(
+            new Value(
+                '\'Sos.Nicolae\'',
+                'Sos.Nicolae',
+                false
+            ),
+            []
+        );
+
+        $this->assertSame('\'Vkr.Hgcscgw\'', $actual->getRawValue());
+    }
+
 }

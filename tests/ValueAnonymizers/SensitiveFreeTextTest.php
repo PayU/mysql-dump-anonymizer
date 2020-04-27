@@ -36,4 +36,15 @@ class SensitiveFreeTextTest extends TestCase
 
         $this->assertSame('\'XGV Zkmtao Wggkcckg WOO\'', $actual->getRawValue());
     }
+
+    public function testAnonymizeExpr(): void
+    {
+        $this->stringHashMock->expects($this->never())->method('hashKeepFormat');
+
+        $actual = $this->sut->anonymize(
+            new Value('0x11', '0x11', true), []
+        );
+
+        $this->assertSame('0x11', $actual->getRawValue());
+    }
 }

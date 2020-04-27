@@ -50,4 +50,15 @@ class UrlTest extends TestCase
 
         $this->assertSame('\'ubp.huhkosocg.og\'', $actual->getRawValue());
     }
+
+    public function testAnonymizeUrlExpr(): void
+    {
+        $this->stringHashMock->expects($this->never())->method('hashKeepFormat');
+
+        $actual = $this->sut->anonymize(
+            new Value('NULL', 'NULL', true), []
+        );
+
+        $this->assertSame('NULL', $actual->getRawValue());
+    }
 }

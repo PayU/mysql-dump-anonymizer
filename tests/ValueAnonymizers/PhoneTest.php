@@ -49,4 +49,13 @@ class PhoneTest extends TestCase
             ['0723250814', '\'0723250814\''],
         ];
     }
+
+    public function testAnonymizeExpr(): void
+    {
+        $this->stringHashMock->expects($this->never())->method('hashKeepFormat');
+
+        $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
+
+        $this->assertSame('NULL', $actual->getRawValue());
+    }
 }

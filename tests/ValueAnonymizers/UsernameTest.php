@@ -58,4 +58,17 @@ class UsernameTest extends TestCase
 
         $this->assertSame('\'cgodd.dnde\'', $actual->getRawValue());
     }
+
+    public function testAnonymizeUsernameExpr(): void
+    {
+
+        $this->stringHashMock->expects($this->never())->method('hashKeepFormat');
+        $this->stringHashMock->expects($this->never())->method('sha256');
+
+        $actual = $this->sut->anonymize(
+            new Value('NULL', 'NULL', true), []
+        );
+
+        $this->assertSame('NULL', $actual->getRawValue());
+    }
 }
