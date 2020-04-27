@@ -28,6 +28,5 @@ final class Phone implements ValueAnonymizerInterface
 
         $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($value->getUnEscapedValue());
         return AnonymizedValue::fromUnescapedValue($anonymizedEscapedValue);
-
     }
 }

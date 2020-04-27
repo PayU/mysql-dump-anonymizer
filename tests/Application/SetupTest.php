@@ -53,11 +53,9 @@ final class SetupTest extends TestCase
 
         try {
             $this->sut->setup();
-
         } catch (Exception $e) {
             $this->assertTrue(false, 'No expected exception: ' . get_class($e) . ' ' . $e->getMessage());
         }
-
     }
 
     public function testSetupFail(): void
@@ -110,6 +108,4 @@ final class SetupTest extends TestCase
         $actual = $this->sut->getLineDump();
         $this->assertInstanceOf(MysqlLineDump::class, $actual);
     }
-
-
 }

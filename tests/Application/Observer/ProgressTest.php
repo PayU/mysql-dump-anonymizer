@@ -52,7 +52,7 @@ class ProgressTest extends TestCase
         $this->sut->onAnonymizationFinish('namespace\\FreeText');
         $this->sut->onAnonymizationFinish('namespace\\FreeText');
         $this->sut->onAnonymizationFinish('namespace\\SomeType');
-        $this->assertIsFloat( $this->getProperty('anonymizationTypes')['FreeText']['time']);
+        $this->assertIsFloat($this->getProperty('anonymizationTypes')['FreeText']['time']);
         $this->assertIsFloat($this->getProperty('anonymizationTypes')['SomeType']['time']);
         $this->assertIsFloat($this->getProperty('anonymizationTotal'));
     }
@@ -171,6 +171,4 @@ class ProgressTest extends TestCase
         $refProperty->setAccessible(true);
         return $refProperty->getValue($this->sut);
     }
-
-
 }

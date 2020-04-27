@@ -38,7 +38,8 @@ class SerializedTest extends TestCase
 
         $value = new Value('raw', $serializedString, false);
 
-        $this->stringHashMock->expects($this->exactly(2))->method('hashKeepFormat')->willReturn( 'a','b',);
+        $this->stringHashMock->expects($this->exactly(2))->method('hashKeepFormat')
+            ->willReturn('a', 'b');
 
 
         $expected = AnonymizedValue::fromUnescapedValue(serialize([

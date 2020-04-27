@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider;
 
-
 final class AnonymizationProvider implements AnonymizationProviderInterface
 {
     public const NO_ANONYMIZATION = 'NoAnonymization';
@@ -65,10 +64,8 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
     {
         $className = get_class($valueAnonymizer);
         if ($shortClassName = strrchr($className, "\\")) {
-            $className = substr($shortClassName,1);
+            $className = substr($shortClassName, 1);
         }
         return $className !== self::NO_ANONYMIZATION;
     }
-
-
 }

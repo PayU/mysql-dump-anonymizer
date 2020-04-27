@@ -83,7 +83,6 @@ final class AnonymizerTest extends TestCase
         $colNumber = 0;
 
         foreach ($data as $table => $info) {
-
             $lineInfos[] = new LineInfo(
                 true,
                 $table,
@@ -101,7 +100,6 @@ final class AnonymizerTest extends TestCase
             $idx = 0;
             foreach ($info['values'] as $rowNumber => $values) {
                 foreach ($values as $column => $value) {
-
                     $withs[] = [$table, $column];
 
                     if ($oncePerLine) {
@@ -213,6 +211,4 @@ final class AnonymizerTest extends TestCase
             return [$value];
         }, $array);
     }
-
-
 }

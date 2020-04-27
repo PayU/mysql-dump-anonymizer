@@ -4,7 +4,8 @@ namespace PayU\MysqlDumpAnonymizer\Application;
 
 use InvalidArgumentException;
 
-interface CommandLineParametersInterface {
+interface CommandLineParametersInterface
+{
 
     public function setCommandLineArguments(): void;
 
@@ -24,5 +25,4 @@ interface CommandLineParametersInterface {
     public function getEstimatedDumpSize(): int;
 
     public function isShowProgress(): bool;
-
 }

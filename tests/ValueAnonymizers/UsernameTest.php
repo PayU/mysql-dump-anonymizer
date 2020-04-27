@@ -35,7 +35,8 @@ class UsernameTest extends TestCase
         $this->stringHashMock->expects($this->never())->method('sha256');
 
         $actual = $this->sut->anonymize(
-            new Value('\'some.name.longthan12\'', 'some.name.longthan12', false), []
+            new Value('\'some.name.longthan12\'', 'some.name.longthan12', false),
+            []
         );
 
         $this->assertSame('\'cgod.dnde.jfuwlfntol\'', $actual->getRawValue());
@@ -53,7 +54,8 @@ class UsernameTest extends TestCase
             ->willReturn('cgodd.dnde');
 
         $actual = $this->sut->anonymize(
-            new Value('\'small.name\'', 'small.name', false), []
+            new Value('\'small.name\'', 'small.name', false),
+            []
         );
 
         $this->assertSame('\'cgodd.dnde\'', $actual->getRawValue());
@@ -66,7 +68,8 @@ class UsernameTest extends TestCase
         $this->stringHashMock->expects($this->never())->method('sha256');
 
         $actual = $this->sut->anonymize(
-            new Value('NULL', 'NULL', true), []
+            new Value('NULL', 'NULL', true),
+            []
         );
 
         $this->assertSame('NULL', $actual->getRawValue());

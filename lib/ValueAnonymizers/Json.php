@@ -37,13 +37,10 @@ final class Json implements ValueAnonymizerInterface
             if (is_array($array)) {
                 return AnonymizedValue::fromUnescapedValue(json_encode($this->anonymizeArray($array), JSON_THROW_ON_ERROR, 512));
             }
-
         } catch (JsonException $e) {
-
         }
 
         return (new FreeText($this->stringHash))->anonymize($value, $row);
-
     }
 
     private function anonymizeArray(array $array): array

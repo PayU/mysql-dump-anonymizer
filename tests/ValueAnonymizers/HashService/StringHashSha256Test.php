@@ -65,7 +65,6 @@ final class StringHashSha256Test extends TestCase
 
         $actual = $this->sut->hashKeepFormat($input);
         $this->assertSame($expected, $actual);
-
     }
 
     public function testWithoutMultiByteCharacter(): void
@@ -92,11 +91,10 @@ final class StringHashSha256Test extends TestCase
             ->willReturn(true, true, true, true, true);
 
         $this->hashAnonymizerMock->expects($this->exactly(5))
-            ->method('getNextPunctuation')->willReturn('$','^','+','!','*');
+            ->method('getNextPunctuation')->willReturn('$', '^', '+', '!', '*');
 
         $actual = $this->sut->hashKeepFormat($input, true);
         $this->assertSame($expected, $actual);
-
     }
 
     public function testHashIpAddressString()
@@ -106,12 +104,10 @@ final class StringHashSha256Test extends TestCase
             ->with('0ec8fe5d3a508da7b07751332c420f895739e5b3311cd6c80a349287ad0b719e');
 
         $this->hashAnonymizerMock->expects($this->exactly(4))->method('getNextNumberBetween0And255')
-            ->willReturn('22','44','55','66');
+            ->willReturn('22', '44', '55', '66');
 
         $actual = $this->sut->hashIpAddressString($input);
 
         $this->assertSame('22.44.55.66', $actual);
-
     }
-
 }

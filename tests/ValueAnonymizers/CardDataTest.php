@@ -33,7 +33,8 @@ class CardDataTest extends TestCase
         $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('0760');
 
         $actual = $this->sut->anonymize(
-            new Value('\'4893\'', '4893', false), []
+            new Value('\'4893\'', '4893', false),
+            []
         );
 
         $this->assertSame('\'0760\'', $actual->getRawValue());
@@ -45,6 +46,4 @@ class CardDataTest extends TestCase
         $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
         $this->assertSame('NULL', $actual->getRawValue());
     }
-
-
 }

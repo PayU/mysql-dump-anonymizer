@@ -35,7 +35,6 @@ final class CommandLineParameters implements CommandLineParametersInterface
             self::PARAM_ESTIMATED_DUMP_SIZE . '::',
             self::PARAM_SHOW_PROGRESS . '::'
         ]);
-
     }
 
     public function setCommandLineArguments(): void
@@ -119,5 +118,4 @@ Usage: cat mysqldump.sql | php ' . basename($_SERVER['SCRIPT_FILENAME']) . ' --'
     {
         return (bool)$this->showProgress;
     }
-
 }

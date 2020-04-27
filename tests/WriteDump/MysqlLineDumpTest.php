@@ -36,7 +36,5 @@ final class MysqlLineDumpTest extends TestCase
         ]]);
 
         $this->assertSame($expected, $actual);
-
     }
-
 }

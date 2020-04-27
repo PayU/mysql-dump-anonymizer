@@ -59,5 +59,4 @@ class Setup implements SetupInterface
     {
         return new MysqlLineDump();
     }
-
 }

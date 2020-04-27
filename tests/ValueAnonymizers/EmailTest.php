@@ -33,7 +33,8 @@ class EmailTest extends TestCase
         $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('djbtxh@kwkogksok.ok');
 
         $actual = $this->sut->anonymize(
-            new Value('\'abyhfi@ijuyhoung.ro\'', 'abyhfi@ijuyhoung.ro', false), []
+            new Value('\'abyhfi@ijuyhoung.ro\'', 'abyhfi@ijuyhoung.ro', false),
+            []
         );
 
         $this->assertSame('\'djbtxh@kwkogksok.ok\'', $actual->getRawValue());

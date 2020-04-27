@@ -9,7 +9,6 @@ use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
 
-
 final class Serialized implements ValueAnonymizerInterface
 {
 

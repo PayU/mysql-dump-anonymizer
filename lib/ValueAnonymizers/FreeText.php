@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 
-
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
@@ -30,9 +29,9 @@ final class FreeText implements ValueAnonymizerInterface
         $string = $value->getUnEscapedValue();
         if (strlen($string) < 12) {
             $anonymizedString = $this->stringHash->hashKeepFormat(
-                substr($this->stringHash->sha256($string), 0 ,12)
+                substr($this->stringHash->sha256($string), 0, 12)
             );
-        }else{
+        } else {
             $anonymizedString = $this->stringHash->hashKeepFormat($value->getUnEscapedValue());
         }
 

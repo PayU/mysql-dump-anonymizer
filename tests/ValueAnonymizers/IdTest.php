@@ -57,5 +57,4 @@ class IdTest extends TestCase
         $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
         $this->assertSame('NULL', $actual->getRawValue());
     }
-
 }

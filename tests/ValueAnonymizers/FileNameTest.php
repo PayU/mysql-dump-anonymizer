@@ -32,7 +32,7 @@ class FileNameTest extends TestCase
         $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('/odfeb/ymt_wecgccw');
 
         $input = '/admin/log_monitor.php';
-        $val = new Value('\''.$input.'\'', $input, false );
+        $val = new Value('\''.$input.'\'', $input, false);
         $actual = $this->sut->anonymize($val, []);
 
         $this->assertSame('\'/odfeb/ymt_wecgccw.php\'', $actual->getRawValue());
@@ -44,5 +44,4 @@ class FileNameTest extends TestCase
         $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
         $this->assertSame('NULL', $actual->getRawValue());
     }
-
 }

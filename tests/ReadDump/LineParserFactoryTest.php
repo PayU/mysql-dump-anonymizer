@@ -35,5 +35,4 @@ final class LineParserFactoryTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->sut->chooseLineParser('doesntExist');
     }
-
 }

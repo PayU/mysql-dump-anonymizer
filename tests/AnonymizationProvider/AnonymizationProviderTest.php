@@ -52,7 +52,6 @@ final class AnonymizationProviderTest extends TestCase
             ],
             $this->noAnonymizationMock
         );
-
     }
 
     public function testGetTableActionExists(): void

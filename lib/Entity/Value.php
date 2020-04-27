@@ -45,5 +45,4 @@ final class Value
     {
         return $this->isExpression;
     }
-
 }

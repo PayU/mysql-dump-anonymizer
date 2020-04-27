@@ -146,5 +146,4 @@ final class CommandLineParametersTest extends TestCase
 
         $this->sut->setCommandLineArguments();
     }
-
 }

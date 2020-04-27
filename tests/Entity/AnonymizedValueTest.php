@@ -23,9 +23,8 @@ class AnonymizedValueTest extends TestCase
 
     public function testFromOriginalValue(): void
     {
-        $actual = AnonymizedValue::fromOriginalValue(new Value('NULL','NULL', true));
+        $actual = AnonymizedValue::fromOriginalValue(new Value('NULL', 'NULL', true));
         $this->assertSame('NULL', $actual->getRawValue());
-
     }
 
     public function testFromRawValue(): void

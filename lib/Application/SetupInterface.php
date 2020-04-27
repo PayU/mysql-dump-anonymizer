@@ -15,5 +15,4 @@ interface SetupInterface
     public function getAnonymizationProvider(): AnonymizationProviderInterface;
 
     public function getLineDump(): LineDumpInterface;
-
 }

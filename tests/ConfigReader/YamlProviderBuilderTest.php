@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ConfigReader;
 
-
 use Exception;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProvider;
 use PayU\MysqlDumpAnonymizer\ConfigReader\ValueAnonymizerFactoryInterface;
@@ -73,7 +72,6 @@ final class YamlProviderBuilderTest extends TestCase
         } catch (Exception $e) {
             $this->assertTrue(false, 'Unexpected exception : ' . get_class($e) . ' : ' . $e->getMessage());
         }
-
     }
 
 
@@ -357,7 +355,8 @@ final class YamlProviderBuilderTest extends TestCase
                 new Eav('somecol', [
                     'EMAIL' => $emailObj,
                     'PHONE' => $phoneObj,
-                ]));
+                ])
+            );
 
         $actual = $this->sut->buildProvider();
         $this->assertEquals($expected, $actual);
@@ -407,6 +406,4 @@ final class YamlProviderBuilderTest extends TestCase
         $actual = $this->sut->buildProvider();
         $this->assertEquals($expected, $actual);
     }
-
-
 }

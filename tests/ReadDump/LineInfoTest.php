@@ -56,6 +56,4 @@ class LineInfoTest extends TestCase
         $this->assertSame(['r1c1','r1c2'], $yeilds[0]);
         $this->assertSame(['r2c1','r2c2'], $yeilds[1]);
     }
-
-
 }

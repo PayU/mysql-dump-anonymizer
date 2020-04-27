@@ -30,7 +30,8 @@ class CredentialsTest extends TestCase
         $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('pass~?i%%#e');
 
         $actual = $this->sut->anonymize(
-            new Value('\'afdg$%^&@w\'', 'afdg$%^&@w', false), []
+            new Value('\'afdg$%^&@w\'', 'afdg$%^&@w', false),
+            []
         );
 
         $this->assertSame('\'pass~?i%%#e\'', $actual->getRawValue());
@@ -42,6 +43,4 @@ class CredentialsTest extends TestCase
         $actual = $this->sut->anonymize(new Value('NULL', 'NULL', true), []);
         $this->assertSame('NULL', $actual->getRawValue());
     }
-
-
 }

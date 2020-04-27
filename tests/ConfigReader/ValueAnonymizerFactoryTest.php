@@ -37,7 +37,7 @@ class ValueAnonymizerFactoryTest extends TestCase
         $this->assertInstanceOf($classString, $actual);
         if (!empty($constructArgs)) {
             $this->assertCount(0, $this->getPrivateInstances(), "for $classString");
-        }else{
+        } else {
             $this->assertCount(1, $this->getPrivateInstances(), "for $classString");
         }
     }
@@ -95,10 +95,10 @@ class ValueAnonymizerFactoryTest extends TestCase
     {
         $anonymizers = $this->getPrivateValueAnonymizers();
         $ret = [];
-        foreach ($anonymizers as $key=>$classString) {
+        foreach ($anonymizers as $key => $classString) {
             if ($key === 'Eav') {
                 $ret[] = [$key, $classString, ['string',['array']]];
-            }else{
+            } else {
                 $ret[] = [$key, $classString, []];
             }
         }
@@ -113,7 +113,7 @@ class ValueAnonymizerFactoryTest extends TestCase
     {
         $anonymizers = $this->getPrivateValueAnonymizers();
         $ret = [];
-        foreach ($anonymizers as $key=>$classString) {
+        foreach ($anonymizers as $key => $classString) {
             $ret[] = [$key];
         }
         return $ret;
@@ -124,9 +124,9 @@ class ValueAnonymizerFactoryTest extends TestCase
      */
     private function resetPrivateInstances() : void
     {
-        $refObject   = new ReflectionObject( $this->sut );
-        $refProperty = $refObject->getProperty( 'instances' );
-        $refProperty->setAccessible( true );
+        $refObject   = new ReflectionObject($this->sut);
+        $refProperty = $refObject->getProperty('instances');
+        $refProperty->setAccessible(true);
         $refProperty->setValue($this->sut, []);
     }
 
@@ -136,9 +136,9 @@ class ValueAnonymizerFactoryTest extends TestCase
      */
     private function getPrivateInstances() : array
     {
-        $refObject   = new ReflectionObject( $this->sut );
-        $refProperty = $refObject->getProperty( 'instances' );
-        $refProperty->setAccessible( true );
+        $refObject   = new ReflectionObject($this->sut);
+        $refProperty = $refObject->getProperty('instances');
+        $refProperty->setAccessible(true);
         return $refProperty->getValue($this->sut);
     }
 
@@ -148,10 +148,9 @@ class ValueAnonymizerFactoryTest extends TestCase
      */
     private function getPrivateValueAnonymizers() : array
     {
-        $refObject   = new ReflectionObject( new ValueAnonymizerFactory() );
-        $refProperty = $refObject->getProperty( 'valueAnonymizers' );
-        $refProperty->setAccessible( true );
+        $refObject   = new ReflectionObject(new ValueAnonymizerFactory());
+        $refProperty = $refObject->getProperty('valueAnonymizers');
+        $refProperty->setAccessible(true);
         return $refProperty->getValue();
     }
-
 }

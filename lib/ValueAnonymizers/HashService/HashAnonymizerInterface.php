@@ -3,7 +3,6 @@
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService;
 
-
 interface HashAnonymizerInterface
 {
     public function initializeHashString(string $string): void;
@@ -17,6 +16,4 @@ interface HashAnonymizerInterface
     public function getNextPunctuation(): string;
 
     public function isPunctuation($char): bool;
-
-
 }

@@ -31,7 +31,8 @@ class SensitiveFreeTextTest extends TestCase
         $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('XGV Zkmtao Wggkcckg WOO');
 
         $actual = $this->sut->anonymize(
-            new Value('\'OLX Online Services SRL\'', 'OLX Online Services SRL', false), []
+            new Value('\'OLX Online Services SRL\'', 'OLX Online Services SRL', false),
+            []
         );
 
         $this->assertSame('\'XGV Zkmtao Wggkcckg WOO\'', $actual->getRawValue());
@@ -42,7 +43,8 @@ class SensitiveFreeTextTest extends TestCase
         $this->stringHashMock->expects($this->never())->method('hashKeepFormat');
 
         $actual = $this->sut->anonymize(
-            new Value('0x11', '0x11', true), []
+            new Value('0x11', '0x11', true),
+            []
         );
 
         $this->assertSame('0x11', $actual->getRawValue());

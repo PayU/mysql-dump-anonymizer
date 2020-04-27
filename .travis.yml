@@ -2,7 +2,6 @@ language: php
 sudo: false
 
 php:
-  - 7.3
   - 7.4
 
 cache:
@@ -16,4 +15,6 @@ install:
   - travis_retry composer install --no-scripts --no-suggest --no-interaction
 
 script:
+  - vendor/bin/pretty
   - vendor/bin/phpunit
+  - vendor/bin/deptrack

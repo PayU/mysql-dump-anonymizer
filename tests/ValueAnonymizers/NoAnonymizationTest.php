@@ -22,7 +22,8 @@ class NoAnonymizationTest extends TestCase
     public function testNoAnonymization(): void
     {
         $actual = $this->sut->anonymize(
-            new Value('\'safe value\'', 'safe value', false), []
+            new Value('\'safe value\'', 'safe value', false),
+            []
         );
 
         $this->assertSame('\'safe value\'', $actual->getRawValue());
@@ -31,7 +32,8 @@ class NoAnonymizationTest extends TestCase
     public function testNoAnonymizationExpression(): void
     {
         $actual = $this->sut->anonymize(
-            new Value('NOW()', 'NOW()', true), []
+            new Value('NOW()', 'NOW()', true),
+            []
         );
 
         $this->assertSame('NOW()', $actual->getRawValue());

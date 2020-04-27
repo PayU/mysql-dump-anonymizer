@@ -3,7 +3,6 @@
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService;
 
-
 final class HashAnonymizer implements HashAnonymizerInterface
 {
     public const PUNCTUATION = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';//32
@@ -44,8 +43,9 @@ final class HashAnonymizer implements HashAnonymizerInterface
     {
     }
 
-    private function resetStacks() {
-        foreach ($this->stacks as $key=>$value) {
+    private function resetStacks()
+    {
+        foreach ($this->stacks as $key => $value) {
             $this->stacks[$key] = null;
             $this->cnt[$key] = -1;
         }
@@ -87,14 +87,14 @@ final class HashAnonymizer implements HashAnonymizerInterface
     {
             $intSeeds = [];
             $start = 0;
-            while (($start <= strlen($this->hash)-8) && ($start <= 56)) {
-                $intSeeds[] = (int)base_convert(
-                    substr($this->hash,$start,8),
-                    16,
-                    10
-                );
-                $start += 8;
-            }
+        while (($start <= strlen($this->hash)-8) && ($start <= 56)) {
+            $intSeeds[] = (int)base_convert(
+                substr($this->hash, $start, 8),
+                16,
+                10
+            );
+            $start += 8;
+        }
 
             $pool256 = str_split(self::LETTER_POOL);
             $intSeed = (int)floor(array_sum($intSeeds) / count($intSeeds));
@@ -104,7 +104,6 @@ final class HashAnonymizer implements HashAnonymizerInterface
 
             $this->stacks[self::LETTERS] = implode('', $pool256);
             $this->stackLengths[self::LETTERS] = strlen($this->stacks[self::LETTERS]);
-
     }
 
     private function generateNumbersStack(): void
@@ -171,6 +170,4 @@ final class HashAnonymizer implements HashAnonymizerInterface
 
         return $ret;
     }
-
-
 }

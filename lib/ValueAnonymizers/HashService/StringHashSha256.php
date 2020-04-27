@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService;
 
-
 final class StringHashSha256 implements StringHashInterface
 {
 
@@ -48,14 +47,13 @@ final class StringHashSha256 implements StringHashInterface
         $returnString = '';
 
         $hasMultiBytesChars = false;
-        if(preg_match("/[^a-zA-Z0-9\s`~!@#$%^&*()_+-={}|:;<>?,.\/\"'\\\[\]]/", $string)) {
+        if (preg_match("/[^a-zA-Z0-9\s`~!@#$%^&*()_+-={}|:;<>?,.\/\"'\\\[\]]/", $string)) {
             $hasMultiBytesChars = true;
         }
 
         $stringLength = $hasMultiBytesChars ? mb_strlen($string) : strlen($string);
 
         for ($i = 0; $i < $stringLength; $i++) {
-
             $char = $string[$i];
             if ($hasMultiBytesChars) {
                 $char = mb_substr($string, $i, 1);
@@ -101,7 +99,5 @@ final class StringHashSha256 implements StringHashInterface
             . $this->hashAnonymizer->getNextNumberBetween0And255() . '.'
             . $this->hashAnonymizer->getNextNumberBetween0And255() . '.'
             . $this->hashAnonymizer->getNextNumberBetween0And255();
-
     }
-
 }

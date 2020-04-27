@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\WriteDump;
 
-
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 
 final class MysqlLineDump implements LineDumpInterface

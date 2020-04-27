@@ -77,5 +77,4 @@ final class ValueAnonymizerFactory implements ValueAnonymizerFactoryInterface
     {
         return array_key_exists($string, self::$valueAnonymizers);
     }
-
 }

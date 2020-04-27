@@ -54,6 +54,4 @@ final class LineInfo
     {
         return $this->valuesParser;
     }
-
-
 }

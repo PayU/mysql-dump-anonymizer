@@ -15,7 +15,6 @@ class HashAnonymizerTest extends TestCase
         parent::setUp();
 
         $this->sut = new HashAnonymizer();
-
     }
 
     /**
@@ -120,7 +119,8 @@ class HashAnonymizerTest extends TestCase
         ];
     }
 
-    public function hashNumber0255Provider() {
+    public function hashNumber0255Provider()
+    {
         return [
             [str_repeat('0', 64), ['0','0','0']],
             [str_repeat('F', 64), ['255','255','255']],
@@ -140,5 +140,4 @@ class HashAnonymizerTest extends TestCase
             ['☻', false],
         ];
     }
-
 }

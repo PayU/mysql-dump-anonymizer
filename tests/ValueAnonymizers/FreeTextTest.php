@@ -30,7 +30,8 @@ class FreeTextTest extends TestCase
 
     public function testAnonymize(): void
     {
-        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('Vkr.Hgcscgw Swgokwkgs,ks3-8,Gsgosowg Kwkovkr Hgcsc-Gwswg ok Wkgs,Ksgs6');
+        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')
+            ->willReturn('Vkr.Hgcscgw Swgokwkgs,ks3-8,Gsgosowg Kwkovkr Hgcsc-Gwswg ok Wkgs,Ksgs6');
 
         $actual = $this->sut->anonymize(
             new Value(
@@ -66,5 +67,4 @@ class FreeTextTest extends TestCase
 
         $this->assertSame('\'Vkr.Hgcscgw\'', $actual->getRawValue());
     }
-
 }

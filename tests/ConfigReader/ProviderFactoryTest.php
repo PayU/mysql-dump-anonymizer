@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Tests\ConfigReader;
 
-
 use PayU\MysqlDumpAnonymizer\ConfigReader\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\ConfigReader\YamlProviderBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -35,5 +34,4 @@ final class ProviderFactoryTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->sut->make('NOT-FOUND-CONFIG-TYPE', '/path/file');
     }
-
 }

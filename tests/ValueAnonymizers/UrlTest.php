@@ -33,7 +33,8 @@ class UrlTest extends TestCase
         $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('ubp.huhkosocgww.og/wwgwoockkokcg');
 
         $actual = $this->sut->anonymize(
-            new Value('\'http://www.some.hu/path\'', 'http://www.some.hu/path', false), []
+            new Value('\'http://www.some.hu/path\'', 'http://www.some.hu/path', false),
+            []
         );
 
         $this->assertSame('\'http://ubp.huhkosocgww.og/wwgwoockkokcg\'', $actual->getRawValue());
@@ -45,7 +46,8 @@ class UrlTest extends TestCase
             ->willReturn('ubp.huhkosocg.og');
 
         $actual = $this->sut->anonymize(
-            new Value('\'www.alphabank.ro\'', 'www.alphabank.ro', false), []
+            new Value('\'www.alphabank.ro\'', 'www.alphabank.ro', false),
+            []
         );
 
         $this->assertSame('\'ubp.huhkosocg.og\'', $actual->getRawValue());
@@ -56,7 +58,8 @@ class UrlTest extends TestCase
         $this->stringHashMock->expects($this->never())->method('hashKeepFormat');
 
         $actual = $this->sut->anonymize(
-            new Value('NULL', 'NULL', true), []
+            new Value('NULL', 'NULL', true),
+            []
         );
 
         $this->assertSame('NULL', $actual->getRawValue());

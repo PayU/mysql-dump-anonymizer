@@ -35,5 +35,4 @@ final class AnonymizedValue
         $anonymizedValue->rawValue = '\'' . addcslashes($value, "'\\\n") . '\'';
         return $anonymizedValue;
     }
-
 }
