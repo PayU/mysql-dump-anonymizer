@@ -15,6 +15,9 @@ install:
   - composer install
 
 script:
+  - cat composer.json
+  - ls -al vendor/
+  - ls -al vendor/bin
   - vendor/bin/pretty
   - vendor/bin/phpunit
   - vendor/bin/deptrack
