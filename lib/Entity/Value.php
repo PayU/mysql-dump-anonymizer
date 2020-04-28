@@ -7,10 +7,10 @@ namespace PayU\MysqlDumpAnonymizer\Entity;
 final class Value
 {
     /** @var string raw value in insert statement */
-    private $rawValue;
+    private string $rawValue;
 
      /* @var string */
-    private $unEscapedValue;
+    private string $unEscapedValue;
 
     /**
      * Needs to be able to make the difference between the string NULL and the actual NULL to set in the query string
@@ -19,7 +19,7 @@ final class Value
      * @var bool
      *
      */
-    private $isExpression;
+    private bool $isExpression;
 
     public function __construct(string $rawValue, string $unEscapedValue, bool $isExpression)
     {
@@ -44,13 +44,5 @@ final class Value
     public function isExpression(): bool
     {
         return $this->isExpression;
-    }
-
-    /**
-     * @param string $rawValue
-     */
-    public function setRawValue(string $rawValue): void
-    {
-        $this->rawValue = $rawValue;
     }
 }

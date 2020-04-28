@@ -1,70 +1,54 @@
 <?php
-
 declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer;
 
-use PayU\MysqlDumpAnonymizer\Entity\AnonymizationActions;
-use PayU\MysqlDumpAnonymizer\Services\DataTypeFactory;
-use PayU\MysqlDumpAnonymizer\Provider\AnonymizationProviderInterface;
+use PayU\MysqlDumpAnonymizer\Application\Observer;
+use PayU\MysqlDumpAnonymizer\Application\ObserverInterface;
+use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
+use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Services\LineParser\LineParserInterface;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\NoAnonymization;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizer\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\ReadDump\LineParserInterface;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 
 class Anonymizer
 {
-    /** @var CommandLineParameters */
-    private $commandLineParameters;
-
-    /** @var Observer */
-    private $observer;
-
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /** @var AnonymizationProviderInterface */
-    private $anonymizationProvider;
-
-    /** @var LineParserInterface */
-    private $lineParser;
+    private ObserverInterface $observer;
+    private AnonymizationProviderInterface $anonymizationProvider;
+    private LineParserInterface $lineParser;
+    private LineDumpInterface $lineDump;
 
     public function __construct(
-        CommandLineParameters $commandLineParameters,
         AnonymizationProviderInterface $anonymizationProvider,
         LineParserInterface $lineParser,
-        Observer $observer,
-        Config $config
+        LineDumpInterface $lineDump,
+        ObserverInterface $observer
     ) {
-        $this->commandLineParameters = $commandLineParameters;
         $this->anonymizationProvider = $anonymizationProvider;
         $this->lineParser = $lineParser;
+        $this->lineDump = $lineDump;
         $this->observer = $observer;
-        $this->config = $config;
     }
 
 
     public function run($inputStream, $outputStream): void
     {
 
-        $this->observer->notify(Observer::EVENT_BEGIN, $this->commandLineParameters->getEstimatedDumpSize());
-
         while ($line = $this->readLine($inputStream)) {
             fwrite($outputStream, $this->anonymizeLine($line));
-            $this->observer->notify(Observer::EVENT_AFTER_LINE_PROCESSING);
+            $this->observer->notify(Observer::EVENT_AFTER_LINE_PROCESSING, null);
         }
 
-        $this->observer->notify(Observer::EVENT_END);
+        $this->observer->notify(Observer::EVENT_END, null);
     }
 
     private function readLine($inputStream)
     {
-        $this->observer->notify(Observer::EVENT_START_READ);
+        $this->observer->notify(Observer::EVENT_START_READ, null);
         $line = fgets($inputStream);
-        $this->observer->notify(Observer::EVENT_END_READ, strlen(is_string($line)?$line:''));
+        $this->observer->notify(Observer::EVENT_END_READ, strlen(is_string($line) ? $line : ''));
         return $line;
     }
 
@@ -73,20 +57,20 @@ class Anonymizer
     {
         $lineInfo = $this->lineParser->lineInfo($line);
         if ($lineInfo->isInsert() === false) {
-            $this->observer->notify(Observer::EVENT_NOT_AN_INSERT);
+            $this->observer->notify(Observer::EVENT_NOT_AN_INSERT, null);
             return $line;
         }
 
         $table = $lineInfo->getTable();
 
         //truncate action doesnt write inserts
-        if ($this->anonymizationProvider->getTableAction($table) === AnonymizationActions::TRUNCATE) {
-            $this->observer->notify(Observer::EVENT_TRUNCATE);
+        if ($this->anonymizationProvider->getTableAction($table) === AnonymizationAction::TRUNCATE) {
+            $this->observer->notify(Observer::EVENT_TRUNCATE, null);
             return '';
         }
 
         if ($lineInfo->isInsert() === false) {
-            $this->observer->notify(Observer::EVENT_NOT_AN_INSERT);
+            $this->observer->notify(Observer::EVENT_NOT_AN_INSERT, null);
             return $line;
         }
 
@@ -96,7 +80,7 @@ class Anonymizer
         $insertRequiresAnonymization = false;
         foreach ($lineColumns as $column) {
             $valueAnonymizer = $this->anonymizationProvider->getAnonymizationFor($table, $column);
-            if (get_class($valueAnonymizer) !== DataTypeFactory::getDataTypes()[DataTypeFactory::NO_ANONYMIZATION]) {
+            if ($this->anonymizationProvider->isAnonymization($valueAnonymizer)) {
                 $insertRequiresAnonymization = true;
                 break;
             }
@@ -104,14 +88,14 @@ class Anonymizer
 
         //When insert line doesnt have anything to anonymize, return it as-is
         if ($insertRequiresAnonymization === false) {
-            $this->observer->notify(Observer::EVENT_INSERT_LINE_NO_ANONYMIZATION);
+            $this->observer->notify(Observer::EVENT_INSERT_LINE_NO_ANONYMIZATION, null);
             return $line;
         }
 
         //we have at least one column to anonymize
 
         $anonymizedValues = [];
-        foreach ($this->lineParser->getRowFromInsertLine($line) as $row) {
+        foreach ($lineInfo->getValuesParser() as $row) {
             $anonymizedValue = [];
             /** @var Value[] $row */
             foreach ($row as $columnIndex => $cell) {
@@ -126,7 +110,7 @@ class Anonymizer
             $anonymizedValues[] = $anonymizedValue;
         }
 
-        return $this->lineParser->rebuildInsertLine($table, $lineColumns, $anonymizedValues);
+        return $this->lineDump->rebuildInsertLine($table, $lineColumns, $anonymizedValues);
     }
 
     /**
@@ -139,15 +123,14 @@ class Anonymizer
     {
         if ($value->isExpression() && $value->getRawValue() === 'NULL') {
             $this->observer->notify(Observer::EVENT_NULL_VALUE, get_class($valueAnonymizer));
-            return new AnonymizedValue('NULL');
+            return AnonymizedValue::fromRawValue('NULL');
         }
 
-        if ($valueAnonymizer instanceof NoAnonymization) {
-            $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION);
+        if ($this->anonymizationProvider->isAnonymization($valueAnonymizer) === false) {
+            $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION, null);
         }
-
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_START, get_class($valueAnonymizer));
-        $ret = $valueAnonymizer->anonymize($value, $row, $this->config);
+        $ret = $valueAnonymizer->anonymize($value, $row);
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_END, get_class($valueAnonymizer));
         return $ret;
     }

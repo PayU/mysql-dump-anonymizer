@@ -5,7 +5,7 @@
     <exclude-pattern>vendor/*</exclude-pattern>
     <rule ref="PSR2"/>
     <rule ref="Generic.Files.LineLength">
-        <exclude-pattern>tests/Services/LineParser/MySqlDumpLineParserTest.php</exclude-pattern>
+        <exclude-pattern>tests/ReadDump/MySqlDumpLineParserTest.php</exclude-pattern>
         <properties>
             <property name="lineLimit" value="135"/>
             <property name="absoluteLineLimit" value="520"/>
