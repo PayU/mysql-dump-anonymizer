@@ -12,7 +12,7 @@ matrix:
   fast_finish: true
 
 install:
-  - composer install --dev --no-scripts --no-suggest --no-interaction
+  - composer install
 
 script:
   - vendor/bin/pretty
