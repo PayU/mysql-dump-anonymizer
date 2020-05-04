@@ -2,4 +2,5 @@ FROM composer:latest
 COPY . /var/www/mysql-anonymizer
 WORKDIR /var/www/mysql-anonymizer
 RUN composer install --no-dev
-CMD [ "php", "./bin/mysql-dump-anonymize.php", "--config=./columns_must_anonymize.yml", "--show-progress=0"]
+ENTRYPOINT ["php", "/var/www/mysql-anonymizer/bin/mysql-dump-anonymize.php"]
+CMD ["--show-progress=0", "--config=./columns_must_anonymize.yml"]
