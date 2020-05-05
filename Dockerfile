@@ -1,4 +1,4 @@
-FROM composer:latest
+FROM composer:1
 COPY . /var/www/mysql-anonymizer
 WORKDIR /var/www/mysql-anonymizer
 RUN composer install --no-dev
