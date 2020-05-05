@@ -1,0 +1,10 @@
+# composer vendor files
+/vendor/
+
+# editor custom files
+/.idea/
+
+# vagrant generated files
+/.vagrant/
+/*-console.log
+
