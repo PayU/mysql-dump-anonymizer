@@ -1,0 +1,6 @@
+# ignoring everything
+/*
+# except what we need
+!/bin/
+!/lib/
+!/composer.json
