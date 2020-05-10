@@ -8,8 +8,7 @@ services:
   - mysql
 
 env:
-  - DSN_SOURCE=mysql:dbname=anon_source;host=localhost;user=root;password=
-  - DSN_DESTINATION=mysql:dbname=anon_dest;host=localhost;user=root;password=
+  - DSN_SOURCE=mysql:dbname=anon_source;host=localhost;user=root;password= DSN_DESTINATION=mysql:dbname=anon_dest;host=localhost;user=root;password=
 
 cache:
   directories:
