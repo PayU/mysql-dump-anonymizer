@@ -154,7 +154,7 @@ class MySqlDumpLineParser implements LineParserInterface
         if (strpos($rawValue, "\\") === false) {
             //usual
             $unEscapedValue = $rawValue;
-        }elseif (strpos($rawValue, "\\\\") !== false) {
+        } elseif (strpos($rawValue, "\\\\") !== false) {
             //very rare (having double backslash in the string)
             $replaced = [
                 "/\\\\\\\\|\\\\n/" => static function ($matches) {
@@ -168,7 +168,6 @@ class MySqlDumpLineParser implements LineParserInterface
                 },
             ];
             $unEscapedValue = preg_replace_callback_array($replaced, $rawValue);
-
         } else {
             //rare (having single backslash)
             $replaced = [
@@ -180,6 +179,5 @@ class MySqlDumpLineParser implements LineParserInterface
         }
 
         return stripslashes(substr($unEscapedValue, 1, -1));
-
     }
 }

@@ -63,7 +63,6 @@ final class AfterScriptRunTest extends TestCase
         ];
 
         foreach ($fields as $field) {
-
             $query = "SELECT PrimaryKey FROM all_allow_null WHERE $field IS NULL";
             $stmt = self::$source->query($query);
             $primaryKeys = [];
@@ -72,8 +71,8 @@ final class AfterScriptRunTest extends TestCase
             }
 
             if (!empty($primaryKeys)) {
-                $query2 = "SELECT PrimaryKey, $field FROM all_allow_null WHERE PrimaryKey IN (" . implode(',', $primaryKeys) . ')';
-                $stmt2 = self::$destination->query($query2);
+                $q2 = "SELECT PrimaryKey, $field FROM all_allow_null WHERE PrimaryKey IN (" . implode(',', $primaryKeys) . ')';
+                $stmt2 = self::$destination->query($q2);
                 while ($destRow = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                     $this->assertNull($destRow[$field], " $field PK {$destRow['PrimaryKey']} not null !");
                 }
@@ -116,7 +115,6 @@ final class AfterScriptRunTest extends TestCase
             $query2 = 'SELECT * FROM all_allow_null';
             $stmt2 = self::$destination->query($query2);
             while ($destRow = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-
                 $sourceRow = $sourceRows[$destRow['PrimaryKey']];
 
                 $this->assertSame(
@@ -187,9 +185,7 @@ final class AfterScriptRunTest extends TestCase
                         ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'],
                         'Numbers for for PK' . $destRow['PrimaryKey'] . ':'
                     );
-
                 }
-
             }
         } else {
             $this->assertTrue(false, 'NO data to test !');
@@ -266,16 +262,26 @@ final class AfterScriptRunTest extends TestCase
         //uppercase characters are anonymized with other uppercase characters
         $this->assertFreeTextCharacters($sourceJson['key1'], $anonymizedJson['key1'], range('A', 'Z'));
         $this->assertFreeTextCharacters($sourceJson['key2']['key2-1'], $anonymizedJson['key2']['key2-1'], range('A', 'Z'));
+
         //numbers are replaced with other numbers
-        $this->assertFreeTextCharacters($sourceJson['key1'], $anonymizedJson['key1'], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
-        $this->assertFreeTextCharacters($sourceJson['key2']['key2-1'], $anonymizedJson['key2']['key2-1'], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
+        $this->assertFreeTextCharacters(
+            $sourceJson['key1'],
+            $anonymizedJson['key1'],
+            ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        );
+
+        $this->assertFreeTextCharacters(
+            $sourceJson['key2']['key2-1'],
+            $anonymizedJson['key2']['key2-1'],
+            ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        );
+
         //new lines are kept in the same position
         $this->assertFreeTextCharacters($sourceJson['key1'], $anonymizedJson['key1'], ["\n"]);
         $this->assertFreeTextCharacters($sourceJson['key2']['key2-1'], $anonymizedJson['key2']['key2-1'], ["\n"]);
         //tabs are kept in the same position
         $this->assertFreeTextCharacters($sourceJson['key1'], $anonymizedJson['key1'], ["\t"]);
         $this->assertFreeTextCharacters($sourceJson['key2']['key2-1'], $anonymizedJson['key2']['key2-1'], ["\t"]);
-
     }
 
     /**
@@ -293,7 +299,7 @@ final class AfterScriptRunTest extends TestCase
 
         $anonymizedUnserialized = unserialize($anonymizedRow['Serialized']);
 
-        $position1 = $this->strpos_all($anonymizedUnserialized['key1'], "\r\n");
+        $position1 = $this->strposAll($anonymizedUnserialized['key1'], "\r\n");
 
         $this->assertSame("\r\n", mb_substr($anonymizedUnserialized['key1'], $position1[0], 2));
 
@@ -312,20 +318,36 @@ final class AfterScriptRunTest extends TestCase
 
         //lowercase characters are anonymized with other lowercase characters
         $this->assertFreeTextCharacters($source['key1'], $anonymizedUnserialized['key1'], range('a', 'z'));
-        $this->assertFreeTextCharacters($source['key2']['key2-1'], $anonymizedUnserialized['key2']['key2-1'], range('a', 'z'));
+        $this->assertFreeTextCharacters(
+            $source['key2']['key2-1'],
+            $anonymizedUnserialized['key2']['key2-1'],
+            range('a', 'z')
+        );
         //uppercase characters are anonymized with other uppercase characters
         $this->assertFreeTextCharacters($source['key1'], $anonymizedUnserialized['key1'], range('A', 'Z'));
-        $this->assertFreeTextCharacters($source['key2']['key2-1'], $anonymizedUnserialized['key2']['key2-1'], range('A', 'Z'));
+        $this->assertFreeTextCharacters(
+            $source['key2']['key2-1'],
+            $anonymizedUnserialized['key2']['key2-1'],
+            range('A', 'Z')
+        );
         //numbers are replaced with other numbers
-        $this->assertFreeTextCharacters($source['key1'], $anonymizedUnserialized['key1'], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
-        $this->assertFreeTextCharacters($source['key2']['key2-1'], $anonymizedUnserialized['key2']['key2-1'], ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
+        $this->assertFreeTextCharacters(
+            $source['key1'],
+            $anonymizedUnserialized['key1'],
+            ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        );
+        $this->assertFreeTextCharacters(
+            $source['key2']['key2-1'],
+            $anonymizedUnserialized['key2']['key2-1'],
+            ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        );
+
         //new lines are kept in the same position
         $this->assertFreeTextCharacters($source['key1'], $anonymizedUnserialized['key1'], ["\n"]);
         $this->assertFreeTextCharacters($source['key2']['key2-1'], $anonymizedUnserialized['key2']['key2-1'], ["\n"]);
         //tabs are kept in the same position
         $this->assertFreeTextCharacters($source['key1'], $anonymizedUnserialized['key1'], ["\t"]);
         $this->assertFreeTextCharacters($source['key2']['key2-1'], $anonymizedUnserialized['key2']['key2-1'], ["\t"]);
-
     }
 
     /**
@@ -340,7 +362,7 @@ final class AfterScriptRunTest extends TestCase
         $characters = str_split(HashAnonymizer::PUNCTUATION);
         $allPositions = [];
         foreach ($characters as $sign) {
-            $allPositions[$sign] = $this->strpos_all($source, $sign);
+            $allPositions[$sign] = $this->strposAll($source, $sign);
         }
         foreach ($allPositions as $sign => $positions) {
             foreach ($positions as $position) {
@@ -349,7 +371,7 @@ final class AfterScriptRunTest extends TestCase
                 $this->assertSame(
                     $sourceSign,
                     $anonymizedSign,
-                    $startMsg . "Not the same punctuation src[$sourceSign] dest[$anonymizedSign] at pos [$position] SRC[$source] DEST[$anonymized"
+                    $startMsg . "Not the same punctuation src[$sourceSign] dest[$anonymizedSign] at pos [$position]"
                 );
             }
         }
@@ -360,7 +382,7 @@ final class AfterScriptRunTest extends TestCase
 
         $allPositions = [];
         foreach ($characters as $sign) {
-            $allPositions[$sign] = $this->strpos_all($source, $sign);
+            $allPositions[$sign] = $this->strposAll($source, $sign);
         }
         foreach ($allPositions as $sign => $positions) {
             foreach ($positions as $position) {
@@ -371,21 +393,19 @@ final class AfterScriptRunTest extends TestCase
                     $characters,
                     $startMsg . "Invalid sign [$anonymizedSign] not in " . implode(',', $characters) . " at pos$position in $source "
                 );
-
             }
         }
     }
 
 
-    private function strpos_all($haystack, $needle): array
+    private function strposAll($haystack, $needle): array
     {
         $offset = 0;
         $allpos = array();
-        while (($pos = mb_strpos($haystack, (string)$needle, $offset)) !== FALSE) {
+        while (($pos = mb_strpos($haystack, (string)$needle, $offset)) !== false) {
             $offset = $pos + 1;
             $allpos[] = $pos;
         }
         return $allpos;
     }
-
 }

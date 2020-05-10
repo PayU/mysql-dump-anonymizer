@@ -122,9 +122,6 @@ final class HashAnonymizer implements HashAnonymizerInterface
 
         $this->stacks[self::SIGNS] = implode('', $pool256);
         $this->stackLengths[self::SIGNS] = strlen($this->stacks[self::SIGNS]);
-
-
-
     }
 
 
@@ -175,5 +172,4 @@ final class HashAnonymizer implements HashAnonymizerInterface
         }
         return (int)floor(array_sum($intSeeds) / count($intSeeds));
     }
-
 }

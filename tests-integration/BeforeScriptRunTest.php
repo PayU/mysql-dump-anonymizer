@@ -28,7 +28,7 @@ final class BeforeScriptRunTest extends TestCase
             throw new RuntimeException('Empty environment variable DSN_SOURCE');
         }
         self::$source = new PDO($dsnSource);
-        self::$source->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
+        self::$source->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     }
 
     public function testPrepareJsonSource(): void
@@ -92,7 +92,5 @@ final class BeforeScriptRunTest extends TestCase
         $statement = self::$source->prepare($query);
         $executed1 = $statement->execute($data);
         $this->assertTrue($executed1);
-
     }
-
 }
