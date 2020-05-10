@@ -23,13 +23,18 @@ final class Json implements ValueAnonymizerInterface
     }
 
 
+    /**
+     * @param Value $value
+     * @param Value[] $row
+     * @return AnonymizedValue
+     */
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ($value->isExpression()) {
             return AnonymizedValue::fromOriginalValue($value);
         }
 
-        $jsonString = str_replace(["\r", "\n"], ["\\r", "\\n"], $value->getUnEscapedValue());
+        $jsonString = str_replace(["\r", "\n", "\t"], ["\\r", "\\n", "\\t"], $value->getUnEscapedValue());
 
         try {
             $array = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);

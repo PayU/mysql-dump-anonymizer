@@ -33,8 +33,8 @@ final class HashAnonymizer implements HashAnonymizerInterface
         self::NUMBERS_0_255 => -1,
     ];
 
-    private const LETTER_POOL = 'aaaaaaaaaaaaaaaaaaaaabbbcccccddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeefffffggggg'.
-    'hhhhhhhhhhhhhhhiiiiiiiiiiiiiiiiiiijkkkllllllllllmmmmmmnnnnnnnnnnnnnnnnnoooooooooooooooooooppppqrrrrrrrrrr'.
+    private const LETTER_POOL = 'aaaaaaaaaaaaaaaaaaaaabbbcccccddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeefffffggggg' .
+    'hhhhhhhhhhhhhhhiiiiiiiiiiiiiiiiiiijkkkllllllllllmmmmmmnnnnnnnnnnnnnnnnnoooooooooooooooooooppppqrrrrrrrrrr' .
     'rrrrrrrrrsssssssssssssssstttttttttttttttttttttttuuuuuuuvvwwwwwwxyyyyyz';
 
     private string $hash;
@@ -85,25 +85,14 @@ final class HashAnonymizer implements HashAnonymizerInterface
 
     private function generateLetterStack(): void
     {
-            $intSeeds = [];
-            $start = 0;
-        while (($start <= strlen($this->hash)-8) && ($start <= 56)) {
-            $intSeeds[] = (int)base_convert(
-                substr($this->hash, $start, 8),
-                16,
-                10
-            );
-            $start += 8;
-        }
+        $pool256 = str_split(self::LETTER_POOL);
+        $intSeed = $this->hashToInt();
 
-            $pool256 = str_split(self::LETTER_POOL);
-            $intSeed = (int)floor(array_sum($intSeeds) / count($intSeeds));
+        mt_srand($intSeed, MT_RAND_MT19937);
+        shuffle($pool256);
 
-            mt_srand($intSeed, MT_RAND_MT19937);
-            shuffle($pool256);
-
-            $this->stacks[self::LETTERS] = implode('', $pool256);
-            $this->stackLengths[self::LETTERS] = strlen($this->stacks[self::LETTERS]);
+        $this->stacks[self::LETTERS] = implode('', $pool256);
+        $this->stackLengths[self::LETTERS] = strlen($this->stacks[self::LETTERS]);
     }
 
     private function generateNumbersStack(): void
@@ -117,7 +106,7 @@ final class HashAnonymizer implements HashAnonymizerInterface
         $this->stacks[self::NUMBERS_0_255] = [];
         $len = strlen($this->hash);
         $len = ($len > 10 ? 10 : $len); //Ten 0-255 numbers is usually enough. When its not, it will generate more times.
-        for ($i=0; $i<=$len-2; $i += 2) {
+        for ($i = 0; $i <= $len - 2; $i += 2) {
             $this->stacks[self::NUMBERS_0_255][] = base_convert(substr($this->hash, $i, 2), 16, 10);
         }
         $this->stackLengths[self::NUMBERS_0_255] = count($this->stacks[self::NUMBERS_0_255]);
@@ -125,16 +114,17 @@ final class HashAnonymizer implements HashAnonymizerInterface
 
     private function generateSignsStack(): void
     {
-        $choose = base_convert($this->hash, 16, 32);
-        $len = strlen($choose);
-        $ret = '';
-        for ($i = 0; $i < $len; $i++) {
-            $index = base_convert($choose[$i], 32, 10);
-            $ret .= self::PUNCTUATION[$index];
-        }
+        $pool256 = str_split(self::PUNCTUATION);
+        $intSeed = $this->hashToInt();
 
-        $this->stacks[self::SIGNS] = $ret;
+        mt_srand($intSeed, MT_RAND_MT19937);
+        shuffle($pool256);
+
+        $this->stacks[self::SIGNS] = implode('', $pool256);
         $this->stackLengths[self::SIGNS] = strlen($this->stacks[self::SIGNS]);
+
+
+
     }
 
 
@@ -170,4 +160,20 @@ final class HashAnonymizer implements HashAnonymizerInterface
 
         return $ret;
     }
+
+    private function hashToInt(): int
+    {
+        $intSeeds = [];
+        $start = 0;
+        while (($start <= strlen($this->hash) - 8) && ($start <= 56)) {
+            $intSeeds[] = (int)base_convert(
+                substr($this->hash, $start, 8),
+                16,
+                10
+            );
+            $start += 8;
+        }
+        return (int)floor(array_sum($intSeeds) / count($intSeeds));
+    }
+
 }
