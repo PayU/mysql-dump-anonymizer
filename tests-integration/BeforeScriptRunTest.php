@@ -27,7 +27,7 @@ final class BeforeScriptRunTest extends TestCase
         if (empty($dsnSource)) {
             throw new RuntimeException('Empty environment variable DSN_SOURCE');
         }
-        self::$source = new PDO($dsnSource);
+        self::$source = new PDO($dsnSource, 'root', '');
         self::$source->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     }
 

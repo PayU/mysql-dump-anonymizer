@@ -30,14 +30,14 @@ final class AfterScriptRunTest extends TestCase
         if (empty($dsnSource)) {
             throw new RuntimeException('Empty environment variable DSN_SOURCE');
         }
-        self::$source = new PDO($dsnSource);
+        self::$source = new PDO($dsnSource, 'root', '');
 
 
         $dsnSource = getenv('DSN_DESTINATION');
         if (empty($dsnSource)) {
             throw new RuntimeException('Empty environment variable DSN_DESTINATION');
         }
-        self::$destination = new PDO($dsnSource);
+        self::$destination = new PDO($dsnSource, 'root', '');
     }
 
     public function testNullIsAnonymizedWithNull(): void
