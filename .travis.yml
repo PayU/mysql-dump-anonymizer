@@ -26,8 +26,8 @@ script:
   - vendor/bin/phpunit
   - vendor/bin/deptrac
   - mysql -u root --execute="CREATE DATABASE anon_source;"
-  - mysql -u root -D anon_source < sample\sample.sql
+  - mysql -u root -D anon_source < sample/sample.sql
   - mysql -u root --execute="CREATE DATABASE anon_dest;"
-  - vendor\bin\phpunit --test-suffix BeforeScriptRunTest.php tests-integration
+  - vendor/bin/phpunit --test-suffix BeforeScriptRunTest.php tests-integration
   - mysqldump -u root --complete-insert --hex-blob anon_source | php bin\mysql-dump-anonymize.php --config=sample\anon.yml --show-progress=0 | mysql -u root -D anon_dest
-  - vendor\bin\phpunit --test-suffix AfterScriptRunTest.php tests-integration
+  - vendor/bin/phpunit --test-suffix AfterScriptRunTest.php tests-integration
