@@ -3,4 +3,6 @@
 # except what we need
 !/bin/
 !/lib/
+!/sample/
 !/composer.json
+!/columns_must_anonymize.yml
