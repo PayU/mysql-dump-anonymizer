@@ -27,6 +27,10 @@ script:
   - mysql -u root --execute="CREATE DATABASE anon_source;"
   - mysql -u root -D anon_source < sample/sample.sql
   - mysql -u root --execute="CREATE DATABASE anon_dest;"
+  - export DSN_SOURCE=mysql:dbname=anon_source;host=localhost
+  - export DSN_DESTINATION=mysql:dbname=anon_dest;host=localhost
+  - export DB_USER=root
+  - export DB_PASS=
   - vendor/bin/phpunit --test-suffix BeforeScriptRunTest.php tests-integration
   - mysqldump -u root --complete-insert --hex-blob anon_source | php bin/mysql-dump-anonymize.php --config=sample/anon.yml --show-progress=0 | mysql -u root -D anon_dest
   - vendor/bin/phpunit --test-suffix AfterScriptRunTest.php tests-integration
