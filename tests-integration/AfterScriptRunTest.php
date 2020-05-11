@@ -49,6 +49,10 @@ final class AfterScriptRunTest extends TestCase
 
         self::$source = new PDO($dsnSource, $dbUser, $dbPass);
         self::$destination = new PDO($dsnSource, $dbUser, $dbPass);
+
+        self::$source->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        self::$destination->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+
     }
 
     public function testNullIsAnonymizedWithNull(): void
