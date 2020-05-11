@@ -31,8 +31,8 @@ final class AfterScriptRunTest extends TestCase
             throw new RuntimeException('Empty environment variable DSN_SOURCE');
         }
 
-        $dsnSource = getenv('DSN_DESTINATION');
-        if (empty($dsnSource)) {
+        $dsnDestination = getenv('DSN_DESTINATION');
+        if (empty($dsnDestination)) {
             throw new RuntimeException('Empty environment variable DSN_DESTINATION');
         }
 
@@ -48,7 +48,7 @@ final class AfterScriptRunTest extends TestCase
 
 
         self::$source = new PDO($dsnSource, $dbUser, $dbPass);
-        self::$destination = new PDO($dsnSource, $dbUser, $dbPass);
+        self::$destination = new PDO($dsnDestination, $dbUser, $dbPass);
 
         self::$source->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         self::$destination->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
