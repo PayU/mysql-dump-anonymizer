@@ -49,7 +49,7 @@ class MySqlDumpLineParser implements LineParserInterface
      * @param string $line
      * @return Value[][]
      */
-    private function getRowFromInsertLine(string $line) : iterable
+    private function getRowFromInsertLine(string $line): iterable
     {
         yield from $this->parseValuesList($line);
     }
@@ -138,7 +138,7 @@ class MySqlDumpLineParser implements LineParserInterface
         }
     }
 
-    private function isExpression($rawValue) : bool
+    private function isExpression($rawValue): bool
     {
         //INSERT INTO  () VALUES ('NULL', NULL, 0x123123, '0x123123', 'normal', 123);
 
@@ -151,12 +151,33 @@ class MySqlDumpLineParser implements LineParserInterface
             return $rawValue;
         }
 
-        $replaced = [
-            "\\r" => "\r",
-            "\\n" => "\n",
-            "\\t" => "\t"
-        ];
-        $unEscapedValue = str_replace(array_keys($replaced), $replaced, $rawValue);
+        if (strpos($rawValue, "\\") === false) {
+            //usual
+            $unEscapedValue = $rawValue;
+        } elseif (strpos($rawValue, "\\\\") !== false) {
+            //very rare (having double backslash in the string)
+            $replaced = [
+                "/\\\\\\\\|\\\\n/" => static function ($matches) {
+                    return ($matches[0] === "\\n") ? "\n" : $matches[0]; //replace \n,\\\n,etc but not \\n,\\\\n,etc
+                },
+                "/\\\\\\\\|\\\\r/" => static function ($matches) {
+                    return ($matches[0] === "\\r") ? "\r" : $matches[0];
+                },
+                "/\\\\\\\\|\\\\t/" => static function ($matches) {
+                    return ($matches[0] === "\\t") ? "\t" : $matches[0];
+                },
+            ];
+            $unEscapedValue = preg_replace_callback_array($replaced, $rawValue);
+        } else {
+            //rare (having single backslash)
+            $replaced = [
+                "\\r" => "\r",
+                "\\n" => "\n",
+                "\\t" => "\t"
+            ];
+            $unEscapedValue = str_replace(array_keys($replaced), $replaced, $rawValue);
+        }
+
         return stripslashes(substr($unEscapedValue, 1, -1));
     }
 }

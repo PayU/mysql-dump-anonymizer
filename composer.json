@@ -6,7 +6,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "PayU\\MysqlDumpAnonymizer\\Tests\\": "tests/"
+            "PayU\\MysqlDumpAnonymizer\\Tests\\": "tests/",
+            "PayU\\MysqlDumpAnonymizer\\TestsIntegration\\": "tests-integration/"
         }
     },
     "config": {

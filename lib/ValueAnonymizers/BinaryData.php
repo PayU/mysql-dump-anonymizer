@@ -20,7 +20,7 @@ final class BinaryData implements ValueAnonymizerInterface
 
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
-        if (empty($value->getUnEscapedValue()) || $value->isExpression()) {
+        if (empty($value->getUnEscapedValue()) || ($value->isExpression() === false)) {
             return AnonymizedValue::fromRawValue('\'\'');
         }
 

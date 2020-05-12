@@ -19,6 +19,11 @@ final class Serialized implements ValueAnonymizerInterface
         $this->stringHash = $stringHash;
     }
 
+    /**
+     * @param Value $value
+     * @param Value[] $row
+     * @return AnonymizedValue
+     */
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         $serializedString = $value->getUnEscapedValue();

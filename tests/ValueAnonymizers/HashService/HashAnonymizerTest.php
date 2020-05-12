@@ -104,9 +104,9 @@ class HashAnonymizerTest extends TestCase
     public function hashPunctuationProvider(): array
     {
         return [
-            [str_repeat('0', 64), '!!!'],
-            [str_repeat('F', 64), '#!!'],
-            ['b96a43f0c700ae55b4ac744f0b1be530976038e0abb2c2e5eba505eca99a2a47', '"/,'],
+            [str_repeat('0', 64), '`<~'],
+            [str_repeat('F', 64), '>-`'],
+            ['b96a43f0c700ae55b4ac744f0b1be530976038e0abb2c2e5eba505eca99a2a47', '+~:'],
         ];
     }
 
