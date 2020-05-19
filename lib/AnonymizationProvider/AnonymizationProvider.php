@@ -43,7 +43,7 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
 
     public function getTableAction($table)
     {
-        if (array_key_exists($table, $this->tablesAction)) {
+        if (isset($this->tablesAction[$table])) {
             return $this->tablesAction[$table];
         }
         return $this->tableNotFoundAction;
@@ -51,8 +51,7 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
 
     public function getAnonymizationFor($table, $column) : ValueAnonymizerInterface
     {
-        if (array_key_exists($table, $this->tableColumnsAnonymizationProvider)
-            && array_key_exists($column, $this->tableColumnsAnonymizationProvider[$table])
+        if (isset($this->tableColumnsAnonymizationProvider[$table][$column])
         ) {
             return $this->tableColumnsAnonymizationProvider[$table][$column];
         }
