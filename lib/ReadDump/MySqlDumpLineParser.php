@@ -101,12 +101,10 @@ class MySqlDumpLineParser implements LineParserInterface
                     $rawValue = $char;
                     if ($char === '\'') {
                         $valueEscaping = $char;
-                    } else {
-                        $valueEscaping = '';
                     }
                     break;
                 case 2:
-                    if ($valueEscaping === '') {
+                    if ($valueEscaping === null) {
                         if (in_array($char, [' ', ','], true)) {
                             $parseLevel = 1;
                             $row[] = new Value($rawValue, $this->unEscape($rawValue), $this->isExpression($rawValue));
@@ -124,6 +122,7 @@ class MySqlDumpLineParser implements LineParserInterface
                             $parseLevel = 1;
                             $rawValue .= $char;
                             $row[] = new Value($rawValue, $this->unEscape($rawValue), $this->isExpression($rawValue));
+                            $valueEscaping = null;
                             break;
                         }
                         if ($char === '\\') {
@@ -142,7 +141,7 @@ class MySqlDumpLineParser implements LineParserInterface
     {
         //INSERT INTO  () VALUES ('NULL', NULL, 0x123123, '0x123123', 'normal', 123);
 
-        return (false === (strpos($rawValue, '\'') === 0 && substr($rawValue, -1) === '\''));
+        return $rawValue[0] !== '\'';
     }
 
     private function unEscape($rawValue): string
@@ -151,33 +150,21 @@ class MySqlDumpLineParser implements LineParserInterface
             return $rawValue;
         }
 
-        if (strpos($rawValue, "\\") === false) {
-            //usual
-            $unEscapedValue = $rawValue;
-        } elseif (strpos($rawValue, "\\\\") !== false) {
-            //very rare (having double backslash in the string)
-            $replaced = [
-                "/\\\\\\\\|\\\\n/" => static function ($matches) {
-                    return ($matches[0] === "\\n") ? "\n" : $matches[0]; //replace \n,\\\n,etc but not \\n,\\\\n,etc
-                },
-                "/\\\\\\\\|\\\\r/" => static function ($matches) {
-                    return ($matches[0] === "\\r") ? "\r" : $matches[0];
-                },
-                "/\\\\\\\\|\\\\t/" => static function ($matches) {
-                    return ($matches[0] === "\\t") ? "\t" : $matches[0];
-                },
-            ];
-            $unEscapedValue = preg_replace_callback_array($replaced, $rawValue);
-        } else {
-            //rare (having single backslash)
-            $replaced = [
-                "\\r" => "\r",
-                "\\n" => "\n",
-                "\\t" => "\t"
-            ];
-            $unEscapedValue = str_replace(array_keys($replaced), $replaced, $rawValue);
+        if (strpos($rawValue, '\\') === false) {
+            return substr($rawValue, 1, -1);
         }
 
-        return stripslashes(substr($unEscapedValue, 1, -1));
+        $replaced = [
+            '\\\\' => '\\',
+            '\\\'' => '\'',
+            '\\0' => "\0",
+            '\\r' => "\r",
+            '\\n' => "\n",
+            '\\t' => "\t",
+            '\\b' => chr(8),
+            '\\Z' => chr(26),
+        ];
+
+        return strtr(substr($rawValue, 1, -1), $replaced);
     }
 }
