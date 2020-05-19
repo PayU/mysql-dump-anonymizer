@@ -76,13 +76,12 @@ class Anonymizer
 
         $lineColumns = $lineInfo->getColumns();
 
-
+        $valueAnonymizers = [];
         $insertRequiresAnonymization = false;
-        foreach ($lineColumns as $column) {
-            $valueAnonymizer = $this->anonymizationProvider->getAnonymizationFor($table, $column);
-            if ($this->anonymizationProvider->isAnonymization($valueAnonymizer)) {
+        foreach ($lineColumns as $columnIndex => $column) {
+            $valueAnonymizers[$columnIndex] = $this->anonymizationProvider->getAnonymizationFor($table, $column);
+            if ($this->anonymizationProvider->isAnonymization($valueAnonymizers[$columnIndex])) {
                 $insertRequiresAnonymization = true;
-                break;
             }
         }
 
@@ -100,7 +99,7 @@ class Anonymizer
             /** @var Value[] $row */
             foreach ($row as $columnIndex => $cell) {
                 $anonymizedValue[] = $this->anonymizeValue(
-                    $this->anonymizationProvider->getAnonymizationFor($table, $lineColumns[$columnIndex]),
+                    $valueAnonymizers[$columnIndex],
                     $cell,
                     array_combine($lineColumns, $row)
                 );
