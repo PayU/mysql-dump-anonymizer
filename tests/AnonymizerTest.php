@@ -301,5 +301,4 @@ final class AnonymizerTest extends TestCase
         }
         yield from $ret;
     }
-
 }
