@@ -8,6 +8,24 @@ use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 
 final class MysqlLineDump implements LineDumpInterface
 {
+    private $rowContentGenerator;
+
+    /**
+     * MysqlLineDump constructor.
+     * @param $rawValueExtracter
+     * @param $rowContentGenerator
+     */
+    public function __construct()
+    {
+        $rawValueExtractor = static function ($value) {
+            return $value->getRawValue();
+        };
+        $this->rowContentGenerator = static function ($row) use ($rawValueExtractor) {
+            return implode(',', array_map($rawValueExtractor, $row));
+        };
+    }
+
+
     /**
      * @param string $table
      * @param array $columns
@@ -16,16 +34,11 @@ final class MysqlLineDump implements LineDumpInterface
      */
     public function rebuildInsertLine(string $table, array $columns, array $rows): string
     {
-        $dumpQuery = 'INSERT' . ' INTO `' . $table . '` (`';
-        $dumpQuery .= implode('`, `', $columns);
-        $dumpQuery .= '`) VALUES (';
-
-        foreach ($rows as $row) {
-            foreach ($row as $value) {
-                $dumpQuery .= $value->getRawValue() . ', ';
-            }
-            $dumpQuery = substr($dumpQuery, 0, -2) . '), (';
-        }
-        return substr($dumpQuery, 0, -3) . ';' . PHP_EOL;
+        return 'INSERT INTO `' . $table . '` (`'
+            . implode('`, `', $columns)
+            . '`) VALUES ('
+            . implode('),(', array_map($this->rowContentGenerator, $rows))
+            . ');'
+            . "\n";
     }
 }
