@@ -120,7 +120,7 @@ class Anonymizer
      */
     private function anonymizeValue(ValueAnonymizerInterface $valueAnonymizer, Value $value, $row): AnonymizedValue
     {
-        if ($value->isExpression() && $value->getRawValue() === 'NULL') {
+        if ($value->getRawValue() === 'NULL') {
             $this->observer->notify(Observer::EVENT_NULL_VALUE, get_class($valueAnonymizer));
             return AnonymizedValue::fromRawValue('NULL');
         }
