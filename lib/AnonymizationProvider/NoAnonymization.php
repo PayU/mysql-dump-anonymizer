@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
+namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider;
 
-use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 
