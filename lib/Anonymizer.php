@@ -126,7 +126,7 @@ class Anonymizer
         }
 
         if ($value->getRawValue() === '\'\'') {
-            return AnonymizedValue::fromRawValue('');
+            return AnonymizedValue::fromRawValue('\'\'');
         }
 
         if ($this->anonymizationProvider->isAnonymization($valueAnonymizer) === false) {
