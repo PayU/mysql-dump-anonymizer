@@ -6,6 +6,18 @@ namespace PayU\MysqlDumpAnonymizer\Entity;
 
 final class AnonymizedValue
 {
+    private const QUOTE = '\'';
+    private const ESCAPING_MAP = [
+        '\\' => '\\\\',
+        '\'' => '\\\'',
+        "\0" => '\\0',
+        "\r" => '\\r',
+        "\n" => '\\n',
+        "\t" => '\\t',
+        "\x08" => '\\b',
+        "\x1A" => '\\Z',
+    ];
+
     /** @var string raw value in insert statement */
     private string $rawValue;
 
@@ -32,7 +44,7 @@ final class AnonymizedValue
     public static function fromUnescapedValue(string $value): AnonymizedValue
     {
         $anonymizedValue = new self();
-        $anonymizedValue->rawValue = '\'' . addcslashes($value, "'\\\n") . '\'';
+        $anonymizedValue->rawValue = self::QUOTE . strtr($value, self::ESCAPING_MAP) . self::QUOTE;
         return $anonymizedValue;
     }
 }
