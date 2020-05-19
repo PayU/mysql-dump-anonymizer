@@ -32,13 +32,7 @@ final class AnonymizationProviderTest extends TestCase
             ->disallowMockingUnknownTypes()
             ->getMock();
 
-        $this->noAnonymizationMock = $this->getMockBuilder(ValueAnonymizerInterface::class)
-            ->setMockClassName('NoAnonymization')
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->getMock();
+        $this->noAnonymizationMock = new NoAnonymization();
 
         $this->sut = new AnonymizationProvider(
             [
