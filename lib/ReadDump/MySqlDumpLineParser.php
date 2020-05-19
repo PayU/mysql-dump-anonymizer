@@ -20,6 +20,18 @@ class MySqlDumpLineParser implements LineParserInterface
 
     private const INSERT_LINE_PATTERN = '#^INSERT\s+INTO\s+`([^`]+)`\s*\(((?:`[^`]+`(?:\s*,\s*)?)+)\)\s+VALUES\s*(.*)\s*;$#';
 
+    private const UNESCAPING_MAP = [
+        '\\\\' => '\\',
+        '\\\'' => '\'',
+        '\\"' => '"',
+        '\\0' => "\0",
+        '\\r' => "\r",
+        '\\n' => "\n",
+        '\\t' => "\t",
+        '\\b' => "\x08",
+        '\\Z' => "\x1A",
+    ];
+
 
     /**
      * @param string $line
@@ -154,17 +166,6 @@ class MySqlDumpLineParser implements LineParserInterface
             return substr($rawValue, 1, -1);
         }
 
-        $replaced = [
-            '\\\\' => '\\',
-            '\\\'' => '\'',
-            '\\0' => "\0",
-            '\\r' => "\r",
-            '\\n' => "\n",
-            '\\t' => "\t",
-            '\\b' => chr(8),
-            '\\Z' => chr(26),
-        ];
-
-        return strtr(substr($rawValue, 1, -1), $replaced);
+        return strtr(substr($rawValue, 1, -1), self::UNESCAPING_MAP);
     }
 }
