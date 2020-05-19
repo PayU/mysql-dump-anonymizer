@@ -25,7 +25,7 @@ final class MysqlLineDumpTest extends TestCase
     public function testDump(): void
     {
         /** @noinspection SqlResolve */
-        $expected = "INSERT INTO `t` (`c1`, `c2`) VALUES (NULL, 'r1c2'), ('r2c1', 'r2c2');".PHP_EOL;
+        $expected = "INSERT INTO `t` (`c1`, `c2`) VALUES (NULL,'r1c2'),('r2c1','r2c2');".PHP_EOL;
 
         $actual = $this->sut->rebuildInsertLine('t', ['c1', 'c2'], [[
             AnonymizedValue::fromRawValue('NULL'),
