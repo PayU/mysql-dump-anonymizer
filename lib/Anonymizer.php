@@ -125,6 +125,10 @@ class Anonymizer
             return AnonymizedValue::fromRawValue('NULL');
         }
 
+        if ($value->getRawValue() === '\'\'') {
+            return AnonymizedValue::fromRawValue('');
+        }
+
         if ($this->anonymizationProvider->isAnonymization($valueAnonymizer) === false) {
             $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION, null);
         }
