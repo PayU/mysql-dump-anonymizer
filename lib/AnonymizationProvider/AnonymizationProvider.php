@@ -6,8 +6,6 @@ namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider;
 
 final class AnonymizationProvider implements AnonymizationProviderInterface
 {
-    public const NO_ANONYMIZATION = 'NoAnonymization';
-
     /** @var array  */
     private array $tablesAction;
 
@@ -43,7 +41,7 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
 
     public function getTableAction($table)
     {
-        if (array_key_exists($table, $this->tablesAction)) {
+        if (isset($this->tablesAction[$table])) {
             return $this->tablesAction[$table];
         }
         return $this->tableNotFoundAction;
@@ -51,8 +49,7 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
 
     public function getAnonymizationFor($table, $column) : ValueAnonymizerInterface
     {
-        if (array_key_exists($table, $this->tableColumnsAnonymizationProvider)
-            && array_key_exists($column, $this->tableColumnsAnonymizationProvider[$table])
+        if (isset($this->tableColumnsAnonymizationProvider[$table][$column])
         ) {
             return $this->tableColumnsAnonymizationProvider[$table][$column];
         }
@@ -62,10 +59,6 @@ final class AnonymizationProvider implements AnonymizationProviderInterface
 
     public function isAnonymization(ValueAnonymizerInterface $valueAnonymizer): bool
     {
-        $className = get_class($valueAnonymizer);
-        if ($shortClassName = strrchr($className, "\\")) {
-            $className = substr($shortClassName, 1);
-        }
-        return $className !== self::NO_ANONYMIZATION;
+        return !$valueAnonymizer instanceof NoAnonymization;
     }
 }

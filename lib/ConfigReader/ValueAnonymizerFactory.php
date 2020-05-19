@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ConfigReader;
 
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\NoAnonymization;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\BankData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\BinaryData;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\CardData;
@@ -15,7 +16,6 @@ use PayU\MysqlDumpAnonymizer\ValueAnonymizers\FileName;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\FreeText;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\HashAnonymizer;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Id;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashSha256;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Ip;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\IpInt;

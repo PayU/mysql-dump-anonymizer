@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 
-namespace PayU\MysqlDumpAnonymizer\Tests\ValueAnonymizers;
+namespace PayU\MysqlDumpAnonymizer\Tests\AnonymizationProvider;
 
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\NoAnonymization;
 use PHPUnit\Framework\TestCase;
 
 class NoAnonymizationTest extends TestCase

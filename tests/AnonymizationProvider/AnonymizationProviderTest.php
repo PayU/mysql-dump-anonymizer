@@ -8,7 +8,7 @@ use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProvider;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\FreeText;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\NoAnonymization;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -32,13 +32,7 @@ final class AnonymizationProviderTest extends TestCase
             ->disallowMockingUnknownTypes()
             ->getMock();
 
-        $this->noAnonymizationMock = $this->getMockBuilder(ValueAnonymizerInterface::class)
-            ->setMockClassName(AnonymizationProvider::NO_ANONYMIZATION)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->getMock();
+        $this->noAnonymizationMock = new NoAnonymization();
 
         $this->sut = new AnonymizationProvider(
             [

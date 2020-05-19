@@ -13,7 +13,7 @@ use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Eav;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Email;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\HashAnonymizer;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\NoAnonymization;
+use PayU\MysqlDumpAnonymizer\AnonymizationProvider\NoAnonymization;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\Phone;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashSha256;
 use PHPUnit\Framework\MockObject\MockObject;

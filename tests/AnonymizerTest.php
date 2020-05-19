@@ -60,92 +60,189 @@ final class AnonymizerTest extends TestCase
             'table1' => [
                 'columns' => ['a1', 'a2'],
                 'values' => [
-                    ['a1' => 'r1a1', 'a2' => 'r1a2'],
-                    ['a1' => 'r2a1', 'a2' => 'r2a2'],
+                    ['r1a1', 'r1a2'],
+                    ['r2a1', 'r2a2'],
                 ]
             ],
             'table2' => [
                 'columns' => ['b1', 'b2'],
                 'values' => [
-                    ['b1' => 'r1b1', 'b2' => 'r1b2'],
-                    ['b1' => 'r2b1', 'b2' => 'r2b2'],
+                    ['r1b1', 'r1b2'],
+                    ['r2b1', 'r2b2'],
                 ]
             ],
         ];
 
+        $lineInfo1 = new LineInfo(
+            true,
+            'table1',
+            $data['table1']['columns'],
+            $this->iterable($data['table1']['values'])
+        );
 
-        $lineInfos = [];
-        $withs = [];
-        $valueMocks = [];
-        $anonymizedLines = [];
+        $lineInfo2 = new LineInfo(
+            true,
+            'table2',
+            $data['table2']['columns'],
+            $this->iterable($data['table2']['values'])
+        );
 
-        $lineNumber = 0;
-        $colNumber = 0;
 
-        foreach ($data as $table => $info) {
-            $lineInfos[] = new LineInfo(
-                true,
-                $table,
-                $info['columns'],
-                $this->iterable($info['values'])
+        $valueMockColumnA1 = $this->createMock(ValueAnonymizerInterface::class);
+        $valueMockColumnA1->expects($this->exactly(2))->method('anonymize')
+            ->withConsecutive(
+                [
+                    new Value('\'r1a1\'', 'r1a1', false),
+                    [
+                        'a1' => new Value('\'r1a1\'', 'r1a1', false),
+                        'a2' => new Value('\'r1a2\'', 'r1a2', false),
+                    ]
+                ],
+                [
+                    new Value('\'r2a1\'', 'r2a1', false),
+                    [
+                        'a1' => new Value('\'r2a1\'', 'r2a1', false),
+                        'a2' => new Value('\'r2a2\'', 'r2a2', false),
+                    ]
+                ]
+            )
+            ->willReturn(
+                AnonymizedValue::fromUnescapedValue('anon-r1a1'),
+                AnonymizedValue::fromUnescapedValue('anon-r2a1'),
             );
-            $oncePerLine = true;
 
-            $anonymizedLines[$lineNumber] = [
-                $table,
-                $info['columns'],
-                []
-            ];
+        $valueMockColumnA2 = $this->createMock(ValueAnonymizerInterface::class);
+        $valueMockColumnA2->expects($this->exactly(2))->method('anonymize')
+            ->withConsecutive(
+                [
+                    new Value('\'r1a2\'', 'r1a2', false),
+                    [
+                        'a1' => new Value('\'r1a1\'', 'r1a1', false),
+                        'a2' => new Value('\'r1a2\'', 'r1a2', false),
+                    ]
+                ],
+                [
+                    new Value('\'r2a2\'', 'r2a2', false),
+                    [
+                        'a1' => new Value('\'r2a1\'', 'r2a1', false),
+                        'a2' => new Value('\'r2a2\'', 'r2a2', false),
+                    ]
+                ]
+            )
+            ->willReturn(
+                AnonymizedValue::fromUnescapedValue('anon-r1a2'),
+                AnonymizedValue::fromUnescapedValue('anon-r2a2'),
+            );
 
-            $idx = 0;
-            foreach ($info['values'] as $rowNumber => $values) {
-                foreach ($values as $column => $value) {
-                    $withs[] = [$table, $column];
+        $valueMockColumnB1 = $this->createMock(ValueAnonymizerInterface::class);
+        $valueMockColumnB1->expects($this->exactly(2))->method('anonymize')
+            ->withConsecutive(
+                [
+                    new Value('\'r1b1\'', 'r1b1', false),
+                    [
+                        'b1' => new Value('\'r1b1\'', 'r1b1', false),
+                        'b2' => new Value('\'r1b2\'', 'r1b2', false),
+                    ]
+                ],
+                [
+                    new Value('\'r2b1\'', 'r2b1', false),
+                    [
+                        'b1' => new Value('\'r2b1\'', 'r2b1', false),
+                        'b2' => new Value('\'r2b2\'', 'r2b2', false),
+                    ]
+                ]
+            )
+            ->willReturn(
+                AnonymizedValue::fromUnescapedValue('anon-r1b1'),
+                AnonymizedValue::fromUnescapedValue('anon-r2b1'),
+            );
 
-                    if ($oncePerLine) {
-                        $withs[] = [$table, $column];
-                    }
+        $valueMockColumnB2 = $this->createMock(ValueAnonymizerInterface::class);
+        $valueMockColumnB2->expects($this->exactly(2))->method('anonymize')
+            ->withConsecutive(
+                [
+                    new Value('\'r1b2\'', 'r1b2', false),
+                    [
+                        'b1' => new Value('\'r1b1\'', 'r1b1', false),
+                        'b2' => new Value('\'r1b2\'', 'r1b2', false),
+                    ]
+                ],
+                [
+                    new Value('\'r2b2\'', 'r2b2', false),
+                    [
+                        'b1' => new Value('\'r2b1\'', 'r2b1', false),
+                        'b2' => new Value('\'r2b2\'', 'r2b2', false),
+                    ]
+                ]
+            )
+            ->willReturn(
+                AnonymizedValue::fromUnescapedValue('anon-r1b2'),
+                AnonymizedValue::fromUnescapedValue('anon-r2b2'),
+            );
 
-                    if ($oncePerLine) {
-                        $valueMocks[$colNumber] = $this->createMock(ValueAnonymizerInterface::class);
-                        $valueMocks[$colNumber]->expects($this->never())->method('anonymize');
-                        $colNumber++;
-                    }
 
-                    $anonymizedLines[$lineNumber][2][$idx][] = AnonymizedValue::fromUnescapedValue('anon-' . $value);
+        $rebuildInsertLineWith1 = [
+            'table1',
+            $data['table1']['columns'],
+            [
+                0 => [
+                    AnonymizedValue::fromUnescapedValue('anon-r1a1'),
+                    AnonymizedValue::fromUnescapedValue('anon-r1a2'),
+                ],
+                1 => [
+                    AnonymizedValue::fromUnescapedValue('anon-r2a1'),
+                    AnonymizedValue::fromUnescapedValue('anon-r2a2'),
+                ]
+            ]
+        ];
 
-                    $valueMocks[$colNumber] = $this->createMock(ValueAnonymizerInterface::class);
-                    $valueMocks[$colNumber]->expects($this->once())->method('anonymize')
-                        ->with(new Value('\'' . $value . '\'', $value, false), array_map(static function ($a) {
-                            return new Value('\'' . $a . '\'', $a, false);
-                        }, $values))
-                        ->willReturn(AnonymizedValue::fromUnescapedValue('anon-' . $value));
-                    $colNumber++;
-                    $oncePerLine = false;
-                }
-                $idx++;
-            }
-            $lineNumber++;
-        }
+        $rebuildInsertLineWith2 = [
+            'table2',
+            $data['table2']['columns'],
+            [
+                0 => [
+                    AnonymizedValue::fromUnescapedValue('anon-r1b1'),
+                    AnonymizedValue::fromUnescapedValue('anon-r1b2'),
+                ],
+                1 => [
+                    AnonymizedValue::fromUnescapedValue('anon-r2b1'),
+                    AnonymizedValue::fromUnescapedValue('anon-r2b2'),
+                ]
+            ]
+        ];
 
         $this->lineParserMock->expects($this->exactly(2))->method('lineInfo')
             ->withConsecutive(['line1' . "\n"], ['line2'])
-            ->willReturn(...$lineInfos);
+            ->willReturn($lineInfo1, $lineInfo2);
 
         $this->anonymizationProviderMock->expects($this->exactly(2))->method('getTableAction')
-            ->withConsecutive(...$this->makeConsecutiveArguments(array_keys($data)))
+            ->withConsecutive(['table1'], ['table2'])
             ->willReturn(AnonymizationAction::ANONYMIZE, AnonymizationAction::ANONYMIZE);
 
-        $this->anonymizationProviderMock->expects($this->exactly(10))->method('getAnonymizationFor')
-            ->withConsecutive(...$withs)
-            ->willReturn(...$valueMocks);
+        $this->anonymizationProviderMock->expects($this->exactly(4))->method('getAnonymizationFor')
+            ->withConsecutive(['table1', 'a1'], ['table1', 'a2'], ['table2', 'b1'], ['table2', 'b2'])
+            ->willReturn($valueMockColumnA1, $valueMockColumnA2, $valueMockColumnB1, $valueMockColumnB2);
 
-        $this->anonymizationProviderMock->expects($this->exactly(10))->method('isAnonymization')
-            ->withConsecutive(...$this->makeConsecutiveArguments($valueMocks))
-            ->willReturn(...array_fill(0, 10, true));
+        // 1,2 , 1,2 ,  3,4,3,4
+        $this->anonymizationProviderMock->expects($this->exactly(12))->method('isAnonymization')
+            ->withConsecutive(
+                [$valueMockColumnA1],
+                [$valueMockColumnA2],
+                [$valueMockColumnA1],
+                [$valueMockColumnA2],
+                [$valueMockColumnA1],
+                [$valueMockColumnA2],
+                [$valueMockColumnB1],
+                [$valueMockColumnB2],
+                [$valueMockColumnB1],
+                [$valueMockColumnB2],
+                [$valueMockColumnB1],
+                [$valueMockColumnB2],
+            )
+            ->willReturn(...array_fill(0, 12, true));
 
         $this->lineDumpMock->expects($this->exactly(2))->method('rebuildInsertLine')
-            ->withConsecutive(...array_values($anonymizedLines))
+            ->withConsecutive($rebuildInsertLineWith1, $rebuildInsertLineWith2)
             ->willReturn('INSERT table1' . "\n", 'INSERT table2');
 
         $this->observerMock->expects($this->exactly(25))->method('notify')->withConsecutive(
@@ -203,12 +300,5 @@ final class AnonymizerTest extends TestCase
             }
         }
         yield from $ret;
-    }
-
-    private function makeConsecutiveArguments($array)
-    {
-        return array_map(static function ($value) {
-            return [$value];
-        }, $array);
     }
 }
