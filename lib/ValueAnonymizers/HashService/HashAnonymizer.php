@@ -33,10 +33,6 @@ final class HashAnonymizer implements HashAnonymizerInterface
         self::NUMBERS_0_255 => -1,
     ];
 
-    private const LETTER_POOL = 'aaaaaaaaaaaaaaaaaaaaabbbcccccddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeefffffggggg' .
-    'hhhhhhhhhhhhhhhiiiiiiiiiiiiiiiiiiijkkkllllllllllmmmmmmnnnnnnnnnnnnnnnnnoooooooooooooooooooppppqrrrrrrrrrr' .
-    'rrrrrrrrrsssssssssssssssstttttttttttttttttttttttuuuuuuuvvwwwwwwxyyyyyz';
-
     private string $hash;
 
     public function __construct()
@@ -62,7 +58,6 @@ final class HashAnonymizer implements HashAnonymizerInterface
         return $this->getNextFromStack(self::NUMBERS_0_255);
     }
 
-
     public function getNextNumber(): string
     {
         return $this->getNextFromStack(self::NUMBERS);
@@ -85,14 +80,39 @@ final class HashAnonymizer implements HashAnonymizerInterface
 
     private function generateLetterStack(): void
     {
-        $pool256 = str_split(self::LETTER_POOL);
-        $intSeed = $this->hashToInt();
-
-        mt_srand($intSeed, MT_RAND_MT19937);
-        shuffle($pool256);
-
-        $this->stacks[self::LETTERS] = implode('', $pool256);
+        $this->stacks[self::LETTERS] = str_replace(range(0, 9), '', base_convert($this->hash, 16, 36));
+        if (strlen($this->stacks[self::LETTERS]) < 10) {
+            //in the rare event when the sha hash has less than 10 chars
+            $this->stacks[self::LETTERS] .= $this->numbersToLetters(base_convert($this->hash, 16, 10));
+        }
         $this->stackLengths[self::LETTERS] = strlen($this->stacks[self::LETTERS]);
+    }
+
+    /**
+     * @param string $numbers 64 number characters
+     * @return string
+     */
+    private function numbersToLetters(string $numbers): string
+    {
+        $len = strlen($numbers); //len a
+        if ($len === 1) {
+            $numbers .= $numbers;
+            $len = 2;
+        }
+        $sureLetters = '';
+        for ($i = 0; $i < $len; $i += 2) {
+            $here = (int)"{$numbers[$i]}{$numbers[$i+1]}";
+            $chr = 65;
+            for ($j = 0; $j <= 99; $j += 4) {
+                if ($here >= $j && $here < $j + 3) {
+                    $sureLetters .= strtolower(chr($chr));
+                    break;
+                }
+                $chr++;
+            }
+        }
+
+        return $sureLetters;
     }
 
     private function generateNumbersStack(): void
@@ -154,7 +174,6 @@ final class HashAnonymizer implements HashAnonymizerInterface
 
         $ret = $this->stacks[$string][$this->cnt[$string]];
         $this->cnt[$string]++;
-
         return $ret;
     }
 
@@ -162,7 +181,7 @@ final class HashAnonymizer implements HashAnonymizerInterface
     {
         $intSeeds = [];
         $start = 0;
-        while (($start <= strlen($this->hash) - 8) && ($start <= 56)) {
+        while (($start <= strlen($this->hash) - 8) && ($start <= 32)) {
             $intSeeds[] = (int)base_convert(
                 substr($this->hash, $start, 8),
                 16,
