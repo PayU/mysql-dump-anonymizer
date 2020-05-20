@@ -40,7 +40,7 @@ class ObserverTest extends TestCase
         return [
             [Observer::EVENT_START_READ, 'onStartReadLine'],
             [Observer::EVENT_END_READ, 'onFinishReadLine', 123],
-            [Observer::EVENT_ANONYMIZATION_START, 'onAnonymizationStart', 'data'],
+            [Observer::EVENT_ANONYMIZATION_START, 'onAnonymizationStart', ['anonymizationType'=>'test','dataSize'=>10]],
             [Observer::EVENT_ANONYMIZATION_END, 'onAnonymizationFinish', 'data'],
             [Observer::EVENT_AFTER_LINE_PROCESSING, 'onAfterEachLineProcessing'],
             [Observer::EVENT_NOT_AN_INSERT, 'onNotAnInsertLine'],

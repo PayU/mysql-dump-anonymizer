@@ -14,7 +14,7 @@ interface ProcessObserverInterface
 
     public function onNullValue(string $anonymizationType): void;
 
-    public function onAnonymizationStart(string $anonymizationType): void;
+    public function onAnonymizationStart(string $anonymizationType, int $dataSize): void;
 
     public function onAnonymizationFinish(string $anonymizationType): void;
 

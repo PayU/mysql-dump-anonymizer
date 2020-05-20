@@ -45,7 +45,7 @@ class Observer implements ObserverInterface
                     $observer->onFinishReadLine($data);
                     break;
                 case self::EVENT_ANONYMIZATION_START:
-                    $observer->onAnonymizationStart($data);
+                    $observer->onAnonymizationStart($data['anonymizationType'], $data['dataSize']);
                     break;
                 case self::EVENT_ANONYMIZATION_END:
                     $observer->onAnonymizationFinish($data);
