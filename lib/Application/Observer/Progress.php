@@ -220,11 +220,11 @@ final class Progress implements ProcessObserverInterface
             }
             $speed = 0;
             if ($microtime['size'] > 0) {
-                $speed = round(($microtime['size'] / 1024 / 1024) / $microtime['time'],3);
+                $speed = round(($microtime['size'] / 1024 / 1024) / $microtime['time'], 3);
             }
 
             $output .= $this->pad($anonymizationType) . $this->round($microtime['time']) . 's'
-                . ' ('.str_pad((string)$speed,6, ' ',STR_PAD_LEFT).' MB/s)'
+                . ' ('.str_pad((string)$speed, 6, ' ', STR_PAD_LEFT).' MB/s)'
                 . ' (' . $this->round($div * 100) . ' %)  '
                 . ' (x ' . $this->round($this->anonymizationTypes[$anonymizationType]['count'], 0) . ')'
                 . ' (NULL: ' . $this->round($this->anonymizationTypes[$anonymizationType]['nulls'], 0) . ')'
