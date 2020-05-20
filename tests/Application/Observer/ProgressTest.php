@@ -59,9 +59,9 @@ class ProgressTest extends TestCase
 
     public function testOnAnonymizationFinish(): void
     {
-        $this->sut->onAnonymizationStart('namespace\\FreeText');
-        $this->sut->onAnonymizationStart('namespace\\FreeText');
-        $this->sut->onAnonymizationStart('namespace\\SomeType');
+        $this->sut->onAnonymizationStart('namespace\\FreeText', 1);
+        $this->sut->onAnonymizationStart('namespace\\FreeText', 1);
+        $this->sut->onAnonymizationStart('namespace\\SomeType', 1);
         $this->assertSame(2, $this->getProperty('anonymizationTypes')['FreeText']['count']);
         $this->assertSame(1, $this->getProperty('anonymizationTypes')['SomeType']['count']);
 
@@ -99,12 +99,12 @@ class ProgressTest extends TestCase
 
         $this->sut->onBegin(10000);
         $this->sut->onStartReadLine();
-        $this->sut->onAnonymizationStart('namespace\\Something');
+        $this->sut->onAnonymizationStart('namespace\\Something', 1);
         $this->sut->onAnonymizationFinish('namespace\\Something');
         $this->sut->onFinishReadLine(10);
 
         $this->sut->onStartReadLine();
-        $this->sut->onAnonymizationStart('namespace\\SomethingElse');
+        $this->sut->onAnonymizationStart('namespace\\SomethingElse', 1);
         $this->sut->onAnonymizationFinish('namespace\\SomethingElse');
         $this->sut->onFinishReadLine(15);
 

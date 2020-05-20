@@ -132,7 +132,12 @@ class Anonymizer
         if ($this->anonymizationProvider->isAnonymization($valueAnonymizer) === false) {
             $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION, null);
         }
-        $this->observer->notify(Observer::EVENT_ANONYMIZATION_START, get_class($valueAnonymizer));
+
+        $this->observer->notify(Observer::EVENT_ANONYMIZATION_START, [
+            'anonymizationType' => get_class($valueAnonymizer),
+            'dataSize' => strlen($value->getUnEscapedValue())
+        ]);
+
         $ret = $valueAnonymizer->anonymize($value, $row);
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_END, get_class($valueAnonymizer));
         return $ret;
