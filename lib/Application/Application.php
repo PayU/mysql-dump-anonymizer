@@ -11,10 +11,13 @@ class Application
 {
     public static function run(): void
     {
+        $timer = TimeStats::start('setup');
         $commandLineParameters = new CommandLineParameters();
         $observer = new Observer();
+        $timer->stop();
 
         try {
+            $timer = TimeStats::start('setup');
             $setup = new Setup($commandLineParameters, $observer);
             $setup->setup();
 
@@ -27,10 +30,14 @@ class Application
                 $observer
             );
 
+            $timer->stop();
+            $timer = TimeStats::start('run');
             $application->run(STDIN, STDOUT);
+            $timer->stop();
         } catch (InvalidArgumentException | ConfigValidationException $e) {
             fwrite(STDERR, 'ERROR: ' . $e->getMessage() . "\n");
             fwrite(STDERR, $commandLineParameters->help());
+            $timer->stop();
             exit(1);
         }
     }

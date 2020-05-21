@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\ReadDump;
 
+use PayU\MysqlDumpAnonymizer\Application\TimeStats;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use RuntimeException;
 
@@ -39,6 +40,7 @@ class MySqlDumpLineParser implements LineParserInterface
      */
     public function lineInfo(string $line): LineInfo
     {
+        $timer = TimeStats::start('run.anonymize.parse');
         $isInsert = (strpos($line, self::INSERT_START_STRING) === 0);
 
         $table = null;
@@ -54,7 +56,9 @@ class MySqlDumpLineParser implements LineParserInterface
             $columns = explode(self::COL_DELIM, $columnsString);
         }
 
-        return new LineInfo($isInsert, $table, $columns, $this->getRowFromInsertLine($line));
+        $lineInfo = new LineInfo($isInsert, $table, $columns, $this->getRowFromInsertLine($line));
+        $timer->stop();
+        return $lineInfo;
     }
 
     /**
@@ -72,8 +76,11 @@ class MySqlDumpLineParser implements LineParserInterface
      */
     private function parseValuesList(string $insertLineString): iterable
     {
+        $timer = TimeStats::start('run.anonymize.parse');
         if (!preg_match(self::INSERT_LINE_PATTERN, rtrim($insertLineString), $match)) {
-            throw new RuntimeException('Invalid insert line:'.substr($insertLineString, 0, 500));
+            $exception = new RuntimeException('Invalid insert line:'.substr($insertLineString, 0, 500));
+            $timer->stop();
+            throw $exception;
         }
 
         $rawValues = $match[3];
@@ -98,14 +105,18 @@ class MySqlDumpLineParser implements LineParserInterface
                         $row = [];
                         break;
                     }
-                    throw new RuntimeException('Encountered in level 0 char: ' . $char);
+                    $exception = new RuntimeException('Encountered in level 0 char: ' . $char);
+                    $timer->stop();
+                    throw $exception;
                 case 1:
                     if (in_array($char, [' ', ','], true)) {
                         break;
                     }
                     if ($char === ')') {
                         $parseLevel = 0;
+                        $timer->stop();
                         yield $row;
+                        $timer = TimeStats::start('run.anonymize.parse');
                         break;
                     }
 
@@ -125,7 +136,9 @@ class MySqlDumpLineParser implements LineParserInterface
                         if ($char === ')') {
                             $parseLevel = 0;
                             $row[] = new Value($rawValue, $this->unEscape($rawValue), $this->isExpression($rawValue));
+                            $timer->stop();
                             yield $row;
+                            $timer = TimeStats::start('run.anonymize.parse');
                             break;
                         }
                         $rawValue .= $char;
@@ -147,6 +160,7 @@ class MySqlDumpLineParser implements LineParserInterface
             }
             $index++;
         }
+        $timer->stop();
     }
 
     private function isExpression($rawValue): bool

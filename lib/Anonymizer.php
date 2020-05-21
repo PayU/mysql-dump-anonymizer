@@ -5,6 +5,7 @@ namespace PayU\MysqlDumpAnonymizer;
 
 use PayU\MysqlDumpAnonymizer\Application\Observer;
 use PayU\MysqlDumpAnonymizer\Application\ObserverInterface;
+use PayU\MysqlDumpAnonymizer\Application\TimeStats;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
 use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
@@ -37,8 +38,11 @@ class Anonymizer
     {
 
         while ($line = $this->readLine($inputStream)) {
-            fwrite($outputStream, $this->anonymizeLine($line));
+            $anonymizedLine = $this->anonymizeLine($line);
+            $timer = TimeStats::start('run.write');
+            fwrite($outputStream, $anonymizedLine);
             $this->observer->notify(Observer::EVENT_AFTER_LINE_PROCESSING, null);
+            $timer->stop();
         }
 
         $this->observer->notify(Observer::EVENT_END, null);
@@ -46,15 +50,18 @@ class Anonymizer
 
     private function readLine($inputStream)
     {
+        $timer = TimeStats::start('run.read');
         $this->observer->notify(Observer::EVENT_START_READ, null);
         $line = fgets($inputStream);
         $this->observer->notify(Observer::EVENT_END_READ, strlen(is_string($line) ? $line : ''));
+        $timer->stop();
         return $line;
     }
 
 
     private function anonymizeLine($line): string
     {
+        $timerAll = TimeStats::start('run.anonymize');
         $lineInfo = $this->lineParser->lineInfo($line);
         if ($lineInfo->isInsert() === false) {
             $this->observer->notify(Observer::EVENT_NOT_AN_INSERT, null);
@@ -63,14 +70,19 @@ class Anonymizer
 
         $table = $lineInfo->getTable();
 
+        $timer = TimeStats::start('run.anonymize.readConfAndFastReturn');
         //truncate action doesnt write inserts
         if ($this->anonymizationProvider->getTableAction($table) === AnonymizationAction::TRUNCATE) {
             $this->observer->notify(Observer::EVENT_TRUNCATE, null);
+            $timer->stop();
+            $timerAll->stop();
             return '';
         }
 
         if ($lineInfo->isInsert() === false) {
             $this->observer->notify(Observer::EVENT_NOT_AN_INSERT, null);
+            $timer->stop();
+            $timerAll->stop();
             return $line;
         }
 
@@ -88,9 +100,12 @@ class Anonymizer
         //When insert line doesnt have anything to anonymize, return it as-is
         if ($insertRequiresAnonymization === false) {
             $this->observer->notify(Observer::EVENT_INSERT_LINE_NO_ANONYMIZATION, null);
+            $timer->stop();
+            $timerAll->stop();
             return $line;
         }
 
+        $timer->stop();
         //we have at least one column to anonymize
 
         $anonymizedValues = [];
@@ -109,7 +124,11 @@ class Anonymizer
             $anonymizedValues[] = $anonymizedValue;
         }
 
-        return $this->lineDump->rebuildInsertLine($table, $lineColumns, $anonymizedValues);
+        $timer = TimeStats::start('run.anonymize.build');
+        $anonymizedLine = $this->lineDump->rebuildInsertLine($table, $lineColumns, $anonymizedValues);
+        $timer->stop();
+        $timerAll->stop();
+        return $anonymizedLine;
     }
 
     /**
@@ -120,21 +139,32 @@ class Anonymizer
      */
     private function anonymizeValue(ValueAnonymizerInterface $valueAnonymizer, Value $value, $row): AnonymizedValue
     {
+        $timer = TimeStats::start('run.anonymize.readConfAndFastReturn');
         if ($value->getRawValue() === 'NULL') {
             $this->observer->notify(Observer::EVENT_NULL_VALUE, get_class($valueAnonymizer));
-            return AnonymizedValue::fromRawValue('NULL');
+            $anonymizedValue = AnonymizedValue::fromRawValue('NULL');
+            $timer->stop();
+            return $anonymizedValue;
         }
 
         if ($value->getRawValue() === '\'\'') {
-            return AnonymizedValue::fromRawValue('\'\'');
+            $anonymizedValue = AnonymizedValue::fromRawValue('\'\'');
+            $timer->stop();
+            return $anonymizedValue;
         }
 
         if ($this->anonymizationProvider->isAnonymization($valueAnonymizer) === false) {
             $this->observer->notify(Observer::EVENT_NO_ANONYMIZATION, null);
         }
+        $timer->stop();
+
+        $timer = TimeStats::start('run.anonymize.compute');
+        $timerAnon = TimeStats::start('run.anonymize.compute.' . get_class($valueAnonymizer));
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_START, get_class($valueAnonymizer));
-        $ret = $valueAnonymizer->anonymize($value, $row);
+        $anonymizedValue = $valueAnonymizer->anonymize($value, $row);
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_END, get_class($valueAnonymizer));
-        return $ret;
+        $timerAnon->stop();
+        $timer->stop();
+        return $anonymizedValue;
     }
 }
