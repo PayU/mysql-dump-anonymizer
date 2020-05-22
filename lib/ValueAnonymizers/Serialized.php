@@ -27,7 +27,7 @@ final class Serialized implements ValueAnonymizerInterface
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         $serializedString = $value->getUnEscapedValue();
-        $array = unserialize($serializedString, ['allowed_classes' => false]);
+        $array = @unserialize($serializedString, ['allowed_classes' => false]);
         if (is_array($array)) {
             $anonymizedArray = $this->anonymizeArray($array);
             return AnonymizedValue::fromUnescapedValue(serialize($anonymizedArray));
