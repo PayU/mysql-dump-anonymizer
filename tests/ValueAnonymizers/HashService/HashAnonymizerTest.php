@@ -72,6 +72,12 @@ class HashAnonymizerTest extends TestCase
         $actual = $this->sut->getNextLetter();
         $actual .= $this->sut->getNextLetter();
         $actual .= $this->sut->getNextLetter();
+        $actual .= $this->sut->getNextLetter();
+        $actual .= $this->sut->getNextLetter();
+        $actual .= $this->sut->getNextLetter();
+        $actual .= $this->sut->getNextLetter();
+        $actual .= $this->sut->getNextLetter();
+        $actual .= $this->sut->getNextLetter();
 
         $this->assertSame($expected, $actual);
     }
@@ -106,16 +112,17 @@ class HashAnonymizerTest extends TestCase
         return [
             [str_repeat('0', 64), '`<~'],
             [str_repeat('F', 64), '>-`'],
-            ['b96a43f0c700ae55b4ac744f0b1be530976038e0abb2c2e5eba505eca99a2a47', '+~:'],
+            ['b96a43f0c700ae55b4ac744f0b1be530976038e0abb2c2e5eba505eca99a2a47', '*`='],
         ];
     }
 
     public function hashLetterProvider(): array
     {
         return [
-            [str_repeat('0', 64), 'ate'],
-            [str_repeat('F', 64), 'ipi'],
-            ['b96a43f0c700ae55b4ac744f0b1be530976038e0abb2c2e5eba505eca99a2a47', 'nts'],
+            [str_repeat('0', 64), 'aaaaaaaaa'],
+            [str_repeat('F', 64), 'dpqcbikgs'],
+            ['b96a43f0c700ae55b4ac744f0b1be530976038e0abb2c2e5eba505eca99a2a47', 'mdkdlacks'],
+            ['abcdef12312345678903afbcde983893ddee9937375032dbabeddeeaa1232343', 'aivazsgck'],
         ];
     }
 
