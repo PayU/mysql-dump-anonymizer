@@ -27,15 +27,11 @@ final class Email implements ValueAnonymizerInterface
 
         $string = $value->getUnEscapedValue();
 
-        if (strlen($string) < 10) {
-            $hash = $this->stringHash->sha256($string);
-            $toAnonymize = substr($hash, 0, 10);
-            $toAnonymize .= '@'.substr($hash, 10, 5).'.'.substr($hash, 15, 3);
-            $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($toAnonymize);
-        } else {
-            $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($string);
-        }
+        $hash = md5($string.'ilvOBvE*&NiWw&PSdu9v1t');
+        $user = substr($hash,0, 20);
+        $sld = substr($hash, 19, 9);
+        $tld = substr($hash, 29);
 
-        return AnonymizedValue::fromUnescapedValue($anonymizedEscapedValue);
+        return AnonymizedValue::fromUnescapedValue($user.'@'.$sld.'.'.$tld);
     }
 }
