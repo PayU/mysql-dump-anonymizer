@@ -30,7 +30,7 @@ final class Phone implements ValueAnonymizerInterface
 
         if (strlen($string) < 10) {
             $hash = base_convert($this->stringHash->sha256($string), 16, 10);
-            $toAnonymize = '+'.substr($hash, 0, 11);
+            $toAnonymize = substr($hash, 0, 10);
             $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($toAnonymize);
         } else {
             $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($string);
