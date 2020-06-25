@@ -28,7 +28,7 @@ final class Email implements ValueAnonymizerInterface
         $string = $value->getUnEscapedValue();
 
         $hash = md5($string.'ilvOBvE*&NiWw&PSdu9v1t');
-        $user = substr($hash,0, 20);
+        $user = substr($hash, 0, 20);
         $sld = substr($hash, 19, 9);
         $tld = substr($hash, 29);
 
