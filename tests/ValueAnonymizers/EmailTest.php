@@ -37,7 +37,7 @@ class EmailTest extends TestCase
             []
         );
 
-        $this->assertSame('\'2b7ab4f9fc328ce629df@f7c182408.2d9\'', $actual->getRawValue());
+        $this->assertSame('\'8aaa2edd6acdc6bf82fc@c2df7e88c.c60\'', $actual->getRawValue());
     }
 
 
