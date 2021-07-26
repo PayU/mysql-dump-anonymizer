@@ -26,7 +26,7 @@ final class Credentials implements ValueAnonymizerInterface
 
         $string = $value->getUnEscapedValue();
 
-        if (strlen($string) <= 10) {
+        if (strlen($string) < 10) {
             $anonymizedEscapedValue = $this->stringHash->hashKeepFormat(
                 substr($this->stringHash->sha256($string), 0, 10)
             );
