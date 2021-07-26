@@ -219,7 +219,7 @@ final class Progress implements ProcessObserverInterface
                 $div = 0;
             }
             $speed = 0;
-            if ($microtime['size'] > 0) {
+            if ($microtime['size'] > 0 && $microtime['time'] > 0) {
                 $speed = round(($microtime['size'] / 1024 / 1024) / $microtime['time'], 3);
             }
 
