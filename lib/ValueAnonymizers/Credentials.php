@@ -24,7 +24,15 @@ final class Credentials implements ValueAnonymizerInterface
             return AnonymizedValue::fromOriginalValue($value);
         }
 
-        $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($value->getUnEscapedValue(), true);
+        $string = $value->getUnEscapedValue();
+
+        if (strlen($string) < 10) {
+            $anonymizedEscapedValue = $this->stringHash->hashKeepFormat(
+                substr($this->stringHash->sha256($string), 0, 10)
+            );
+        } else {
+            $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($string, true);
+        }
 
         return AnonymizedValue::fromUnescapedValue($anonymizedEscapedValue);
     }

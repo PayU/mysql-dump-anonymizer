@@ -30,14 +30,15 @@ class EmailTest extends TestCase
 
     public function testAnonymize(): void
     {
-        $this->stringHashMock->expects($this->once())->method('hashKeepFormat')->willReturn('djbtxh@kwkogksok.ok');
+        $this->stringHashMock->expects($this->exactly(2))->method('hashKeepFormat')->willReturn('djbtxh@kwkogksok.ok');
+        $this->stringHashMock->expects($this->once())->method('sha256')->willReturn('djbtxh@kwkogksok.ok');
 
         $actual = $this->sut->anonymize(
             new Value('\'abyhfi@ijuyhoung.ro\'', 'abyhfi@ijuyhoung.ro', false),
             []
         );
 
-        $this->assertSame('\'djbtxh@kwkogksok.ok\'', $actual->getRawValue());
+        $this->assertSame('\'djbtxh@kwkogksok.ok@djbtxh@kwkogksok.ok\'', $actual->getRawValue());
     }
 
 

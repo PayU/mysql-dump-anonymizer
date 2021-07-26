@@ -25,7 +25,19 @@ final class Email implements ValueAnonymizerInterface
             return AnonymizedValue::fromOriginalValue($value);
         }
 
-        $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($value->getUnEscapedValue());
+        $string = $value->getUnEscapedValue();
+
+        [$user, $domain] = explode('@', $string, 2);
+
+        if (strlen($user) < 10) {
+            $toAnonymize = substr($this->stringHash->sha256($string), 0, 10);
+            $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($toAnonymize);
+        } else {
+            $anonymizedEscapedValue = $this->stringHash->hashKeepFormat($user);
+        }
+
+        $anonymizedEscapedValue .= '@' . $this->stringHash->hashKeepFormat($domain);
+
         return AnonymizedValue::fromUnescapedValue($anonymizedEscapedValue);
     }
 }
