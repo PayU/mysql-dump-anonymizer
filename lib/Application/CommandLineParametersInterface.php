@@ -25,4 +25,6 @@ interface CommandLineParametersInterface
     public function getEstimatedDumpSize(): int;
 
     public function isShowProgress(): bool;
+
+    public function getSalt(): string;
 }

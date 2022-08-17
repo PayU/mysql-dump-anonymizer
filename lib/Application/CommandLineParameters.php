@@ -5,22 +5,23 @@ declare(strict_types=1);
 
 namespace PayU\MysqlDumpAnonymizer\Application;
 
+use InvalidArgumentException;
 use PayU\MysqlDumpAnonymizer\ConfigReader\ProviderFactory;
 use PayU\MysqlDumpAnonymizer\ReadDump\LineParserFactory;
-use InvalidArgumentException;
 
 final class CommandLineParameters implements CommandLineParametersInterface
 {
     private const PARAM_CONFIG_FILES = 'config';
     private const PARAM_LINE_PARSER = 'line-parser';
     private const PARAM_CONFIG_TYPE = 'config-type';
+    private const PARAM_SALT = 'salt';
     private const PARAM_ESTIMATED_DUMP_SIZE = 'dump-size';
     private const PARAM_SHOW_PROGRESS = 'show-progress';
-
 
     private string $configFile;
     private string $lineParser;
     private string $configType;
+    private string $salt;
     private int $estimatedDumpSize;
     private int $showProgress;
 
@@ -33,7 +34,8 @@ final class CommandLineParameters implements CommandLineParametersInterface
             self::PARAM_LINE_PARSER . '::',
             self::PARAM_CONFIG_TYPE . '::',
             self::PARAM_ESTIMATED_DUMP_SIZE . '::',
-            self::PARAM_SHOW_PROGRESS . '::'
+            self::PARAM_SHOW_PROGRESS . '::',
+            self::PARAM_SALT . '::'
         ]);
     }
 
@@ -44,6 +46,7 @@ final class CommandLineParameters implements CommandLineParametersInterface
         $this->configType = $this->arguments[self::PARAM_CONFIG_TYPE] ?? ProviderFactory::DEFAULT_CONFIG_TYPE;
         $this->estimatedDumpSize = (int)($this->arguments[self::PARAM_ESTIMATED_DUMP_SIZE] ?? 1000000000);
         $this->showProgress = (int)($this->arguments[self::PARAM_SHOW_PROGRESS] ?? 1);
+        $this->salt = $this->arguments[self::PARAM_SALT] ?? md5(microtime());
     }
 
 
@@ -56,7 +59,6 @@ final class CommandLineParameters implements CommandLineParametersInterface
 
     public function help(): string
     {
-
         return '
 Usage: cat mysqldump.sql | php ' . basename($_SERVER['SCRIPT_FILENAME']) . ' --' . self::PARAM_CONFIG_FILES . '=FILENAME [OPTIONS]'
             . PHP_EOL . PHP_EOL
@@ -71,6 +73,8 @@ Usage: cat mysqldump.sql | php ' . basename($_SERVER['SCRIPT_FILENAME']) . ' --'
             . '   ' . $this->pad('') . ' This will be used to show progress data at runtime. ' . PHP_EOL . PHP_EOL
             . ' --' . $this->pad(self::PARAM_SHOW_PROGRESS) . ' Default value: 1' . PHP_EOL
             . '   ' . $this->pad('') . ' Set to 0 to not show progress data. ' . PHP_EOL . PHP_EOL
+            . ' --' . $this->pad(self::PARAM_SALT) . ' Default value: md5(microtime())' . PHP_EOL
+            . '   ' . $this->pad('') . ' Specifies the hashing salt value at runtime. ' . PHP_EOL . PHP_EOL
             . '';
     }
 
@@ -117,5 +121,13 @@ Usage: cat mysqldump.sql | php ' . basename($_SERVER['SCRIPT_FILENAME']) . ' --'
     public function isShowProgress(): bool
     {
         return (bool)$this->showProgress;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSalt(): string
+    {
+        return $this->salt;
     }
 }

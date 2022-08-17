@@ -7,18 +7,13 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService;
 final class StringHashSha256 implements StringHashInterface
 {
 
-    private static string $salt;
+    public static string $salt;
 
     private HashAnonymizerInterface $hashAnonymizer;
 
 
-
     public function __construct(HashAnonymizerInterface $hashAnonymizer)
     {
-        if (!isset(self::$salt)) {
-            self::$salt = md5(microtime());
-        }
-
         $this->hashAnonymizer = $hashAnonymizer;
     }
 

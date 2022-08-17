@@ -7,6 +7,7 @@ namespace PayU\MysqlDumpAnonymizer\Application;
 
 use PayU\MysqlDumpAnonymizer\Exceptions\ConfigValidationException;
 use PayU\MysqlDumpAnonymizer\Application\Observer\Progress;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashSha256;
 use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
 use PayU\MysqlDumpAnonymizer\WriteDump\MysqlLineDump;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
@@ -34,6 +35,8 @@ class Setup implements SetupInterface
         if ($this->commandLineParameters->isShowProgress()) {
             $this->observer->registerObserver(new Progress());
         }
+
+        StringHashSha256::$salt = $this->commandLineParameters->getSalt();
     }
 
     public function getLineParser(): LineParserInterface
