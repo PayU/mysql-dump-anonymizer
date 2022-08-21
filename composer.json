@@ -19,7 +19,7 @@
         "phpunit/phpunit": "9",
         "mnapoli/pretty": "^1.1",
         "squizlabs/php_codesniffer": "3.*",
-        "sensiolabs-de/deptrac-shim": "^0.6.0"
+        "qossmic/deptrac-shim": "^0.24"
     },
     "require": {
         "php": "^7.4",
