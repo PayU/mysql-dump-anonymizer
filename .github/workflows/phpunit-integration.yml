@@ -1,0 +1,76 @@
+name: PHPUnit integration tests
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  phpunit:
+    name: PHPUnit integration tests with mysql
+
+    runs-on: ${{ matrix.operating-system }}
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_ROOT_PASSWORD: ""
+        ports:
+          - 3306/tcp
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    strategy:
+      matrix:
+        operating-system:
+          - ubuntu-latest
+        php-version:
+          - 7.4
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          ini-values: memory_limit=-1, max_execution_time=120
+          tools: composer:v2
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --no-suggest
+
+      - name: Setup MySQL
+        run: |
+          mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports['3306'] }} -u root --execute="CREATE DATABASE anon_source;"
+          mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports['3306'] }} -u root -D anon_source < sample/sample.sql
+          mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports['3306'] }} -u root --execute="CREATE DATABASE anon_dest;"
+
+      - name: Tests before migration
+        run: vendor/bin/phpunit  --testdox --colors=always --no-interaction --verbose --test-suffix BeforeScriptRunTest.php tests-integration
+        env:
+          DSN_SOURCE: "mysql:dbname=anon_source;host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }}"
+          DB_USER: "root"
+          DB_PASS: ""
+
+      - name: Run migration
+        run: mysqldump -h 127.0.0.1 -P ${{ job.services.mysql.ports['3306'] }} -u root --complete-insert --hex-blob anon_source | php bin/mysql-dump-anonymize.php --config=sample/anon.yml --show-progress=0 | mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports['3306'] }} -u root -D anon_dest
+
+      - name: Tests after migration
+        run: vendor/bin/phpunit  --testdox --colors=always --no-interaction --verbose --test-suffix AfterScriptRunTest.php tests-integration
+        env:
+          DSN_SOURCE: "mysql:dbname=anon_source;host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }}"
+          DSN_DESTINATION: "mysql:dbname=anon_dest;host=127.0.0.1;port=${{ job.services.mysql.ports['3306'] }}"
+          DB_USER: "root"
+          DB_PASS: ""
