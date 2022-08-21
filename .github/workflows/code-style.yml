@@ -39,7 +39,7 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-interaction --no-progress --no-suggest
+        run: composer install --prefer-dist --ansi --no-interaction --no-progress --no-suggest
 
       - name: Validate code style
         run: vendor/bin/pretty
