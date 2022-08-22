@@ -7,7 +7,7 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService;
 final class StringHashSha256 implements StringHashInterface
 {
 
-    public static string $salt;
+    private static string $salt;
 
     private HashAnonymizerInterface $hashAnonymizer;
 
@@ -17,9 +17,9 @@ final class StringHashSha256 implements StringHashInterface
         $this->hashAnonymizer = $hashAnonymizer;
     }
 
-    public function sha256($string, $rawOutput = false): string
+    public static function setSalt(string $salt): void
     {
-        return hash('sha256', $string . self::$salt, $rawOutput);
+        self::$salt = $salt;
     }
 
     /**
@@ -84,6 +84,11 @@ final class StringHashSha256 implements StringHashInterface
         return $returnString;
     }
 
+    public function sha256($string, $rawOutput = false): string
+    {
+        return hash('sha256', $string . self::$salt, $rawOutput);
+    }
+
     public function hashIpAddressString(string $string): string
     {
         $this->hashAnonymizer->initializeHashString(
@@ -95,4 +100,5 @@ final class StringHashSha256 implements StringHashInterface
             . $this->hashAnonymizer->getNextNumberBetween0And255() . '.'
             . $this->hashAnonymizer->getNextNumberBetween0And255();
     }
+
 }
