@@ -12,19 +12,14 @@ final class StringHashSha256 implements StringHashInterface
     private HashAnonymizerInterface $hashAnonymizer;
 
 
-
     public function __construct(HashAnonymizerInterface $hashAnonymizer)
     {
-        if (!isset(self::$salt)) {
-            self::$salt = md5(microtime());
-        }
-
         $this->hashAnonymizer = $hashAnonymizer;
     }
 
-    public function sha256($string, $rawOutput = false): string
+    public static function setSalt(string $salt): void
     {
-        return hash('sha256', $string . self::$salt, $rawOutput);
+        self::$salt = $salt;
     }
 
     /**
@@ -87,6 +82,11 @@ final class StringHashSha256 implements StringHashInterface
         }
 
         return $returnString;
+    }
+
+    public function sha256($string, $rawOutput = false): string
+    {
+        return hash('sha256', $string . self::$salt, $rawOutput);
     }
 
     public function hashIpAddressString(string $string): string
