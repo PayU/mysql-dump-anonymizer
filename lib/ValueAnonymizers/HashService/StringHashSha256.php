@@ -100,5 +100,4 @@ final class StringHashSha256 implements StringHashInterface
             . $this->hashAnonymizer->getNextNumberBetween0And255() . '.'
             . $this->hashAnonymizer->getNextNumberBetween0And255();
     }
-
 }
