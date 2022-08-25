@@ -55,4 +55,7 @@ mysql-dump-anonymize.php options:
  --show-progress        Default value: 1
                         Set to 0 to not show progress data.
 
+ --salt                 Default value: md5(microtime())
+                        Specifies the hashing salt value at runtime.
+
 ```
