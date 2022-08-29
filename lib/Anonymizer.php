@@ -6,6 +6,7 @@ namespace PayU\MysqlDumpAnonymizer;
 use PayU\MysqlDumpAnonymizer\Application\Observer;
 use PayU\MysqlDumpAnonymizer\Application\ObserverInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizationAction;
+use PayU\MysqlDumpAnonymizer\Exceptions\FallbackException;
 use PayU\MysqlDumpAnonymizer\WriteDump\LineDumpInterface;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\AnonymizationProviderInterface;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
@@ -137,8 +138,11 @@ class Anonymizer
             'anonymizationType' => get_class($valueAnonymizer),
             'dataSize' => strlen($value->getUnEscapedValue())
         ]);
-
-        $ret = $valueAnonymizer->anonymize($value, $row);
+        try {
+            $ret = $valueAnonymizer->anonymize($value, $row);
+        } catch (FallbackException $fallbackException) {
+            $ret = $fallbackException->getValueAnonymizer()->anonymize($value, $row);
+        }
         $this->observer->notify(Observer::EVENT_ANONYMIZATION_END, get_class($valueAnonymizer));
         return $ret;
     }
