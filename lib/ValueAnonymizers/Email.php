@@ -8,7 +8,9 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\HashAnonymizer;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
+use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashSha256;
 
 final class Email implements ValueAnonymizerInterface
 {
@@ -26,6 +28,10 @@ final class Email implements ValueAnonymizerInterface
         }
 
         $string = $value->getUnEscapedValue();
+
+        if (mb_strpos($string, '@') === false) {
+            return (new FreeText(new StringHashSha256(new HashAnonymizer())))->anonymize($value, $row);
+        }
 
         [$user, $domain] = explode('@', $string, 2);
 
