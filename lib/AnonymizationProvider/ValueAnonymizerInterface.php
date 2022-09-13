@@ -7,7 +7,6 @@ namespace PayU\MysqlDumpAnonymizer\AnonymizationProvider;
 
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
-use PayU\MysqlDumpAnonymizer\Exceptions\FallbackException;
 
 interface ValueAnonymizerInterface
 {
@@ -15,7 +14,6 @@ interface ValueAnonymizerInterface
      * @param Value $value
      * @param array $row
      * @return AnonymizedValue
-     * @throws FallbackException
      */
     public function anonymize(Value $value, array $row): AnonymizedValue;
 }

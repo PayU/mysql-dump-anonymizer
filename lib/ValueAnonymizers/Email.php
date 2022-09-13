@@ -8,10 +8,7 @@ namespace PayU\MysqlDumpAnonymizer\ValueAnonymizers;
 use PayU\MysqlDumpAnonymizer\Entity\AnonymizedValue;
 use PayU\MysqlDumpAnonymizer\Entity\Value;
 use PayU\MysqlDumpAnonymizer\AnonymizationProvider\ValueAnonymizerInterface;
-use PayU\MysqlDumpAnonymizer\Exceptions\FallbackException;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\HashAnonymizer;
 use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashInterface;
-use PayU\MysqlDumpAnonymizer\ValueAnonymizers\HashService\StringHashSha256;
 
 final class Email implements ValueAnonymizerInterface
 {
@@ -22,12 +19,6 @@ final class Email implements ValueAnonymizerInterface
         $this->stringHash = $stringHash;
     }
 
-    /**
-     * @param Value $value
-     * @param array $row
-     * @return AnonymizedValue
-     * @throws FallbackException
-     */
     public function anonymize(Value $value, array $row): AnonymizedValue
     {
         if ($value->isExpression()) {
@@ -35,13 +26,6 @@ final class Email implements ValueAnonymizerInterface
         }
 
         $string = $value->getUnEscapedValue();
-
-        if (mb_strpos($string, '@') === false) {
-            throw new FallbackException(
-                new FreeText(new StringHashSha256(new HashAnonymizer())),
-                'The given string is not an email'
-            );
-        }
 
         [$user, $domain] = explode('@', $string, 2);
 
