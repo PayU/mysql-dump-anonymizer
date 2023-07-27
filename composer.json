@@ -1,4 +1,8 @@
 {
+    "name": "payu/mysql-dump-anonymizer",
+    "description": "Anonymizer for MySQL dumps. Can be used standalone or as a library.",
+    "type": "library",
+    "license": "Apache-2.0",
     "autoload": {
         "psr-4": {
             "PayU\\MysqlDumpAnonymizer\\": "lib/"
