@@ -36,6 +36,9 @@ deptrac:
       - AnonymizationProvider
     ValueAnonymizers: # ValueAnonymizerInterface in AnonymizationProvider namespace
       - AnonymizationProvider
-
-
-
+  analyser:
+    types:
+      - class
+      - function
+      - file
+      - use
