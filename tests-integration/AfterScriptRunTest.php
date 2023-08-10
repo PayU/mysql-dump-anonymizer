@@ -217,7 +217,7 @@ final class AfterScriptRunTest extends TestCase
         $destRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $this->assertGreaterThan(0, $sourceRow['nr']);
-        $this->assertSame('0', $destRow['nr']);
+        $this->assertSame(0, $destRow['nr']);
     }
 
     /**
