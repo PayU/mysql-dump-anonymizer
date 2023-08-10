@@ -34,6 +34,7 @@ final class AnonymizerTest extends TestCase
     /** @var ObserverInterface|MockObject */
     private $observerMock;
 
+    public const TMP_FILE_PATH = "/tmp/testData";
 
     public function setUp(): void
     {
@@ -286,8 +287,12 @@ final class AnonymizerTest extends TestCase
 
     private function makeLineStream(array $lines)
     {
-        $fp = fopen('data://text/plain;base64,' . base64_encode(implode("\n", $lines)), 'ab+');
+
+        $fp = fopen(self::TMP_FILE_PATH . (string)rand(0, 999), 'w+');
+        fwrite($fp, implode("\n", $lines));
+
         rewind($fp);
+
         return $fp;
     }
 
