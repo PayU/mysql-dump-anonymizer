@@ -216,8 +216,8 @@ final class AfterScriptRunTest extends TestCase
         $stmt = self::$destination->query($query);
         $destRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $this->assertGreaterThan(0, $sourceRow['nr']);
-        $this->assertSame(0, $destRow['nr']);
+        $this->assertGreaterThan(0, (int)$sourceRow['nr']);
+        $this->assertSame(0, (int)$destRow['nr']);
     }
 
     /**
