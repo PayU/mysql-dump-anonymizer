@@ -53,7 +53,7 @@ final class AnonymizerTest extends TestCase
     public function testRun(): void
     {
         $inputStream = $this->makeInputStream(['line1', 'line2']);
-        $outputStream = $this->makeOutputStream([]);
+        $outputStream = $this->makeOutputStream();
 
         $data = [
             'table1' => [
@@ -291,10 +291,9 @@ final class AnonymizerTest extends TestCase
         return $fp;
     }
 
-    private function makeOutputStream(array $lines)
+    private function makeOutputStream()
     {
         $fp = fopen('php://memory', 'ab+');
-        fwrite($fp, implode("\n", $lines));
         rewind($fp);
 
         return $fp;

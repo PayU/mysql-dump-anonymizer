@@ -150,7 +150,7 @@ final class AfterScriptRunTest extends TestCase
                 }
 
                 if ($destRow['Email'] !== null) {
-                    $this->assertRegExp(
+                    $this->assertMatchesRegularExpression(
                         '/^.+\@\S+\.\S+$/',
                         $destRow['Email'],
                         "Email at PK{$destRow['PrimaryKey']} is not a valid email !"
