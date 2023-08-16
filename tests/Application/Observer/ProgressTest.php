@@ -10,8 +10,6 @@ class ProgressTest extends TestCase
 {
     private Progress $sut;
 
-    public const TMP_FILE_PATH = "/tmp/testData";
-
     public function setUp(): void
     {
         $this->sut = new Progress();
@@ -157,7 +155,7 @@ class ProgressTest extends TestCase
 
     private function setOutputStream()
     {
-        $fp = fopen(self::TMP_FILE_PATH, 'w+');
+        $fp = fopen('php://memory', 'ab+');
         rewind($fp);
 
         $refObject = new ReflectionObject($this->sut);
@@ -172,10 +170,5 @@ class ProgressTest extends TestCase
         $refProperty = $refObject->getProperty('output');
         $refProperty->setAccessible(true);
         return $refProperty->getValue($this->sut);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        unlink(self::TMP_FILE_PATH);
     }
 }

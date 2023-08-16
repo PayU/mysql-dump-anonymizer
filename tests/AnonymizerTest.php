@@ -34,8 +34,6 @@ final class AnonymizerTest extends TestCase
     /** @var ObserverInterface|MockObject */
     private $observerMock;
 
-    public const TMP_FILE_PATH = "/tmp/testData";
-
     public function setUp(): void
     {
         parent::setUp();
@@ -54,8 +52,8 @@ final class AnonymizerTest extends TestCase
 
     public function testRun(): void
     {
-        $inputStream = $this->makeLineStream(['line1', 'line2']);
-        $outputStream = $this->makeLineStream([]);
+        $inputStream = $this->makeInputStream(['line1', 'line2']);
+        $outputStream = $this->makeOutputStream([]);
 
         $data = [
             'table1' => [
@@ -285,12 +283,18 @@ final class AnonymizerTest extends TestCase
         $this->assertSame(['INSERT table1' . "\n", 'INSERT table2'], $actual);
     }
 
-    private function makeLineStream(array $lines)
+    private function makeInputStream(array $lines)
     {
+        $fp = fopen('data://text/plain;base64,' . base64_encode(implode("\n", $lines)), 'ab+');
+        rewind($fp);
 
-        $fp = fopen(self::TMP_FILE_PATH . (string)rand(0, 999), 'w+');
+        return $fp;
+    }
+
+    private function makeOutputStream(array $lines)
+    {
+        $fp = fopen('php://memory', 'ab+');
         fwrite($fp, implode("\n", $lines));
-
         rewind($fp);
 
         return $fp;
