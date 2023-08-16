@@ -26,7 +26,7 @@
         "qossmic/deptrac-shim": "^0.24"
     },
     "require": {
-        "php": "^7.4",
+        "php": "^7.4 || ~8.0.0 || ~8.1.0 || ~8.2.0",
         "symfony/yaml": "^5.0",
         "ext-json": "*",
         "myclabs/php-enum": "^1.7.1"

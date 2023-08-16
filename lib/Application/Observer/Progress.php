@@ -10,7 +10,7 @@ final class Progress implements ProcessObserverInterface
     private const FULL = "\u{2588}";
     private const EMPTY = "\u{2591}";
 
-    private static $output = STDERR;
+    private $output = STDERR;
 
     private $total = 0;
     private $startedAt;
@@ -144,7 +144,7 @@ final class Progress implements ProcessObserverInterface
 
     private function output($string): void
     {
-        fwrite(self::$output, $string);
+        fwrite($this->output, $string);
     }
 
     private function round($microseconds, $decimals = 2, $pad = 6)

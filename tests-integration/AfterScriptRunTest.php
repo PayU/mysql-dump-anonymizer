@@ -51,7 +51,9 @@ final class AfterScriptRunTest extends TestCase
         self::$destination = new PDO($dsnDestination, $dbUser, $dbPass);
 
         self::$source->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        self::$source->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
         self::$destination->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
+        self::$destination->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
     }
 
     public function testNullIsAnonymizedWithNull(): void
@@ -148,7 +150,7 @@ final class AfterScriptRunTest extends TestCase
                 }
 
                 if ($destRow['Email'] !== null) {
-                    $this->assertRegExp(
+                    $this->assertMatchesRegularExpression(
                         '/^.+\@\S+\.\S+$/',
                         $destRow['Email'],
                         "Email at PK{$destRow['PrimaryKey']} is not a valid email !"
@@ -216,7 +218,7 @@ final class AfterScriptRunTest extends TestCase
         $stmt = self::$destination->query($query);
         $destRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $this->assertGreaterThan(0, $sourceRow['nr']);
+        $this->assertGreaterThan('0', $sourceRow['nr']);
         $this->assertSame('0', $destRow['nr']);
     }
 

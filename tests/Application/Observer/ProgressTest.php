@@ -155,7 +155,7 @@ class ProgressTest extends TestCase
 
     private function setOutputStream()
     {
-        $fp = fopen('data://text/plain;base64,', 'ab+');
+        $fp = fopen('php://memory', 'ab+');
         rewind($fp);
 
         $refObject = new ReflectionObject($this->sut);
