@@ -71,7 +71,7 @@ jobs:
           DB_PASS: ""
 
       - name: Run migration
-        run: mysqldump -h 127.0.0.1 -P ${{ job.services.mysql.ports['3306'] }} -u root --complete-insert --hex-blob anon_source | php bin/mysql-dump-anonymize.php --config=sample/anon.yml --show-progress=0 | mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports['3306'] }} -u root -D anon_dest
+        run: mysqldump -h 127.0.0.1 -P ${{ job.services.mysql.ports['3306'] }} -u root --complete-insert --hex-blob --set-gtid-purged=OFF anon_source | php bin/mysql-dump-anonymize.php --config=sample/anon.yml --show-progress=0 | mysql -h 127.0.0.1 -P ${{ job.services.mysql.ports['3306'] }} -u root -D anon_dest
 
       - name: Tests after migration
         run: vendor/bin/phpunit  --testdox --colors=always --no-interaction --verbose --test-suffix AfterScriptRunTest.php tests-integration
