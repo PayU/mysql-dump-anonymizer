@@ -102,8 +102,9 @@ class HashAnonymizerTest extends TestCase
     {
         return [
             [str_repeat('0', 64), '000'],
-            [str_repeat('F', 64), '626'],
-            ['b96a43f0c700ae55b4ac744f0b1be530976038e0abb2c2e5eba505eca99a2a47', '066'],
+            // Keep conversions exact instead of depending on historical base_convert() truncation.
+            [str_repeat('0', 56) . 'ffffffff', '429'],
+            [str_repeat('0', 56) . 'b96a43f0', '311'],
         ];
     }
 
