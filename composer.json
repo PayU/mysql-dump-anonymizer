@@ -27,7 +27,7 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "symfony/yaml": "^5.0",
+        "symfony/yaml": "^5.4 || ^6.4 || ^7.4",
         "ext-json": "*",
         "myclabs/php-enum": "^1.7.1"
     }
